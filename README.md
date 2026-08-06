@@ -1,1 +1,0 @@
-# eunom.ia
