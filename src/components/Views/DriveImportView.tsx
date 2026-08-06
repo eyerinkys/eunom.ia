@@ -27,7 +27,7 @@ export const DriveImportView: React.FC = () => {
               width: '56px',
               height: '56px',
               backgroundColor: 'var(--bg-panel)',
-              border: '1.5px solid #171A1F',
+              border: 'var(--border-rule)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

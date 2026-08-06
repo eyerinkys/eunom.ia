@@ -30,11 +30,12 @@ export const TopBar: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 24px',
+        gap: '28px',
         flexShrink: 0
       }}
     >
-      {/* Search Input */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, maxWidth: '480px' }}>
+      {/* Search Input (Scaled and bounded to avoid crowding actions) */}
+      <div style={{ display: 'flex', alignItems: 'center', flex: '0 1 360px', minWidth: '220px' }}>
         <div style={{ position: 'relative', width: '100%' }}>
           <Search 
             size={16} 
@@ -53,14 +54,14 @@ export const TopBar: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
               width: '100%',
-              height: '38px',
+              height: '36px',
               paddingLeft: '38px',
               paddingRight: '12px',
               backgroundColor: 'var(--bg-panel)',
               border: 'none',
-              borderBottom: '1.5px solid #171A1F',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '12px',
+              borderBottom: 'var(--border-rule)',
+              fontFamily: 'var(--font-sans)',
+              fontSize: '11px',
               color: 'var(--text-primary)',
               outline: 'none'
             }}
@@ -68,29 +69,35 @@ export const TopBar: React.FC = () => {
         </div>
       </div>
 
-      {/* Global Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        {/* View Mode Toggle */}
+      {/* Global Actions & View Mode Controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 }}>
+        {/* View Mode Toggle (Pushed right with distinct spacing margin) */}
         <div 
           style={{ 
             display: 'flex', 
             border: 'var(--border-rule)', 
             backgroundColor: 'var(--bg-panel)',
-            padding: '2px'
+            padding: '2px',
+            marginLeft: '12px',
+            marginRight: '8px',
+            flexShrink: 0
           }}
         >
           <button
             onClick={() => setDisplayMode('table')}
             style={{
-              padding: '6px 10px',
-              backgroundColor: displayMode === 'table' ? 'var(--bg-canvas)' : 'transparent',
-              border: displayMode === 'table' ? '1.5px solid #171A1F' : 'none',
+              padding: '6px 14px',
+              backgroundColor: displayMode === 'table' ? 'var(--accent-bronze)' : 'transparent',
+              color: displayMode === 'table' ? '#11161D' : 'var(--text-primary)',
+              border: displayMode === 'table' ? '1px solid #C69A42' : 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px',
+              gap: '6px',
               fontSize: '11px',
-              fontFamily: 'var(--font-mono)'
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 600,
+              flexShrink: 0
             }}
             title="List Table View"
           >
@@ -99,15 +106,18 @@ export const TopBar: React.FC = () => {
           <button
             onClick={() => setDisplayMode('grid')}
             style={{
-              padding: '6px 10px',
-              backgroundColor: displayMode === 'grid' ? 'var(--bg-canvas)' : 'transparent',
-              border: displayMode === 'grid' ? '1.5px solid #171A1F' : 'none',
+              padding: '6px 14px',
+              backgroundColor: displayMode === 'grid' ? 'var(--accent-bronze)' : 'transparent',
+              color: displayMode === 'grid' ? '#11161D' : 'var(--text-primary)',
+              border: displayMode === 'grid' ? '1px solid #C69A42' : 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px',
+              gap: '6px',
               fontSize: '11px',
-              fontFamily: 'var(--font-mono)'
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 600,
+              flexShrink: 0
             }}
             title="Grid Card View"
           >
@@ -118,6 +128,7 @@ export const TopBar: React.FC = () => {
         <button 
           onClick={handleNewFolder}
           className="btn-secondary"
+          style={{ flexShrink: 0 }}
         >
           <FolderPlus size={15} /> New Folder
         </button>
@@ -125,6 +136,7 @@ export const TopBar: React.FC = () => {
         <button 
           onClick={() => setActiveTab('drive')}
           className="btn-secondary"
+          style={{ flexShrink: 0 }}
         >
           <CloudDownload size={15} /> Drive Import
         </button>
@@ -132,6 +144,7 @@ export const TopBar: React.FC = () => {
         <button 
           onClick={() => setUploadModalOpen(true)}
           className="btn-primary"
+          style={{ flexShrink: 0 }}
         >
           <Upload size={15} /> UPLOAD FILE
         </button>

@@ -1,41 +1,43 @@
-/* Eunomia — Mineral Archival Design System */
+/* Eunomia — Mineral Archival Design System (Custom Color Palette & Ultra-Readable Typography Theme) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
-  /* Surface Color Tokens (Tonal Layering) */
-  --bg-canvas: #F8F9FF;           /* Level 0: Archive Ivory */
-  --bg-panel: #E1E2E9;            /* Level 1: Soft Sandstone */
-  --bg-sidebar: #191C21;          /* Level 2: Deep Ink Global Navigation */
-  --bg-modal: #FFFFFF;            /* Level 3: Pure White Overlay Dialogs */
-  --bg-surface-elevated: #F2F3FA;
+  /* Surface Color Tokens (Tonal Layering - Canvas & Elevation) */
+  --bg-canvas: #11161D;           /* Core Document Background */
+  --bg-panel: #1C232E;            /* Stack Containers, Panels */
+  --bg-sidebar: #1C232E;          /* Global Navigation Panel */
+  --bg-modal: #1C232E;            /* Overlay Dialogs */
+  --bg-surface-elevated: #1C232E;
   
-  /* Text & Rule Line Tokens */
-  --text-primary: #191C21;        /* Deep Ink primary text */
-  --text-secondary: #514538;      /* Warm Muted Brown secondary text */
-  --text-muted: #837467;          /* Muted rule text */
-  --text-on-dark: #F8F9FF;        /* Ivory text on dark sidebar */
-  --text-on-dark-muted: #A3A8B5;
+  /* Text & Rule Line Tokens (High Contrast Typography) */
+  --text-primary: #FFFFFF;        /* Pure Crisp White Primary Headings & Titles */
+  --text-secondary: #F0EAE1;      /* High Contrast Soft Ivory Body Text */
+  --text-muted: #C8C0B5;          /* Clear Light Sand Secondary / Muted Text */
+  --text-on-dark: #FFFFFF;        /* Primary Text on Dark Surfaces */
+  --text-on-dark-muted: #C8C0B5;  /* Muted Text on Dark Surfaces */
   
-  /* Rule Lines Motif (1.5px solid) */
-  --border-rule: 1.5px solid #171A1F;
-  --border-rule-light: 1.5px solid #D5C3B3;
-  --border-rule-accent: 3px solid #82510E;
-  --rule-color: #171A1F;
-  --rule-light: #D5C3B3;
+  /* Rule Lines Motif (1px solid #2E3746) */
+  --border-rule: 1px solid #2E3746;
+  --border-rule-light: 1px solid #2E3746;
+  --border-rule-accent: 3px solid #C69A42;
+  --rule-color: #2E3746;
+  --rule-light: #2E3746;
 
-  /* Brand & Accent Palettes (Mineral Archival) */
-  --accent-bronze: #82510E;        /* Primary Accent: Burnished Bronze */
-  --accent-bronze-light: #9F6926;
-  --accent-bronze-fixed: #FFDDBB;
-  --accent-copper: #32675C;        /* Secondary Accent: Oxidised Copper */
-  --accent-plum: #6F536A;          /* Tertiary Accent: Muted Plum */
-  --accent-olive: #556B2F;         /* Success / Verified Badge */
-  --accent-red: #BA1A1A;           /* Tamper / Warning Red */
-  --accent-red-light: #FFDAD6;
+  /* Brand & Accent Palettes (Accents & Action States) */
+  --accent-bronze: #C69A42;        /* Primary CTA, key status indicators, rule borders */
+  --accent-bronze-light: #D4AA52;
+  --accent-bronze-fixed: #3B4A3F;
+  --accent-copper: #27534D;        /* Active states / success accents */
+  --accent-plum: #3B4A3F;          /* Secondary tags / subtle hover fills */
+  --accent-olive: #27534D;         /* Success / Verified Badge */
+  --accent-red: #E03E3E;           /* Warning Red */
+  --accent-red-light: #3B1C1C;
   
-  /* Typography Fonts */
-  --font-serif: 'Playfair Display', serif;
-  --font-sans: 'Source Sans 3', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Typography Fonts - Modern Premium Outfit & Inter */
+  --font-serif: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-code: 'Fira Code', monospace;
   
   /* Spacing Scale */
   --sidebar-width: 280px;
@@ -48,21 +50,36 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
   background-color: var(--bg-canvas);
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
 }
 
-/* Typography Utility Classes */
-.font-serif { font-family: var(--font-serif); }
-.font-sans { font-family: var(--font-sans); }
-.font-mono { font-family: var(--font-mono); }
+h1, h2, h3, h4, h5, h6, .font-serif {
+  font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+  letter-spacing: -0.02em;
+  color: var(--text-primary) !important;
+}
+
+p, span, label, td, th {
+  color: var(--text-secondary);
+}
+
+.font-sans, .font-mono {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+.font-code {
+  font-family: 'Fira Code', monospace !important;
+}
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
@@ -82,11 +99,12 @@ body {
 /* Selection Rule Line Marker */
 .row-selected {
   border-left: var(--border-rule-accent) !important;
-  background-color: #E6E2D8 !important;
+  background-color: #3B4A3F !important;
+  color: #FFFFFF !important;
 }
 
 .row-hover:hover {
-  background-color: rgba(225, 226, 233, 0.6);
+  background-color: rgba(59, 74, 63, 0.6) !important;
 }
 
 /* Custom Scrollbars */
@@ -98,21 +116,21 @@ body {
   background: var(--bg-canvas);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--text-muted);
+  background: #2E3746;
   border-radius: 0px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-primary);
+  background: #C69A42;
 }
 
 /* Custom Buttons (Strict Rule Line Style) */
 .btn-primary {
   background-color: var(--accent-bronze);
-  color: #FFFFFF;
-  font-family: var(--font-mono);
+  color: #11161D !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.02em;
   padding: 8px 16px;
   border: var(--border-rule);
   border-radius: 2px;
@@ -129,8 +147,8 @@ body {
 
 .btn-secondary {
   background-color: var(--bg-panel);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
+  color: var(--text-primary) !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 13px;
   font-weight: 500;
   padding: 8px 16px;
@@ -144,7 +162,7 @@ body {
 }
 
 .btn-secondary:hover {
-  background-color: #D5C3B3;
+  background-color: var(--accent-plum);
 }
 
 .btn-icon {
@@ -155,34 +173,34 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
   transition: background-color 0.15s ease;
 }
 
 .btn-icon:hover {
-  background-color: var(--bg-panel);
+  background-color: var(--accent-plum);
 }
 
 /* Status Badges */
 .badge-valid {
-  background-color: rgba(85, 107, 47, 0.15);
-  color: var(--accent-olive);
-  border: 1px solid var(--accent-olive);
-  font-family: var(--font-mono);
+  background-color: rgba(39, 83, 77, 0.4);
+  color: #88F0DC !important;
+  border: 1px solid #27534D;
+  font-family: 'Inter', sans-serif !important;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   padding: 2px 8px;
   border-radius: 2px;
   letter-spacing: 0.05em;
 }
 
 .badge-tampered {
-  background-color: rgba(186, 26, 26, 0.15);
-  color: var(--accent-red);
+  background-color: rgba(224, 62, 62, 0.3);
+  color: #FF8888 !important;
   border: 1px solid var(--accent-red);
-  font-family: var(--font-mono);
+  font-family: 'Inter', sans-serif !important;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   padding: 2px 8px;
   border-radius: 2px;
   letter-spacing: 0.05em;
@@ -190,10 +208,11 @@ body {
 
 /* Code Snippet / Hash Chip */
 .hash-chip {
-  font-family: var(--font-mono);
+  font-family: 'Fira Code', monospace !important;
   font-size: 11px;
-  background-color: #E1E2E9;
-  border: 1.5px solid #171A1F;
+  background-color: var(--bg-panel);
+  border: 1px solid #2E3746;
+  color: var(--text-primary) !important;
   padding: 4px 8px;
   border-radius: 2px;
   letter-spacing: 0.02em;

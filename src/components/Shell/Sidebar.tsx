@@ -13,6 +13,8 @@ import {
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 import type { ViewTab } from '../../types/eunomia';
 
+import { Logo } from './Logo';
+
 export const Sidebar: React.FC = () => {
   const { activeTab, setActiveTab } = useEunomiaStore();
 
@@ -46,54 +48,24 @@ export const Sidebar: React.FC = () => {
           borderBottom: '1.5px solid rgba(248, 249, 255, 0.15)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div 
-            style={{
-              width: '32px',
-              height: '32px',
-              backgroundColor: 'var(--accent-bronze)',
-              border: '1.5px solid #F8F9FF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#FFF',
-              fontWeight: 700,
-              fontFamily: 'var(--font-serif)',
-              fontSize: '18px'
-            }}
-          >
-            E
-          </div>
-          <div>
-            <h1 
-              className="font-serif"
-              style={{
-                fontSize: '22px',
-                fontWeight: 700,
-                lineHeight: 1.1,
-                letterSpacing: '-0.02em'
-              }}
-            >
-              Eunomia
-            </h1>
-            <p 
-              className="font-mono"
-              style={{
-                fontSize: '9px',
-                color: 'var(--text-on-dark-muted)',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase'
-              }}
-            >
-              Archival System v1.0
-            </p>
-          </div>
-        </div>
+        <Logo size={32} variant="full" />
+        <p 
+          className="font-mono"
+          style={{
+            fontSize: '9px',
+            color: 'var(--text-on-dark-muted)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            marginTop: '6px'
+          }}
+        >
+          CAS Archival System v1.0
+        </p>
       </div>
 
       {/* Main Navigation Group */}
       <div style={{ flex: 1, padding: '16px 0', overflowY: 'auto' }}>
-        <div style={{ padding: '0 24px 8px', fontSize: '10px', color: 'var(--text-on-dark-muted)', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>
+        <div style={{ padding: '0 24px 8px', fontSize: '10px', color: 'var(--text-on-dark-muted)', fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}>
           LOCATIONS & VIEWS
         </div>
         <nav style={{ display: 'flex', flexDirection: 'column' }}>
@@ -112,7 +84,7 @@ export const Sidebar: React.FC = () => {
                   color: isActive ? '#FFF' : 'var(--text-on-dark-muted)',
                   border: 'none',
                   borderLeft: isActive ? '3px solid var(--accent-bronze)' : '3px solid transparent',
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-sans)',
                   fontSize: '13px',
                   fontWeight: isActive ? 600 : 400,
                   textAlign: 'left',
@@ -141,7 +113,7 @@ export const Sidebar: React.FC = () => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-on-dark)' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontFamily: 'var(--font-sans)', color: 'var(--text-on-dark)' }}>
             <HardDrive size={14} color="var(--accent-bronze-fixed)" /> Self-Hosted Storage
           </span>
           <span className="font-mono" style={{ fontSize: '10px', color: 'var(--accent-bronze-fixed)' }}>
@@ -159,7 +131,7 @@ export const Sidebar: React.FC = () => {
         >
           <div style={{ width: '34%', height: '100%', backgroundColor: 'var(--accent-bronze)' }} />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'var(--text-on-dark-muted)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'var(--font-sans)', color: 'var(--text-on-dark-muted)' }}>
           <span>CAS Dedup: 48.9 MB</span>
           <span style={{ color: 'var(--accent-olive)' }}>34% Used</span>
         </div>
@@ -184,7 +156,7 @@ export const Sidebar: React.FC = () => {
             background: 'none',
             border: 'none',
             color: activeTab === 'settings' ? '#FFF' : 'var(--text-on-dark-muted)',
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-sans)',
             fontSize: '12px',
             cursor: 'pointer'
           }}
@@ -192,7 +164,7 @@ export const Sidebar: React.FC = () => {
           <Settings size={16} /> Node Settings
         </button>
         <div 
-          style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', color: 'var(--accent-olive)', fontFamily: 'var(--font-mono)' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', color: 'var(--accent-olive)', fontFamily: 'var(--font-sans)' }}
           title="Cryptographic RSA/Ed25519 node online"
         >
           <ShieldCheck size={14} /> SECURE

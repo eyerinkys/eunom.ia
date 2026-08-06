@@ -70,9 +70,10 @@ export const UploadModal: React.FC = () => {
                 width: '100%',
                 padding: '10px',
                 marginTop: '4px',
-                border: '1.5px solid #171A1F',
+                border: 'var(--border-rule)',
                 backgroundColor: 'var(--bg-panel)',
-                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-primary)',
+                fontFamily: 'var(--font-sans)',
                 fontSize: '12px',
                 outline: 'none'
               }}
@@ -90,9 +91,10 @@ export const UploadModal: React.FC = () => {
                 width: '100%',
                 padding: '10px',
                 marginTop: '4px',
-                border: '1.5px solid #171A1F',
+                border: 'var(--border-rule)',
                 backgroundColor: 'var(--bg-panel)',
-                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-primary)',
+                fontFamily: 'var(--font-sans)',
                 fontSize: '12px',
                 outline: 'none'
               }}
@@ -116,9 +118,10 @@ export const UploadModal: React.FC = () => {
                 width: '100%',
                 padding: '10px',
                 marginTop: '4px',
-                border: '1.5px solid #171A1F',
+                border: 'var(--border-rule)',
                 backgroundColor: 'var(--bg-panel)',
-                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-primary)',
+                fontFamily: 'var(--font-sans)',
                 fontSize: '12px',
                 outline: 'none'
               }}

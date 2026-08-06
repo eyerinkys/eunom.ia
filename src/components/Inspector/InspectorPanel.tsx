@@ -126,7 +126,7 @@ export const InspectorPanel: React.FC = () => {
             backgroundColor: inspectorTab === 'details' ? 'var(--bg-canvas)' : 'transparent',
             border: 'none',
             borderBottom: inspectorTab === 'details' ? '3px solid var(--accent-bronze)' : '3px solid transparent',
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-sans)',
             fontSize: '11px',
             fontWeight: 600,
             cursor: 'pointer',
@@ -142,7 +142,7 @@ export const InspectorPanel: React.FC = () => {
             backgroundColor: inspectorTab === 'versions' ? 'var(--bg-canvas)' : 'transparent',
             border: 'none',
             borderBottom: inspectorTab === 'versions' ? '3px solid var(--accent-bronze)' : '3px solid transparent',
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-sans)',
             fontSize: '11px',
             fontWeight: 600,
             cursor: 'pointer',
@@ -158,7 +158,7 @@ export const InspectorPanel: React.FC = () => {
             backgroundColor: inspectorTab === 'provenance' ? 'var(--bg-canvas)' : 'transparent',
             border: 'none',
             borderBottom: inspectorTab === 'provenance' ? '3px solid var(--accent-bronze)' : '3px solid transparent',
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-sans)',
             fontSize: '11px',
             fontWeight: 600,
             cursor: 'pointer',
@@ -186,7 +186,7 @@ export const InspectorPanel: React.FC = () => {
                   gap: '6px',
                   backgroundColor: 'var(--bg-panel)',
                   padding: '8px 10px',
-                  border: '1.5px solid #171A1F'
+                  border: 'var(--border-rule)'
                 }}
               >
                 <code className="font-mono" style={{ fontSize: '10px', wordBreak: 'break-all', flex: 1 }}>
@@ -229,13 +229,13 @@ export const InspectorPanel: React.FC = () => {
               style={{
                 backgroundColor: 'var(--bg-panel)',
                 padding: '12px',
-                border: '1.5px solid #171A1F'
+                border: 'var(--border-rule)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', fontSize: '11px', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', fontSize: '11px', fontWeight: 600, fontFamily: 'var(--font-sans)' }}>
                 <ShieldCheck size={14} color="var(--accent-bronze)" /> RSA-4096 / Ed25519 Signature
               </div>
-              <code className="font-mono" style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
+              <code className="font-code" style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
                 {activeFile.authorSignature}
               </code>
             </div>
@@ -243,20 +243,21 @@ export const InspectorPanel: React.FC = () => {
             {/* Content Snippet Preview */}
             {activeFile.contentSnippet && (
               <div>
-                <label className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                <label className="font-sans" style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                   Document Abstract / Preview
                 </label>
                 <div 
                   style={{
                     marginTop: '4px',
                     padding: '12px',
-                    backgroundColor: '#FFF',
-                    border: '1.5px solid #171A1F',
-                    fontFamily: 'var(--font-mono)',
+                    backgroundColor: 'var(--bg-canvas)',
+                    border: 'var(--border-rule)',
+                    fontFamily: 'var(--font-code)',
                     fontSize: '11px',
                     maxHeight: '140px',
                     overflowY: 'auto',
-                    whiteSpace: 'pre-wrap'
+                    whiteSpace: 'pre-wrap',
+                    color: 'var(--text-primary)'
                   }}
                 >
                   {activeFile.contentSnippet}
@@ -299,7 +300,7 @@ export const InspectorPanel: React.FC = () => {
                     position: 'relative',
                     marginBottom: '16px',
                     backgroundColor: 'var(--bg-panel)',
-                    border: '1.5px solid #171A1F',
+                    border: 'var(--border-rule)',
                     padding: '12px'
                   }}
                 >
@@ -311,7 +312,7 @@ export const InspectorPanel: React.FC = () => {
                       width: '10px',
                       height: '10px',
                       backgroundColor: 'var(--accent-bronze)',
-                      border: '2px solid #F8F9FF',
+                      border: '2px solid var(--bg-canvas)',
                       borderRadius: '50%'
                     }}
                   />
@@ -361,7 +362,7 @@ export const InspectorPanel: React.FC = () => {
               style={{
                 backgroundColor: 'var(--bg-panel)',
                 padding: '16px',
-                border: '1.5px solid #171A1F',
+                border: 'var(--border-rule)',
                 textAlign: 'center'
               }}
             >

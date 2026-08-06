@@ -77,9 +77,9 @@ export const StorageVisualizerView: React.FC = () => {
           <div 
             style={{
               backgroundColor: 'var(--accent-copper)',
-              color: '#FFF',
+              color: '#E4DDD3',
               padding: '20px',
-              borderRight: '1.5px solid #171A1F',
+              borderRight: 'var(--border-rule)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
@@ -96,9 +96,9 @@ export const StorageVisualizerView: React.FC = () => {
           <div 
             style={{
               backgroundColor: 'var(--accent-bronze)',
-              color: '#FFF',
+              color: '#11161D',
               padding: '20px',
-              borderRight: '1.5px solid #171A1F',
+              borderRight: 'var(--border-rule)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
@@ -116,9 +116,9 @@ export const StorageVisualizerView: React.FC = () => {
             <div 
               style={{
                 backgroundColor: 'var(--accent-plum)',
-                color: '#FFF',
+                color: '#E4DDD3',
                 padding: '12px',
-                borderBottom: '1.5px solid #171A1F',
+                borderBottom: 'var(--border-rule)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between'
@@ -130,7 +130,7 @@ export const StorageVisualizerView: React.FC = () => {
             <div 
               style={{
                 backgroundColor: 'var(--accent-olive)',
-                color: '#FFF',
+                color: '#E4DDD3',
                 padding: '12px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -151,7 +151,7 @@ export const StorageVisualizerView: React.FC = () => {
       <div className="rule-all" style={{ backgroundColor: 'var(--bg-canvas)' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
           <thead>
-            <tr className="rule-b" style={{ backgroundColor: 'var(--bg-panel)', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>
+            <tr className="rule-b" style={{ backgroundColor: 'var(--bg-panel)', fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.05em' }}>
               <th style={{ padding: '10px 16px' }}>CATEGORY</th>
               <th style={{ padding: '10px 16px' }}>DESCRIPTION</th>
               <th style={{ padding: '10px 16px' }}>FILES</th>
@@ -164,7 +164,7 @@ export const StorageVisualizerView: React.FC = () => {
               <tr key={cat.id} className="rule-b-light row-hover">
                 <td style={{ padding: '12px 16px', fontWeight: 600 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ width: '12px', height: '12px', backgroundColor: cat.color, border: '1px solid #171A1F' }} />
+                    <div style={{ width: '12px', height: '12px', backgroundColor: cat.color, border: 'var(--border-rule)' }} />
                     {cat.name}
                   </div>
                 </td>

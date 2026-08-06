@@ -93,7 +93,7 @@ export const HomeView: React.FC = () => {
             </h2>
             <button 
               onClick={() => setActiveTab('files')}
-              style={{ background: 'none', border: 'none', color: 'var(--accent-bronze)', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+              style={{ background: 'none', border: 'none', color: 'var(--accent-bronze)', fontFamily: 'var(--font-sans)', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
             >
               Browse All Files <ArrowUpRight size={14} />
             </button>
@@ -190,7 +190,7 @@ export const HomeView: React.FC = () => {
               <div 
                 key={act.id} 
                 style={{ 
-                  borderBottom: '1.5px solid #D5C3B3', 
+                  borderBottom: 'var(--border-rule)', 
                   paddingBottom: '12px' 
                 }}
               >

@@ -23,7 +23,7 @@ export const DiffModal: React.FC = () => {
         className="rule-all"
         style={{
           width: '720px',
-          backgroundColor: '#FFF',
+          backgroundColor: 'var(--bg-modal)',
           padding: '24px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
           display: 'flex',
@@ -61,7 +61,7 @@ export const DiffModal: React.FC = () => {
             <div 
               style={{
                 marginTop: '8px',
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-code)',
                 fontSize: '11px',
                 whiteSpace: 'pre-wrap',
                 lineHeight: 1.6,
@@ -80,7 +80,7 @@ export const DiffModal: React.FC = () => {
             <div 
               style={{
                 marginTop: '8px',
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-code)',
                 fontSize: '11px',
                 whiteSpace: 'pre-wrap',
                 lineHeight: 1.6,

@@ -68,7 +68,7 @@ export const SettingsView: React.FC = () => {
             </h3>
           </div>
           <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-            Current Active Theme: <strong>Mineral Archival</strong> (1.5px Rule Line Motif, Playfair Display & Source Sans 3).
+            Current Active Theme: <strong>Mineral Archival</strong> (1.5px Rule Line Motif, Outfit & Inter).
           </p>
         </div>
 

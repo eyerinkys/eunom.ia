@@ -26,12 +26,12 @@ export const BreadcrumbBar: React.FC = () => {
       style={{
         padding: '12px 24px',
         backgroundColor: 'var(--bg-canvas)',
-        borderBottom: '1.5px solid #E1E2E9',
+        borderBottom: 'var(--border-rule)',
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
         fontSize: '12px',
-        fontFamily: 'var(--font-mono)',
+        fontFamily: 'var(--font-sans)',
         color: 'var(--text-secondary)'
       }}
     >
@@ -46,7 +46,7 @@ export const BreadcrumbBar: React.FC = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-sans)',
                 fontSize: '12px',
                 fontWeight: isLast ? 700 : 500,
                 color: isLast ? 'var(--text-primary)' : 'var(--accent-bronze)',

@@ -98,9 +98,9 @@ export const MyFilesView: React.FC = () => {
               style={{
                 padding: '4px 10px',
                 backgroundColor: selectedCategoryFilter === cat ? 'var(--accent-bronze)' : 'var(--bg-canvas)',
-                color: selectedCategoryFilter === cat ? '#FFF' : 'var(--text-primary)',
-                border: '1.5px solid #171A1F',
-                fontFamily: 'var(--font-mono)',
+                color: selectedCategoryFilter === cat ? '#11161D' : 'var(--text-primary)',
+                border: 'var(--border-rule)',
+                fontFamily: 'var(--font-sans)',
                 fontSize: '11px',
                 fontWeight: 600,
                 textTransform: 'uppercase',
@@ -120,7 +120,7 @@ export const MyFilesView: React.FC = () => {
               alignItems: 'center', 
               gap: '12px',
               backgroundColor: 'var(--bg-canvas)',
-              border: '1.5px solid #171A1F',
+              border: 'var(--border-rule)',
               padding: '4px 12px'
             }}
           >
@@ -187,7 +187,7 @@ export const MyFilesView: React.FC = () => {
           <div className="rule-all" style={{ backgroundColor: 'var(--bg-canvas)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
-                <tr className="rule-b" style={{ backgroundColor: 'var(--bg-panel)', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>
+                <tr className="rule-b" style={{ backgroundColor: 'var(--bg-panel)', fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.05em' }}>
                   <th style={{ padding: '10px 12px', width: '40px' }}>
                     <input 
                       type="checkbox" 
@@ -295,7 +295,7 @@ export const MyFilesView: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="rule-t-light" style={{ paddingTop: '10px', marginTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+                  <div className="rule-t-light" style={{ paddingTop: '10px', marginTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'var(--font-sans)' }}>
                     <span>{file.extension.toUpperCase()}</span>
                     <span style={{ fontWeight: 700 }}>{file.sizeFormatted}</span>
                   </div>
