@@ -12,9 +12,10 @@ import {
 } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 import type { ViewTab } from '../../types/eunomia';
+import { LogOut, User as UserIcon } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab } = useEunomiaStore();
+  const { activeTab, setActiveTab, user, logoutUser } = useEunomiaStore();
 
   const mainNavItems: { tab: ViewTab; label: string; icon: React.ReactNode }[] = [
     { tab: 'home', label: 'Home', icon: <Home size={18} /> },
@@ -198,6 +199,38 @@ export const Sidebar: React.FC = () => {
           <ShieldCheck size={14} /> SECURE
         </div>
       </div>
+      
+      {/* User Profile / Logout */}
+      {user && (
+        <div style={{
+          padding: '16px 24px',
+          borderTop: '1.5px solid rgba(248, 249, 255, 0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: 'rgba(248, 249, 255, 0.03)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FFF' }}>
+            <UserIcon size={14} />
+            <span className="font-mono" style={{ fontSize: '11px', fontWeight: 600 }}>{user.displayName.toUpperCase()}</span>
+          </div>
+          <button
+            onClick={() => logoutUser()}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-on-dark-muted)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            title="Disconnect & Logout"
+          >
+            <LogOut size={14} />
+          </button>
+        </div>
+      )}
     </aside>
   );
 };

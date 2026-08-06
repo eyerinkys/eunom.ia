@@ -1,10 +1,12 @@
 import { create } from 'zustand';
-import type { ViewTab, DisplayMode, FileItem, FolderItem, StorageCategory, ActivityLog, GraphNode } from '../types/eunomia';
-import { INITIAL_FILES, INITIAL_FOLDERS, STORAGE_CATEGORIES, INITIAL_ACTIVITIES, INITIAL_GRAPH_NODES } from '../data/mockData';
+import type { ViewTab, DisplayMode, FileItem, FolderItem, StorageCategory, ActivityLog, GraphNode, User, ApiNode, Breadcrumb } from '../types/eunomia';
+import { INITIAL_FILES, STORAGE_CATEGORIES, INITIAL_ACTIVITIES, INITIAL_GRAPH_NODES } from '../data/mockData';
+import * as authApi from '../api/auth';
+import * as nodesApi from '../api/nodes';
 
 interface EunomiaState {
   activeTab: ViewTab;
-  currentFolderId: string;
+  currentFolderId: string | null;
   displayMode: DisplayMode;
   searchQuery: string;
   selectedFileIds: string[];
@@ -13,9 +15,19 @@ interface EunomiaState {
   isVerifying: boolean;
   verificationStep: number;
   
-  // Data
+  // Auth State
+  user: User | null;
+  isAuthLoading: boolean;
+  authError: string | null;
+
+  // Folder State
+  folderNodes: ApiNode[];
+  breadcrumbs: Breadcrumb[];
+  isFoldersLoading: boolean;
+  foldersError: string | null;
+
+  // Visual/Mock Data for Phase 1 (until file upload is implemented)
   files: FileItem[];
-  folders: FolderItem[];
   storageCategories: StorageCategory[];
   activities: ActivityLog[];
   graphNodes: GraphNode[];
@@ -24,11 +36,23 @@ interface EunomiaState {
   isUploadModalOpen: boolean;
   isDiffModalOpen: boolean;
   diffComparison: { oldVersion: string; newVersion: string; oldSnippet: string; newSnippet: string } | null;
-  selectedCategoryFilter: string;
 
-  // Actions
+  // Auth Actions
+  checkAuth: () => Promise<void>;
+  loginUser: (email: string, password: string) => Promise<void>;
+  registerUser: (email: string, password: string, displayName: string) => Promise<void>;
+  logoutUser: () => Promise<void>;
+
+  // Node Actions
+  fetchFolders: (parentId: string) => Promise<void>;
+  createFolder: (name: string, parentId: string) => Promise<void>;
+  renameFolder: (id: string, name: string) => Promise<void>;
+  moveFolder: (id: string, newParentId: string) => Promise<void>;
+  deleteFolder: (id: string) => Promise<void>;
+
+  // UI Actions
   setActiveTab: (tab: ViewTab) => void;
-  setCurrentFolderId: (folderId: string) => void;
+  setCurrentFolderId: (folderId: string | null) => void;
   setDisplayMode: (mode: DisplayMode) => void;
   setSearchQuery: (query: string) => void;
   selectFile: (file: FileItem | null, isMulti?: boolean) => void;
@@ -38,24 +62,35 @@ interface EunomiaState {
   triggerProvenanceVerification: () => void;
   setUploadModalOpen: (open: boolean) => void;
   setDiffModalOpen: (open: boolean, diffData?: any) => void;
+  selectedCategoryFilter: string;
   setSelectedCategoryFilter: (cat: string) => void;
+  // Stubs for Phase 1
   addUploadedFile: (name: string, type: FileItem['type'], sizeBytes: number) => void;
-  addFolder: (name: string) => void;
+  folders: FolderItem[];
 }
 
 export const useEunomiaStore = create<EunomiaState>((set, get) => ({
   activeTab: 'files',
-  currentFolderId: 'root',
+  currentFolderId: null, // Will be set to root when user logs in and loads data
   displayMode: 'table',
   searchQuery: '',
-  selectedFileIds: ['f1'],
-  activeFile: INITIAL_FILES[0],
+  selectedFileIds: [],
+  activeFile: null,
   inspectorTab: 'details',
   isVerifying: false,
   verificationStep: 0,
   
+  user: null,
+  isAuthLoading: true, // Start loading to check session
+  authError: null,
+
+  folderNodes: [],
+  breadcrumbs: [],
+  isFoldersLoading: false,
+  foldersError: null,
+
+  // Keep mock files for now to avoid breaking UI layout
   files: INITIAL_FILES,
-  folders: INITIAL_FOLDERS,
   storageCategories: STORAGE_CATEGORIES,
   activities: INITIAL_ACTIVITIES,
   graphNodes: INITIAL_GRAPH_NODES,
@@ -64,10 +99,129 @@ export const useEunomiaStore = create<EunomiaState>((set, get) => ({
   isDiffModalOpen: false,
   diffComparison: null,
   selectedCategoryFilter: 'all',
+  setSelectedCategoryFilter: (cat: string) => set({ selectedCategoryFilter: cat }),
+  // Stubs for Phase 1
+  addUploadedFile: () => {
+    alert("File uploads are coming in Phase 2!");
+  },
+  folders: [],
 
+  // Auth Actions
+  checkAuth: async () => {
+    set({ isAuthLoading: true, authError: null });
+    try {
+      const user = await authApi.getMe();
+      set({ user, isAuthLoading: false });
+    } catch {
+      // Unauthenticated initial state is expected, not an error
+      set({ user: null, isAuthLoading: false, authError: null });
+    }
+  },
+
+  loginUser: async (email, password) => {
+    set({ isAuthLoading: true, authError: null });
+    try {
+      const user = await authApi.login(email, password);
+      set({ user, isAuthLoading: false, activeTab: 'home', currentFolderId: null });
+    } catch (err: any) {
+      set({ user: null, isAuthLoading: false, authError: err.message || 'Login failed' });
+      throw err;
+    }
+  },
+
+  registerUser: async (email, password, displayName) => {
+    set({ isAuthLoading: true, authError: null });
+    try {
+      const user = await authApi.register(email, password, displayName);
+      set({ user, isAuthLoading: false, activeTab: 'home', currentFolderId: null });
+    } catch (err: any) {
+      set({ user: null, isAuthLoading: false, authError: err.message || 'Registration failed' });
+      throw err;
+    }
+  },
+
+  logoutUser: async () => {
+    set({ isAuthLoading: true });
+    try {
+      await authApi.logout();
+    } finally {
+      set({ 
+        user: null, 
+        isAuthLoading: false, 
+        folderNodes: [], 
+        breadcrumbs: [], 
+        currentFolderId: null,
+        selectedFileIds: [],
+        activeFile: null
+      });
+    }
+  },
+
+  // Node Actions
+  fetchFolders: async (parentId) => {
+    set({ isFoldersLoading: true, foldersError: null, selectedFileIds: [], activeFile: null });
+    try {
+      const res = await nodesApi.listNodes(parentId);
+      set({ 
+        folderNodes: res.nodes, 
+        breadcrumbs: res.breadcrumbs, 
+        isFoldersLoading: false,
+        currentFolderId: parentId
+      });
+    } catch (err: any) {
+      set({ isFoldersLoading: false, foldersError: err.message || 'Failed to load folders' });
+    }
+  },
+
+  createFolder: async (name, parentId) => {
+    try {
+      const newNode = await nodesApi.createFolder(name, parentId);
+      set({ folderNodes: [...get().folderNodes, newNode] });
+    } catch (err: any) {
+      alert(err.message || 'Failed to create folder');
+    }
+  },
+
+  renameFolder: async (id, name) => {
+    try {
+      await nodesApi.renameNode(id, name);
+      // Optimistic update
+      set({
+        folderNodes: get().folderNodes.map(n => n.id === id ? { ...n, name, updatedAt: new Date().toISOString() } : n)
+      });
+    } catch (err: any) {
+      alert(err.message || 'Failed to rename folder');
+    }
+  },
+
+  moveFolder: async (id, newParentId) => {
+    try {
+      await nodesApi.moveNode(id, newParentId);
+      // Remove from current view
+      set({
+        folderNodes: get().folderNodes.filter(n => n.id !== id)
+      });
+    } catch (err: any) {
+      alert(err.message || 'Failed to move folder');
+    }
+  },
+
+  deleteFolder: async (id) => {
+    try {
+      await nodesApi.deleteNode(id);
+      // Remove from current view
+      set({
+        folderNodes: get().folderNodes.filter(n => n.id !== id)
+      });
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete folder');
+    }
+  },
+
+  // UI Actions
   setActiveTab: (tab) => set({ activeTab: tab }),
   
-  setCurrentFolderId: (folderId) => set({ currentFolderId: folderId, selectedFileIds: [] }),
+  setCurrentFolderId: (folderId) => set({ currentFolderId: folderId, selectedFileIds: [], activeFile: null }),
   
   setDisplayMode: (mode) => set({ displayMode: mode }),
   
@@ -109,75 +263,5 @@ export const useEunomiaStore = create<EunomiaState>((set, get) => ({
   
   setUploadModalOpen: (open) => set({ isUploadModalOpen: open }),
   
-  setDiffModalOpen: (open, diffData = null) => set({ isDiffModalOpen: open, diffComparison: diffData }),
-  
-  setSelectedCategoryFilter: (cat) => set({ selectedCategoryFilter: cat }),
-  
-  addUploadedFile: (name, type, sizeBytes) => {
-    const formatSize = (bytes: number) => {
-      if (bytes < 1024) return `${bytes} B`;
-      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-    };
-
-    const newFile: FileItem = {
-      id: `f-${Date.now()}`,
-      name,
-      folderId: get().currentFolderId,
-      path: `/${name}`,
-      type,
-      extension: `.${name.split('.').pop() || 'bin'}`,
-      sizeFormatted: formatSize(sizeBytes),
-      sizeBytes,
-      owner: 'You',
-      modifiedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
-      hash: Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
-      provenanceStatus: 'VALID',
-      versionCount: 1,
-      authorSignature: 'SIG_ED25519_USER_OK',
-      opfsCached: true,
-      versions: [
-        {
-          id: `v1-${Date.now()}`,
-          version: 'v1',
-          timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
-          sizeFormatted: formatSize(sizeBytes),
-          sizeBytes,
-          author: 'You',
-          commitNote: 'Initial upload & CAS hashing',
-          hash: Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
-          parentHash: '0000000000000000000000000000000000000000000000000000000000000000'
-        }
-      ]
-    };
-
-    const newActivity: ActivityLog = {
-      id: `act-${Date.now()}`,
-      type: 'upload',
-      title: 'Uploaded & Content-Addressed',
-      description: `Ingested ${name} (${formatSize(sizeBytes)}) into local CAS store`,
-      timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
-      statusBadge: 'HASH OK',
-      fileId: newFile.id
-    };
-
-    set({
-      files: [newFile, ...get().files],
-      activities: [newActivity, ...get().activities],
-      activeFile: newFile,
-      selectedFileIds: [newFile.id]
-    });
-  },
-
-  addFolder: (name) => {
-    const newFolder: FolderItem = {
-      id: `folder-${Date.now()}`,
-      name,
-      parentId: get().currentFolderId,
-      path: `/${name}`,
-      itemCount: 0,
-      modifiedAt: new Date().toISOString().slice(0, 16).replace('T', ' ')
-    };
-    set({ folders: [...get().folders, newFolder] });
-  }
+  setDiffModalOpen: (open, diffData = null) => set({ isDiffModalOpen: open, diffComparison: diffData })
 }));

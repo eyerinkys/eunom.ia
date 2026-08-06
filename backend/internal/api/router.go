@@ -45,9 +45,24 @@ func NewRouter(db *sql.DB, corsOrigin string, logger *slog.Logger) http.Handler 
 		// Health check — no auth required.
 		r.Get("/health", HealthHandler(db))
 
+		// Auth routes
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/register", RegisterHandler(db))
+			r.Post("/login", LoginHandler(db))
+			r.Post("/logout", LogoutHandler(db))
+			r.With(RequireAuth(db)).Get("/me", MeHandler(db))
+		})
+
+		// Nodes routes (protected)
+		r.Route("/nodes", func(r chi.Router) {
+			r.Use(RequireAuth(db))
+			r.Get("/", ListNodesHandler(db))
+			r.Post("/", CreateFolderHandler(db))
+			r.Patch("/{id}", UpdateNodeHandler(db))
+			r.Delete("/{id}", DeleteNodeHandler(db))
+		})
+
 		// Future route groups will be mounted here:
-		// r.Route("/auth", authRoutes)
-		// r.Route("/nodes", nodeRoutes)
 		// r.Route("/files", fileRoutes)
 		// r.Route("/uploads", uploadRoutes)
 		// r.Route("/versions", versionRoutes)

@@ -12,8 +12,9 @@ Eunomia is a local-first Content-Addressable Storage (CAS) file management & cry
 
 1. **Complete Visual Shell** — React 19 + TypeScript + Vite 8 frontend with the **Mineral Archival** design system, all primary screens navigable in-browser.
 2. **Go Backend Foundation** — Go 1.26 modular monolith with Chi router, SQLite in WAL mode, Goose migrations (8 Tier 1A tables), structured logging, CORS, and a verified health endpoint.
+3. **Phase 1 Complete** — Full authentication and folder navigation implementation connecting the frontend and backend.
 
-The frontend data layer still operates on in-memory mock state ([`src/data/mockData.ts`](file:///Users/eyerinerror/Desktop/Projects/eunom.ia/src/data/mockData.ts)). No authentication, file upload, or CAS blob ingestion endpoints exist yet. The backend foundation is ready for Phase 1 (Auth & Folder Navigation) implementation.
+The frontend data layer uses a mixture of real folder/auth API integrations and mock state for files/activities. The backend foundation is complete and Phase 1 is fully integrated.
 
 ---
 
@@ -111,7 +112,7 @@ Progress evaluated against the 16 phases defined in [`docs/CONSOLIDATED_PROJECT_
 |---|---|---|---|---|
 | **Phase 0A** | Product & Interface Definition | Design system, wireframes, component tokens, motion spec | **COMPLETE** | `DESIGN.md` & visual shell implemented in React components. |
 | **Phase 0B** | Technical Foundation | Go backend module, Vite+React frontend, `openapi.yaml`, SQLite migrations | **COMPLETE** | Go module, Chi router, SQLite WAL, Goose migrations, health endpoint, OpenAPI spec, Vite proxy all verified. |
-| **Phase 1** | Auth & Folder Navigation | Argon2id auth, HTTP session cookies, nested folder CRUD, My Files list view | **INCOMPLETE** | Frontend UI shell & mock folder CRUD complete. Backend auth, session cookies, DB trees missing. |
+| **Phase 1** | Auth & Folder Navigation | Argon2id auth, HTTP session cookies, nested folder CRUD, My Files list view | **COMPLETE** | Frontend UI shell & real folder CRUD complete. Backend auth, session cookies, DB trees complete and integrated. |
 | **Phase 2** | Chunked Upload & CAS Storage | `/data/blobs/sha256/` CAS engine, SHA-256 streaming, collision modal | **INCOMPLETE** | UI modal exists. Real chunk streaming, CAS filesystem, collision prompt modal missing. |
 | **Phase 3** | Version History | `file_versions` table, re-upload detection, Inspector Versions tab, restore API | **INCOMPLETE** | UI tab & timeline complete. Backend version tree & restore endpoints missing. Schema created. |
 | **Phase 4** | Provenance Chain & Verification | Hash-chained `provenance_events`, verification API, Inspector Provenance tab | **INCOMPLETE** | UI tab & stepper complete. Real SHA-256 event chaining & verify API missing. Schema created. |
@@ -134,8 +135,8 @@ Progress evaluated against the 16 phases defined in [`docs/CONSOLIDATED_PROJECT_
 ### Core Proof Review Gate Status: **NOT READY (BLOCKED)**
 
 To pass the **Core Proof Review Gate**, the following criteria must be satisfied end-to-end:
-1. [ ] User registration, Argon2id password hashing, and HTTP-only session cookie management.
-2. [ ] Nested folder CRUD logic backed by SQLite `nodes` table.
+1. [x] User registration, Argon2id password hashing, and HTTP-only session cookie management.
+2. [x] Nested folder CRUD logic backed by SQLite `nodes` table.
 3. [ ] Chunked file upload streaming directly into Content-Addressed Storage (`/data/blobs/sha256/xx/yy/hash`).
 4. [ ] Upload collision modal prompt (*"Replace existing (vN)"*, *"Keep both"*, *"Cancel"*).
 5. [ ] Version creation and version restoration rollback.
@@ -146,12 +147,11 @@ To pass the **Core Proof Review Gate**, the following criteria must be satisfied
 
 ---
 
-## 7. Remaining Blockers for Phase 1
+## 7. Remaining Blockers for Phase 2
 
-The backend foundation is complete. To begin Phase 1 (Auth & Folder Navigation):
+Phase 1 (Auth & Folder Navigation) is completely finished. To begin Phase 2 (Chunked Upload & CAS Storage):
 
-1. **Auth endpoints**: Implement `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me` with Argon2id password hashing and HTTP-only session cookies.
-2. **Folder/file CRUD**: Implement `GET /api/nodes`, `POST /api/nodes`, `PATCH /api/nodes/:id`, `DELETE /api/nodes/:id` backed by the `nodes` table.
-3. **sqlc queries**: Write SQL queries for auth and node operations, generate typed Go code via `sqlc generate`.
-4. **Frontend integration**: Install TanStack Query, create API client, begin replacing `mockData.ts` reads with typed API calls.
-5. **OpenAPI expansion**: Add auth and node endpoint specifications to [`docs/openapi.yaml`](file:///Users/eyerinerror/Desktop/Projects/eunom.ia/docs/openapi.yaml).
+1. **CAS Engine**: Implement chunked file upload streaming directly into Content-Addressed Storage (`/data/blobs/sha256/xx/yy/hash`).
+2. **File Endpoints**: Build endpoints for blob creation, versioning, and file retrieval.
+3. **Frontend Uploads**: Convert `UploadModal.tsx` to call real file ingest endpoints.
+4. **Collision UI**: Implement upload collision modal prompt (*"Replace existing (vN)"*, *"Keep both"*, *"Cancel"*).
