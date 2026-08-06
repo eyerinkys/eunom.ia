@@ -3,23 +3,9 @@ import { ChevronRight, Folder } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 
 export const BreadcrumbBar: React.FC = () => {
-  const { currentFolderId, setCurrentFolderId, folders } = useEunomiaStore();
+  const { setCurrentFolderId, breadcrumbs } = useEunomiaStore();
 
-  // Reconstruct path array
-  const buildBreadcrumbs = () => {
-    const crumbs: { id: string; name: string }[] = [];
-    let curr = folders.find(f => f.id === currentFolderId);
-    while (curr) {
-      crumbs.unshift({ id: curr.id, name: curr.name });
-      curr = folders.find(f => f.id === curr?.parentId);
-    }
-    if (crumbs.length === 0 || crumbs[0].id !== 'root') {
-      crumbs.unshift({ id: 'root', name: 'ROOT' });
-    }
-    return crumbs;
-  };
-
-  const crumbs = buildBreadcrumbs();
+  const crumbs = breadcrumbs.length > 0 ? breadcrumbs : [{ id: 'root', name: 'ROOT' }];
 
   return (
     <div 

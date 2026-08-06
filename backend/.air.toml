@@ -1,0 +1,23 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/main ./cmd/server"
+  bin = "./tmp/main"
+  delay = 500
+  exclude_dir = ["tmp", "vendor", "data"]
+  include_ext = ["go"]
+  kill_delay = "0s"
+  stop_on_error = true
+
+[color]
+  build = "yellow"
+  main = "magenta"
+  watcher = "cyan"
+
+[log]
+  main_only = false
+  time = false
+
+[misc]
+  clean_on_exit = true

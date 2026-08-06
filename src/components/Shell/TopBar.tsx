@@ -10,13 +10,16 @@ export const TopBar: React.FC = () => {
     setDisplayMode, 
     setUploadModalOpen,
     setActiveTab,
-    addFolder
+    createFolder,
+    currentFolderId
   } = useEunomiaStore();
 
-  const handleNewFolder = () => {
+  const handleNewFolder = async () => {
     const name = prompt('Enter new folder name:');
-    if (name && name.trim()) {
-      addFolder(name.trim().toUpperCase());
+    if (name && name.trim() && currentFolderId) {
+      await createFolder(name.trim(), currentFolderId);
+    } else if (!currentFolderId) {
+      alert("No folder is currently selected.");
     }
   };
 

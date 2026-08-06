@@ -45,12 +45,41 @@ func NewRouter(db *sql.DB, corsOrigin string, logger *slog.Logger) http.Handler 
 		// Health check — no auth required.
 		r.Get("/health", HealthHandler(db))
 
-		// Future route groups will be mounted here:
-		// r.Route("/auth", authRoutes)
-		// r.Route("/nodes", nodeRoutes)
-		// r.Route("/files", fileRoutes)
-		// r.Route("/uploads", uploadRoutes)
-		// r.Route("/versions", versionRoutes)
+		// Auth routes
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/register", RegisterHandler(db))
+			r.Post("/login", LoginHandler(db))
+			r.Post("/logout", LogoutHandler(db))
+			r.With(RequireAuth(db)).Get("/me", MeHandler(db))
+		})
+
+		// Nodes routes (protected)
+		r.Route("/nodes", func(r chi.Router) {
+			r.Use(RequireAuth(db))
+			r.Get("/", ListNodesHandler(db))
+			r.Post("/", CreateFolderHandler(db))
+			r.Patch("/{id}", UpdateNodeHandler(db))
+			r.Delete("/{id}", DeleteNodeHandler(db))
+		})
+
+		// Files & Uploads routes (protected)
+		r.Route("/files", func(r chi.Router) {
+			r.Use(RequireAuth(db))
+			r.Post("/download-zip", DownloadZipHandler(db))
+			r.Get("/{nodeId}/download", DownloadFileHandler(db))
+			r.Get("/{nodeId}/versions", ListVersionsHandler(db))
+			r.Post("/{nodeId}/versions/{versionId}/restore", RestoreVersionHandler(db))
+			r.Get("/{nodeId}/versions/{versionId}/download", DownloadSpecificVersionHandler(db))
+		})
+
+		r.Route("/uploads", func(r chi.Router) {
+			r.Use(RequireAuth(db))
+			r.Post("/", CreateUploadSessionHandler(db))
+			r.Put("/{sessionId}", UploadChunkHandler(db))
+			r.Post("/{sessionId}/complete", CompleteUploadHandler(db))
+			r.Delete("/{sessionId}", CancelUploadHandler(db))
+		})
+
 		// r.Route("/provenance", provenanceRoutes)
 		// r.Route("/storage", storageRoutes)
 		// r.Route("/graph", graphRoutes)

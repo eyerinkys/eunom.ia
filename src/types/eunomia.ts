@@ -4,6 +4,31 @@ export type DisplayMode = 'table' | 'grid';
 
 export type ProvenanceStatus = 'VALID' | 'TAMPERED' | 'UNVERIFIED';
 
+export interface User {
+  id: string;
+  email: string;
+  displayName: string;
+}
+
+export interface ApiNode {
+  id: string;
+  name: string;
+  type: 'folder' | 'file';
+  parentId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  mimeType?: string;
+  sizeBytes?: number;
+  ownerName?: string;
+  hash?: string;
+  versionCount?: number;
+}
+
+export interface Breadcrumb {
+  id: string;
+  name: string;
+}
+
 export interface FileVersion {
   id: string;
   version: string; // e.g. 'v1', 'v2'

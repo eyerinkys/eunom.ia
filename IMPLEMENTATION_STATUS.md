@@ -12,8 +12,9 @@ Eunomia is a local-first Content-Addressable Storage (CAS) file management & cry
 
 1. **Complete Visual Shell** — React 19 + TypeScript + Vite 8 frontend with the **Mineral Archival** design system, all primary screens navigable in-browser.
 2. **Go Backend Foundation** — Go 1.26 modular monolith with Chi router, SQLite in WAL mode, Goose migrations (8 Tier 1A tables), structured logging, CORS, and a verified health endpoint.
+3. **Phase 1 Complete** — Full authentication and folder navigation implementation connecting the frontend and backend.
 
-The frontend data layer still operates on in-memory mock state ([`src/data/mockData.ts`](file:///Users/eyerinerror/Desktop/Projects/eunom.ia/src/data/mockData.ts)). No authentication, file upload, or CAS blob ingestion endpoints exist yet. The backend foundation is ready for Phase 1 (Auth & Folder Navigation) implementation.
+The frontend data layer uses a mixture of real folder/auth API integrations and mock state for files/activities. The backend foundation is complete and Phase 1 is fully integrated.
 
 ---
 
@@ -111,9 +112,9 @@ Progress evaluated against the 16 phases defined in [`docs/CONSOLIDATED_PROJECT_
 |---|---|---|---|---|
 | **Phase 0A** | Product & Interface Definition | Design system, wireframes, component tokens, motion spec | **COMPLETE** | `DESIGN.md` & visual shell implemented in React components. |
 | **Phase 0B** | Technical Foundation | Go backend module, Vite+React frontend, `openapi.yaml`, SQLite migrations | **COMPLETE** | Go module, Chi router, SQLite WAL, Goose migrations, health endpoint, OpenAPI spec, Vite proxy all verified. |
-| **Phase 1** | Auth & Folder Navigation | Argon2id auth, HTTP session cookies, nested folder CRUD, My Files list view | **INCOMPLETE** | Frontend UI shell & mock folder CRUD complete. Backend auth, session cookies, DB trees missing. |
-| **Phase 2** | Chunked Upload & CAS Storage | `/data/blobs/sha256/` CAS engine, SHA-256 streaming, collision modal | **INCOMPLETE** | UI modal exists. Real chunk streaming, CAS filesystem, collision prompt modal missing. |
-| **Phase 3** | Version History | `file_versions` table, re-upload detection, Inspector Versions tab, restore API | **INCOMPLETE** | UI tab & timeline complete. Backend version tree & restore endpoints missing. Schema created. |
+| **Phase 1** | Auth & Folder Navigation | Argon2id auth, HTTP session cookies, nested folder CRUD, My Files list view | **COMPLETE** | Frontend UI shell & real folder CRUD complete. Backend auth, session cookies, DB trees complete and integrated. |
+| **Phase 2** | Chunked Upload & CAS Storage | `/data/blobs/sha256/` CAS engine, SHA-256 streaming, collision modal | **COMPLETE** | CAS filesystem, chunk streaming, and upload collision modal all implemented and verified. |
+| **Phase 3** | Version History | `file_versions` table, re-upload detection, Inspector Versions tab, restore API | **COMPLETE** | Real backend version tree, restore API, unchanged-content detection, and UI versions tab connected. |
 | **Phase 4** | Provenance Chain & Verification | Hash-chained `provenance_events`, verification API, Inspector Provenance tab | **INCOMPLETE** | UI tab & stepper complete. Real SHA-256 event chaining & verify API missing. Schema created. |
 | **Phase 5** | PDF Export & Core Animations | Server-side Go PDF generator (`gopdf`/`maroto`), Anime.js core motion integration | **INCOMPLETE** | UI export trigger pops `alert()`. Go PDF generator & Anime.js integration missing. |
 | **GATE 1** | **Core Proof Review Gate** | **Tier 1A End-to-End Core Proof Walkthrough** | **BLOCKED** | Requires completion of backend Phases 1 through 5. |
@@ -134,11 +135,11 @@ Progress evaluated against the 16 phases defined in [`docs/CONSOLIDATED_PROJECT_
 ### Core Proof Review Gate Status: **NOT READY (BLOCKED)**
 
 To pass the **Core Proof Review Gate**, the following criteria must be satisfied end-to-end:
-1. [ ] User registration, Argon2id password hashing, and HTTP-only session cookie management.
-2. [ ] Nested folder CRUD logic backed by SQLite `nodes` table.
-3. [ ] Chunked file upload streaming directly into Content-Addressed Storage (`/data/blobs/sha256/xx/yy/hash`).
-4. [ ] Upload collision modal prompt (*"Replace existing (vN)"*, *"Keep both"*, *"Cancel"*).
-5. [ ] Version creation and version restoration rollback.
+1. [x] User registration, Argon2id password hashing, and HTTP-only session cookie management.
+2. [x] Nested folder CRUD logic backed by SQLite `nodes` table.
+3. [x] Chunked file upload streaming directly into Content-Addressed Storage (`/data/blobs/sha256/xx/yy/hash`).
+4. [x] Upload collision modal prompt (*"Replace existing (vN)"*, *"Keep both"*, *"Cancel"*).
+5. [x] Version creation and version restoration rollback.
 6. [ ] Interactive provenance verification backed by SHA-256 event chaining.
 7. [ ] Tamper detection flagging modified or corrupted hashes.
 8. [ ] Server-side Go PDF provenance report export.
@@ -146,12 +147,11 @@ To pass the **Core Proof Review Gate**, the following criteria must be satisfied
 
 ---
 
-## 7. Remaining Blockers for Phase 1
+## 7. Remaining Blockers for Phase 4
 
-The backend foundation is complete. To begin Phase 1 (Auth & Folder Navigation):
+Phases 1-3 (Auth, Folders, Uploads, Versions) are completely finished. To begin Phase 4 (Provenance Chain & Verification):
 
-1. **Auth endpoints**: Implement `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me` with Argon2id password hashing and HTTP-only session cookies.
-2. **Folder/file CRUD**: Implement `GET /api/nodes`, `POST /api/nodes`, `PATCH /api/nodes/:id`, `DELETE /api/nodes/:id` backed by the `nodes` table.
-3. **sqlc queries**: Write SQL queries for auth and node operations, generate typed Go code via `sqlc generate`.
-4. **Frontend integration**: Install TanStack Query, create API client, begin replacing `mockData.ts` reads with typed API calls.
-5. **OpenAPI expansion**: Add auth and node endpoint specifications to [`docs/openapi.yaml`](file:///Users/eyerinerror/Desktop/Projects/eunom.ia/docs/openapi.yaml).
+1. **SHA-256 Event Chaining**: Implement backend logic for hash-chained `provenance_events`.
+2. **Verification API**: Build endpoint to traverse the chain and verify integrity.
+3. **Inspector Provenance Tab**: Connect the frontend stepper and UI to the real verification API.
+4. **Tamper Detection**: Add logic to flag modified or corrupted hashes (`TAMPERED` vs `VALID`).

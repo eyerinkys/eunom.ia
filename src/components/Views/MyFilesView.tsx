@@ -1,38 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Folder, 
-  FileText, 
   Download, 
-  ChevronRight, 
   Filter,
+  ArrowUpDown,
+  Edit2,
+  Trash2,
+  Move,
+  FileText,
   FileCode,
-  Archive,
-  ArrowUpDown
+  Archive
 } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
-import type { FileItem } from '../../types/eunomia';
+import type { ApiNode } from '../../types/eunomia';
+import { getDownloadUrl, downloadZip } from '../../api/files';
+
+const getFileIcon = (type: string) => {
+  switch (type) {
+    case 'code': return <FileCode size={24} color="var(--accent-bronze)" />;
+    case 'archive': return <Archive size={24} color="var(--accent-bronze)" />;
+    default: return <FileText size={24} color="var(--accent-bronze)" />;
+  }
+};
 
 export const MyFilesView: React.FC = () => {
   const { 
     files, 
-    folders, 
+    folderNodes,
+    isFoldersLoading,
+    foldersError,
     currentFolderId, 
     setCurrentFolderId, 
     displayMode, 
     searchQuery, 
     selectedFileIds, 
-    selectFile, 
     toggleFileSelection,
     clearSelection,
     selectedCategoryFilter,
-    setSelectedCategoryFilter
+    setSelectedCategoryFilter,
+    renameFolder,
+    deleteFolder,
+    moveFolder,
+    uploadFile,
+    selectFile,
+    deleteFile
   } = useEunomiaStore();
 
-  // Filter current folder items
-  const currentFolders = folders.filter(f => f.parentId === currentFolderId);
-  let currentFiles = files.filter(f => f.folderId === currentFolderId);
+  const [renamingFolderId, setRenamingFolderId] = useState<string | null>(null);
+  const [renameInput, setRenameInput] = useState('');
 
-  // Search query filter
+  // Search query filter (only for mock files in phase 1)
+  let currentFiles = files.filter(f => f.folderId === currentFolderId);
   if (searchQuery.trim()) {
     const q = searchQuery.toLowerCase();
     currentFiles = files.filter(f => 
@@ -61,13 +79,33 @@ export const MyFilesView: React.FC = () => {
     }
   };
 
-  const getFileIcon = (type: FileItem['type']) => {
-    switch (type) {
-      case 'markdown': return <FileText size={16} color="var(--accent-bronze)" />;
-      case 'pdf': return <FileText size={16} color="var(--accent-red)" />;
-      case 'code': return <FileCode size={16} color="var(--accent-copper)" />;
-      case 'archive': return <Archive size={16} color="var(--accent-plum)" />;
-      default: return <FileText size={16} color="var(--accent-bronze)" />;
+
+
+  const handleRenameSubmit = async (folder: ApiNode) => {
+    if (renameInput.trim() && renameInput !== folder.name) {
+      await renameFolder(folder.id, renameInput);
+    }
+    setRenamingFolderId(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    droppedFiles.forEach(file => {
+      uploadFile(file);
+    });
+  };
+
+  const handleDownloadSelected = () => {
+    if (selectedFileIds.length === 0) return;
+    if (selectedFileIds.length === 1) {
+      window.open(getDownloadUrl(selectedFileIds[0]), '_blank');
+    } else {
+      downloadZip(selectedFileIds).catch(err => alert(err.message));
     }
   };
 
@@ -86,7 +124,6 @@ export const MyFilesView: React.FC = () => {
           flexShrink: 0
         }}
       >
-        {/* Category Filters */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span className="font-mono" style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Filter size={12} /> FILTER:
@@ -95,6 +132,8 @@ export const MyFilesView: React.FC = () => {
             <button
               key={cat}
               onClick={() => setSelectedCategoryFilter(cat)}
+              disabled={true}
+              title="File upload and filtering coming in Phase 2"
               style={{
                 padding: '4px 10px',
                 backgroundColor: selectedCategoryFilter === cat ? 'var(--accent-bronze)' : 'var(--bg-canvas)',
@@ -104,7 +143,8 @@ export const MyFilesView: React.FC = () => {
                 fontSize: '11px',
                 fontWeight: 600,
                 textTransform: 'uppercase',
-                cursor: 'pointer'
+                cursor: 'not-allowed',
+                opacity: 0.6
               }}
             >
               {cat}
@@ -112,7 +152,6 @@ export const MyFilesView: React.FC = () => {
           ))}
         </div>
 
-        {/* Aggregate Selection Action Bar */}
         {selectedFileIds.length > 0 && (
           <div 
             style={{ 
@@ -130,9 +169,20 @@ export const MyFilesView: React.FC = () => {
             <button 
               className="btn-secondary" 
               style={{ padding: '2px 8px', fontSize: '10px' }}
-              onClick={() => alert(`Downloading ${selectedFileIds.length} file blobs as TAR.GZ archive...`)}
+              onClick={handleDownloadSelected}
             >
               <Download size={12} /> Download Selected
+            </button>
+            <button 
+              className="btn-secondary" 
+              style={{ padding: '2px 8px', fontSize: '10px', color: '#BA1A1A', borderColor: '#F2B8B5', backgroundColor: '#FFF0F0' }}
+              onClick={() => {
+                if (confirm(`Delete ${selectedFileIds.length} selected item(s)?`)) {
+                  selectedFileIds.forEach(id => deleteFile(id));
+                }
+              }}
+            >
+              <Trash2 size={12} /> Delete Selected
             </button>
             <button 
               className="btn-secondary" 
@@ -146,19 +196,34 @@ export const MyFilesView: React.FC = () => {
       </div>
 
       {/* Main Workspace Area */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+      <div 
+        style={{ flex: 1, overflowY: 'auto', padding: '20px' }}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
         
-        {/* Folders Section (if any) */}
-        {currentFolders.length > 0 && (
+        {foldersError && (
+          <div className="badge-tampered" style={{ marginBottom: '24px', padding: '12px' }}>
+            {foldersError}
+          </div>
+        )}
+
+        {isFoldersLoading ? (
+          <div style={{ display: 'flex', gap: '12px' }}>
+            {/* Skeletons */}
+            {[1, 2, 3].map(i => (
+              <div key={i} className="rule-all" style={{ width: '220px', height: '46px', backgroundColor: 'var(--bg-panel)', opacity: 0.5 }} />
+            ))}
+          </div>
+        ) : folderNodes.length > 0 ? (
           <div style={{ marginBottom: '24px' }}>
             <h3 className="font-serif" style={{ fontSize: '14px', fontWeight: 700, marginBottom: '10px', color: 'var(--text-secondary)' }}>
-              DIRECTORIES ({currentFolders.length})
+              DIRECTORIES ({folderNodes.length})
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px' }}>
-              {currentFolders.map(folder => (
+              {folderNodes.map(folder => (
                 <div
                   key={folder.id}
-                  onClick={() => setCurrentFolderId(folder.id)}
                   className="rule-all row-hover"
                   style={{
                     padding: '12px 14px',
@@ -166,21 +231,69 @@ export const MyFilesView: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    cursor: 'pointer'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Folder size={18} color="var(--accent-bronze)" />
-                    <span className="font-mono" style={{ fontSize: '12px', fontWeight: 700 }}>
-                      {folder.name}
-                    </span>
+                  {renamingFolderId === folder.id ? (
+                    <input 
+                      autoFocus
+                      value={renameInput}
+                      onChange={e => setRenameInput(e.target.value)}
+                      onBlur={() => handleRenameSubmit(folder)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') handleRenameSubmit(folder);
+                        if (e.key === 'Escape') setRenamingFolderId(null);
+                      }}
+                      className="font-mono rule-all"
+                      style={{ fontSize: '12px', padding: '2px 6px', width: '120px' }}
+                    />
+                  ) : (
+                    <div 
+                      style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flex: 1 }}
+                      onClick={() => setCurrentFolderId(folder.id)}
+                    >
+                      <Folder size={18} color="var(--accent-bronze)" />
+                      <span className="font-mono" style={{ fontSize: '12px', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {folder.name}
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <button 
+                      onClick={() => {
+                        setRenamingFolderId(folder.id);
+                        setRenameInput(folder.name);
+                      }} 
+                      title="Rename"
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                    >
+                      <Edit2 size={12} />
+                    </button>
+                    <button 
+                      onClick={() => {
+                        const target = prompt('Enter new parent folder ID (or "root"):');
+                        if (target) moveFolder(folder.id, target);
+                      }}
+                      title="Move"
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                    >
+                      <Move size={12} />
+                    </button>
+                    <button 
+                      onClick={() => {
+                        if (confirm(`Delete folder "${folder.name}"?`)) deleteFolder(folder.id);
+                      }}
+                      title="Delete"
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-red)' }}
+                    >
+                      <Trash2 size={12} />
+                    </button>
                   </div>
-                  <ChevronRight size={14} color="var(--text-muted)" />
                 </div>
               ))}
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* Files Display: Table Mode */}
         {displayMode === 'table' ? (
@@ -209,48 +322,44 @@ export const MyFilesView: React.FC = () => {
                 {currentFiles.length === 0 ? (
                   <tr>
                     <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                      No files in this folder matching filters. Click UPLOAD FILE to ingest data.
+                      No files found. Drag and drop files here to upload.
                     </td>
                   </tr>
                 ) : (
                   currentFiles.map((file) => {
                     const isSelected = selectedFileIds.includes(file.id);
                     return (
-                      <tr
-                        key={file.id}
-                        onClick={() => selectFile(file)}
-                        className={`rule-b-light row-hover ${isSelected ? 'row-selected' : ''}`}
+                      <tr 
+                        key={file.id} 
+                        className={`rule-b row-hover ${isSelected ? 'row-selected' : ''}`}
                         style={{ cursor: 'pointer' }}
+                        onClick={(e) => {
+                          if (e.target instanceof HTMLInputElement) return; // let checkbox handle it
+                          selectFile(file, e.metaKey || e.ctrlKey);
+                        }}
                       >
-                        <td style={{ padding: '10px 12px' }} onClick={(e) => { e.stopPropagation(); toggleFileSelection(file.id); }}>
+                        <td style={{ padding: '10px 12px' }}>
                           <input 
                             type="checkbox" 
-                            checked={isSelected} 
-                            onChange={() => {}} 
+                            checked={isSelected}
+                            onChange={() => toggleFileSelection(file.id)}
                             style={{ cursor: 'pointer' }}
                           />
                         </td>
-                        <td style={{ padding: '10px 12px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            {getFileIcon(file.type)}
-                            <span style={{ fontWeight: 600 }}>{file.name}</span>
-                            {file.provenanceStatus === 'VALID' ? (
-                              <span className="badge-valid">VERIFIED</span>
-                            ) : (
-                              <span className="badge-tampered">ALERT</span>
-                            )}
+                        <td style={{ padding: '10px 12px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <FileText size={14} color="var(--accent-bronze)" />
+                            {file.name}
                           </div>
                         </td>
-                        <td className="font-mono" style={{ padding: '10px 12px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-                          {file.extension.toUpperCase()}
+                        <td style={{ padding: '10px 12px', color: 'var(--text-muted)' }}>
+                          <span className="badge-valid" style={{ backgroundColor: 'var(--bg-panel)', color: 'var(--text-secondary)' }}>
+                            {file.type}
+                          </span>
                         </td>
-                        <td style={{ padding: '10px 12px', fontSize: '12px' }}>{file.owner}</td>
-                        <td className="font-mono" style={{ padding: '10px 12px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-                          {file.modifiedAt}
-                        </td>
-                        <td className="font-mono tabular-nums" style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 600 }}>
-                          {file.sizeFormatted}
-                        </td>
+                        <td style={{ padding: '10px 12px' }}>{file.owner}</td>
+                        <td style={{ padding: '10px 12px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{file.modifiedAt}</td>
+                        <td style={{ padding: '10px 12px', textAlign: 'right', fontFamily: 'var(--font-mono)' }}>{file.sizeFormatted}</td>
                       </tr>
                     );
                   })
@@ -261,22 +370,17 @@ export const MyFilesView: React.FC = () => {
         ) : (
           /* Grid View Mode */
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
-            {currentFiles.map((file) => {
-              const isSelected = selectedFileIds.includes(file.id);
-              return (
-                <div
+            {currentFiles.length === 0 ? (
+              <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)', gridColumn: '1 / -1' }}>
+                No files found. Drag and drop files here to upload.
+              </div>
+            ) : (
+              currentFiles.map(file => (
+                <div 
                   key={file.id}
-                  onClick={() => selectFile(file)}
-                  className={`rule-all row-hover ${isSelected ? 'row-selected' : ''}`}
-                  style={{
-                    backgroundColor: 'var(--bg-panel)',
-                    padding: '16px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    minHeight: '160px'
-                  }}
+                  className={`rule-all row-hover ${selectedFileIds.includes(file.id) ? 'row-selected' : ''}`}
+                  style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', cursor: 'pointer' }}
+                  onClick={(e) => selectFile(file, e.metaKey || e.ctrlKey)}
                 >
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
@@ -300,8 +404,8 @@ export const MyFilesView: React.FC = () => {
                     <span style={{ fontWeight: 700 }}>{file.sizeFormatted}</span>
                   </div>
                 </div>
-              );
-            })}
+              ))
+            )}
           </div>
         )}
       </div>

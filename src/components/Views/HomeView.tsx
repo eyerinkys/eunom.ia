@@ -14,7 +14,7 @@ import { useEunomiaStore } from '../../store/useEunomiaStore';
 export const HomeView: React.FC = () => {
   const { 
     files, 
-    folders, 
+    folderNodes, 
     activities, 
     setActiveTab, 
     setCurrentFolderId, 
@@ -77,7 +77,7 @@ export const HomeView: React.FC = () => {
             <span className="font-mono" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>FOLDERS & PATHS</span>
             <Layers size={16} color="var(--accent-plum)" />
           </div>
-          <h3 className="font-serif" style={{ fontSize: '28px', fontWeight: 700 }}>{folders.length} Directories</h3>
+          <h3 className="font-serif" style={{ fontSize: '28px', fontWeight: 700 }}>{folderNodes.length} Directories</h3>
           <p className="font-mono" style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Graph Physics Disabled</p>
         </div>
       </div>
@@ -140,7 +140,7 @@ export const HomeView: React.FC = () => {
             Primary Archival Folders
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-            {folders.filter(f => f.parentId === 'root').map((folder) => (
+            {folderNodes.slice(0, 3).map((folder: any) => (
               <div
                 key={folder.id}
                 onClick={() => {
@@ -159,7 +159,7 @@ export const HomeView: React.FC = () => {
                   <span className="font-mono" style={{ fontSize: '12px', fontWeight: 700 }}>{folder.name}</span>
                 </div>
                 <span className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
-                  {folder.itemCount} Items • Modified {folder.modifiedAt.slice(0, 10)}
+                  Modified {folder.updatedAt?.slice(0, 10)}
                 </span>
               </div>
             ))}
