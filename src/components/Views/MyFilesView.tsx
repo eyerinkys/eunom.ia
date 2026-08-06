@@ -175,7 +175,7 @@ export const MyFilesView: React.FC = () => {
             </button>
             <button 
               className="btn-secondary" 
-              style={{ padding: '2px 8px', fontSize: '10px', color: '#BA1A1A', borderColor: '#F2B8B5', backgroundColor: '#FFF0F0' }}
+              style={{ padding: '2px 8px', fontSize: '10px', color: '#FF8888', borderColor: 'var(--accent-red)', backgroundColor: 'rgba(224, 62, 62, 0.15)' }}
               onClick={() => {
                 if (confirm(`Delete ${selectedFileIds.length} selected item(s)?`)) {
                   selectedFileIds.forEach(id => deleteFile(id));

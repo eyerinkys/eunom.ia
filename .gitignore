@@ -31,3 +31,4 @@ backend/data/
 
 # Go build artifacts
 backend/eunomia
+backend/tmp/

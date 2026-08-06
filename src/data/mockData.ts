@@ -23,8 +23,6 @@ export const INITIAL_FILES: FileItem[] = [
     parentHash: '7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069',
     provenanceStatus: 'VALID',
     versionCount: 3,
-    authorSignature: 'SIG_RSA4096_ED25519_OK_0x82A1',
-    opfsCached: true,
     contentSnippet: '# Quantum Metrology in Cryogenic Environments\n\n## Abstract\nWe present phase estimation limits using entangled photons in N-path interferometry...',
     versions: [
       {
@@ -79,8 +77,6 @@ export const INITIAL_FILES: FileItem[] = [
     hash: 'a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0',
     provenanceStatus: 'VALID',
     versionCount: 1,
-    authorSignature: 'SIG_HARDWARE_HSM_0x992B',
-    opfsCached: true,
     versions: [
       {
         id: 'v1',
@@ -109,8 +105,6 @@ export const INITIAL_FILES: FileItem[] = [
     hash: 'f9e8d7c6b5a432109876543210fedcba9876543210fedcba9876543210fedcba',
     provenanceStatus: 'VALID',
     versionCount: 2,
-    authorSignature: 'SIG_ED25519_ROSTOVA_OK',
-    opfsCached: false,
     versions: [
       {
         id: 'v2',
@@ -139,8 +133,6 @@ export const INITIAL_FILES: FileItem[] = [
     hash: 'deadbeef1234567890badbeef00112233445566778899aabbccddeeff0011223',
     provenanceStatus: 'TAMPERED',
     versionCount: 2,
-    authorSignature: 'SIG_INVALID_HASH_MISMATCH',
-    opfsCached: false,
     contentSnippet: 'CRITICAL WARNING: Unverified edits detected in step 4 block hash calculation.',
     versions: [
       {
@@ -170,8 +162,6 @@ export const INITIAL_FILES: FileItem[] = [
     hash: '556677889900aabbccddeeff11223344556677889900aabbccddeeff11223344',
     provenanceStatus: 'VALID',
     versionCount: 1,
-    authorSignature: 'SIG_MILLER_DEPT_OK',
-    opfsCached: true,
     versions: []
   },
   {
@@ -188,8 +178,6 @@ export const INITIAL_FILES: FileItem[] = [
     hash: '9900aabbccddeeff11223344556677889900aabbccddeeff1122334455667788',
     provenanceStatus: 'VALID',
     versionCount: 1,
-    authorSignature: 'SIG_MILLER_DEPT_OK',
-    opfsCached: true,
     versions: []
   },
   {
@@ -206,8 +194,6 @@ export const INITIAL_FILES: FileItem[] = [
     hash: '3344556677889900aabbccddeeff11223344556677889900aabbccddeeff1122',
     provenanceStatus: 'VALID',
     versionCount: 1,
-    authorSignature: 'SIG_SARAH_ARCHIVE_OK',
-    opfsCached: false,
     versions: []
   }
 ];

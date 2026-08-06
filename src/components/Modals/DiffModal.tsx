@@ -102,10 +102,10 @@ export const DiffModal: React.FC = () => {
             </span>
             {isTextFile && (
               <>
-                <span className="font-mono" style={{ fontSize: '10px', backgroundColor: '#E2F0D9', color: '#276A3C', padding: '1px 6px', borderRadius: '3px', fontWeight: 600 }}>
+                <span className="font-mono" style={{ fontSize: '10px', backgroundColor: 'rgba(39, 83, 77, 0.4)', color: '#88F0DC', border: '1px solid #27534D', padding: '1px 6px', borderRadius: '3px', fontWeight: 600 }}>
                   +{additions} additions
                 </span>
-                <span className="font-mono" style={{ fontSize: '10px', backgroundColor: '#FADBD8', color: '#78281F', padding: '1px 6px', borderRadius: '3px', fontWeight: 600 }}>
+                <span className="font-mono" style={{ fontSize: '10px', backgroundColor: 'rgba(224, 62, 62, 0.3)', color: '#FF8888', border: '1px solid var(--accent-red)', padding: '1px 6px', borderRadius: '3px', fontWeight: 600 }}>
                   -{deletions} deletions
                 </span>
               </>
@@ -121,7 +121,7 @@ export const DiffModal: React.FC = () => {
                   padding: '3px 8px',
                   fontSize: '10px',
                   backgroundColor: viewMode === 'unified' ? 'var(--accent-bronze)' : 'transparent',
-                  color: viewMode === 'unified' ? '#FFF' : 'var(--text-primary)'
+                  color: viewMode === 'unified' ? '#11161D' : 'var(--text-primary)'
                 }}
               >
                 Unified Line Diff
@@ -133,7 +133,7 @@ export const DiffModal: React.FC = () => {
                   padding: '3px 8px',
                   fontSize: '10px',
                   backgroundColor: viewMode === 'split' ? 'var(--accent-bronze)' : 'transparent',
-                  color: viewMode === 'split' ? '#FFF' : 'var(--text-primary)'
+                  color: viewMode === 'split' ? '#11161D' : 'var(--text-primary)'
                 }}
               >
                 Side-by-Side
@@ -144,8 +144,8 @@ export const DiffModal: React.FC = () => {
 
         {/* Diff View Area */}
         {!isTextFile ? (
-          <div style={{ flex: 1, padding: '16px', border: '1.5px solid #171A1F', borderRadius: '4px', backgroundColor: '#FAFBFD', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ backgroundColor: '#F0F4F8', border: '1px solid #D0D7DE', borderRadius: '4px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ flex: 1, padding: '16px', border: 'var(--border-rule)', borderRadius: '2px', backgroundColor: 'var(--bg-canvas)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ backgroundColor: 'var(--bg-panel)', border: 'var(--border-rule)', borderRadius: '2px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <FileText size={20} color="var(--accent-bronze)" />
               <div>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -158,8 +158,8 @@ export const DiffModal: React.FC = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', flex: 1 }}>
-              <div style={{ border: '1.5px solid #171A1F', borderRadius: '4px', padding: '16px', backgroundColor: '#FFF5F5' }}>
-                <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: '#C5221F', display: 'block', marginBottom: '12px' }}>
+              <div style={{ border: 'var(--border-rule)', borderRadius: '2px', padding: '16px', backgroundColor: 'rgba(224, 62, 62, 0.1)' }}>
+                <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: '#FF8888', display: 'block', marginBottom: '12px' }}>
                   VERSION {diffComparison.oldVersion} (PREVIOUS SNAPSHOT)
                 </span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px' }}>
@@ -178,8 +178,8 @@ export const DiffModal: React.FC = () => {
                 </div>
               </div>
 
-              <div style={{ border: '1.5px solid #171A1F', borderRadius: '4px', padding: '16px', backgroundColor: '#F6FBF7' }}>
-                <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: '#137333', display: 'block', marginBottom: '12px' }}>
+              <div style={{ border: 'var(--border-rule)', borderRadius: '2px', padding: '16px', backgroundColor: 'rgba(39, 83, 77, 0.1)' }}>
+                <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: '#88F0DC', display: 'block', marginBottom: '12px' }}>
                   VERSION {diffComparison.newVersion} (ACTIVE SNAPSHOT)
                 </span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px' }}>
@@ -200,14 +200,14 @@ export const DiffModal: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div style={{ flex: 1, overflowY: 'auto', border: '1.5px solid #171A1F', borderRadius: '4px', backgroundColor: '#FAFBFD', minHeight: '200px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', border: 'var(--border-rule)', borderRadius: '2px', backgroundColor: 'var(--bg-canvas)', minHeight: '200px' }}>
             {viewMode === 'unified' ? (
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', lineHeight: 1.6 }}>
                 {diffLines.map((line, idx) => {
                   const isAdded = line.type === 'added';
                   const isRemoved = line.type === 'removed';
-                  const bgColor = isAdded ? '#E6F4EA' : isRemoved ? '#FCE8E6' : 'transparent';
-                  const textColor = isAdded ? '#137333' : isRemoved ? '#C5221F' : 'var(--text-primary)';
+                  const bgColor = isAdded ? 'rgba(39, 83, 77, 0.3)' : isRemoved ? 'rgba(224, 62, 62, 0.25)' : 'transparent';
+                  const textColor = isAdded ? '#88F0DC' : isRemoved ? '#FF8888' : 'var(--text-primary)';
 
                   return (
                     <div 
@@ -219,7 +219,7 @@ export const DiffModal: React.FC = () => {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        borderBottom: '1px solid rgba(0,0,0,0.03)'
+                        borderBottom: '1px solid rgba(255,255,255,0.05)'
                       }}
                     >
                       <span style={{ userSelect: 'none', opacity: 0.8, width: '16px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
@@ -234,19 +234,19 @@ export const DiffModal: React.FC = () => {
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', height: '100%' }}>
-                <div style={{ padding: '12px', borderRight: '1px solid #E1E2E9', backgroundColor: '#FFF5F5', overflowY: 'auto' }}>
-                  <span className="font-mono" style={{ fontSize: '10px', fontWeight: 700, color: '#C5221F', display: 'block', marginBottom: '8px' }}>
+                <div style={{ padding: '12px', borderRight: 'var(--border-rule)', backgroundColor: 'rgba(224, 62, 62, 0.1)', overflowY: 'auto' }}>
+                  <span className="font-mono" style={{ fontSize: '10px', fontWeight: 700, color: '#FF8888', display: 'block', marginBottom: '8px' }}>
                     VERSION {diffComparison.oldVersion}
                   </span>
-                  <pre style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', whiteSpace: 'pre-wrap', color: '#C5221F', margin: 0 }}>
+                  <pre style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', whiteSpace: 'pre-wrap', color: '#FF8888', margin: 0 }}>
                     {oldText}
                   </pre>
                 </div>
-                <div style={{ padding: '12px', backgroundColor: '#F6FBF7', overflowY: 'auto' }}>
-                  <span className="font-mono" style={{ fontSize: '10px', fontWeight: 700, color: '#137333', display: 'block', marginBottom: '8px' }}>
+                <div style={{ padding: '12px', backgroundColor: 'rgba(39, 83, 77, 0.1)', overflowY: 'auto' }}>
+                  <span className="font-mono" style={{ fontSize: '10px', fontWeight: 700, color: '#88F0DC', display: 'block', marginBottom: '8px' }}>
                     VERSION {diffComparison.newVersion}
                   </span>
-                  <pre style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', whiteSpace: 'pre-wrap', color: '#137333', margin: 0 }}>
+                  <pre style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', whiteSpace: 'pre-wrap', color: '#88F0DC', margin: 0 }}>
                     {newText}
                   </pre>
                 </div>

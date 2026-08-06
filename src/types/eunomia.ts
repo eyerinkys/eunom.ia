@@ -58,8 +58,6 @@ export interface FileItem {
   provenanceStatus: ProvenanceStatus;
   versionCount: number;
   versions: FileVersion[];
-  authorSignature: string;
-  opfsCached: boolean;
   contentSnippet?: string;
 }
 
@@ -106,3 +104,29 @@ export interface GraphNode {
   children?: string[];
   depth: number;
 }
+
+export interface ProvenanceEvent {
+  id: string;
+  nodeId: string;
+  versionId: string;
+  actorId: string;
+  actorName: string;
+  action: 'file_created' | 'version_created' | 'version_restored' | 'metadata_updated';
+  timestamp: string;
+  payloadHash: string;
+  previousEventHash: string;
+  eventHash: string;
+  blobHash: string;
+  metadata: string;
+}
+
+export interface ProvenanceVerificationResult {
+  status: 'VALID' | 'TAMPERED';
+  isValid: boolean;
+  failedEventId?: string;
+  reason?: string;
+  eventsCount: number;
+  headHash?: string;
+  verifiedAt: string;
+}
+

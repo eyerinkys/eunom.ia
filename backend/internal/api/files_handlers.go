@@ -15,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/eyerinerror/eunomia/internal/provenance"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 )
@@ -297,7 +298,7 @@ func CompleteUploadHandler(db *sql.DB) http.HandlerFunc {
 		// 5. Node Creation/Update
 		var nodeID string
 		var versionNumber int = 1
-		var prevEventHash sql.NullString
+		var isNewFile bool
 		
 		if existingNodeID != "" && req.Action == "replace" {
 			nodeID = existingNodeID
@@ -312,13 +313,8 @@ func CompleteUploadHandler(db *sql.DB) http.HandlerFunc {
 				WriteInternalError(w, err)
 				return
 			}
-			
-			err = tx.QueryRow("SELECT event_hash FROM provenance_events WHERE node_id = ? ORDER BY created_at DESC LIMIT 1", nodeID).Scan(&prevEventHash)
-			if err != nil && !errors.Is(err, sql.ErrNoRows) {
-				WriteInternalError(w, err)
-				return
-			}
 		} else {
+			isNewFile = true
 			nodeID = uuid.New().String()
 			_, err = tx.Exec("INSERT INTO nodes (id, user_id, parent_id, name, type, mime_type, created_at, updated_at) VALUES (?, ?, ?, ?, 'file', ?, ?, ?)",
 				nodeID, userID, req.FolderID, filename, mimeType, now, now)
@@ -336,18 +332,20 @@ func CompleteUploadHandler(db *sql.DB) http.HandlerFunc {
 			WriteInternalError(w, err)
 			return
 		}
-		
-		prevHashStr := ""
-		if prevEventHash.Valid {
-			prevHashStr = prevEventHash.String
+
+		// Record provenance event via the provenance engine.
+		eventAction := provenance.EventVersionCreated
+		if isNewFile {
+			eventAction = provenance.EventFileCreated
 		}
-		eventPayload := fmt.Sprintf("%s:%s:%s:%s:%s", nodeID, versionID, fullHash, prevHashStr, now)
-		eventHashBytes := sha256.Sum256([]byte(eventPayload))
-		eventHash := hex.EncodeToString(eventHashBytes[:])
-		
-		eventID := uuid.New().String()
-		_, err = tx.Exec("INSERT INTO provenance_events (id, node_id, version_id, blob_hash, previous_event_hash, event_hash, event_type, actor_id, created_at) VALUES (?, ?, ?, ?, ?, ?, 'version_created', ?, ?)",
-			eventID, nodeID, versionID, fullHash, prevEventHash, eventHash, userID, now)
+		_, err = provenance.RecordEvent(r.Context(), tx, provenance.RecordEventParams{
+			NodeID:      nodeID,
+			VersionID:   versionID,
+			ActorID:     userID,
+			Action:      eventAction,
+			PayloadHash: fullHash,
+			BlobHash:    fullHash,
+		})
 		if err != nil {
 			WriteInternalError(w, err)
 			return
@@ -623,24 +621,16 @@ func RestoreVersionHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		var prevEventHash sql.NullString
-		err = tx.QueryRow("SELECT event_hash FROM provenance_events WHERE node_id = ? ORDER BY created_at DESC LIMIT 1", nodeID).Scan(&prevEventHash)
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
-			WriteInternalError(w, err)
-			return
-		}
-
-		prevHashStr := ""
-		if prevEventHash.Valid {
-			prevHashStr = prevEventHash.String
-		}
-		eventPayload := fmt.Sprintf("%s:%s:%s:%s:%s", nodeID, newVersionID, blobHash, prevHashStr, now)
-		eventHashBytes := sha256.Sum256([]byte(eventPayload))
-		eventHash := hex.EncodeToString(eventHashBytes[:])
-
-		eventID := uuid.New().String()
-		_, err = tx.Exec("INSERT INTO provenance_events (id, node_id, version_id, blob_hash, previous_event_hash, event_hash, event_type, actor_id, created_at) VALUES (?, ?, ?, ?, ?, ?, 'version_restored', ?, ?)",
-			eventID, nodeID, newVersionID, blobHash, prevEventHash, eventHash, userID, now)
+		// Record provenance event for version restore.
+		_, err = provenance.RecordEvent(r.Context(), tx, provenance.RecordEventParams{
+			NodeID:      nodeID,
+			VersionID:   newVersionID,
+			ActorID:     userID,
+			Action:      provenance.EventVersionRestored,
+			PayloadHash: blobHash,
+			BlobHash:    blobHash,
+			Metadata:    fmt.Sprintf(`{"restoredFrom":"v%d"}`, restoredVersionNum),
+		})
 		if err != nil {
 			WriteInternalError(w, err)
 			return

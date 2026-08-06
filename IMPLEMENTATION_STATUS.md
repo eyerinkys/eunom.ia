@@ -115,7 +115,7 @@ Progress evaluated against the 16 phases defined in [`docs/CONSOLIDATED_PROJECT_
 | **Phase 1** | Auth & Folder Navigation | Argon2id auth, HTTP session cookies, nested folder CRUD, My Files list view | **COMPLETE** | Frontend UI shell & real folder CRUD complete. Backend auth, session cookies, DB trees complete and integrated. |
 | **Phase 2** | Chunked Upload & CAS Storage | `/data/blobs/sha256/` CAS engine, SHA-256 streaming, collision modal | **COMPLETE** | CAS filesystem, chunk streaming, and upload collision modal all implemented and verified. |
 | **Phase 3** | Version History | `file_versions` table, re-upload detection, Inspector Versions tab, restore API | **COMPLETE** | Real backend version tree, restore API, unchanged-content detection, and UI versions tab connected. |
-| **Phase 4** | Provenance Chain & Verification | Hash-chained `provenance_events`, verification API, Inspector Provenance tab | **INCOMPLETE** | UI tab & stepper complete. Real SHA-256 event chaining & verify API missing. Schema created. |
+| **Phase 4** | Provenance Chain & Verification | Hash-chained `provenance_events`, verification API, Inspector Provenance tab | **COMPLETE** | Full backend engine, migration 002, 10-test suite, API handlers, and Anime.js Inspector integration complete. |
 | **Phase 5** | PDF Export & Core Animations | Server-side Go PDF generator (`gopdf`/`maroto`), Anime.js core motion integration | **INCOMPLETE** | UI export trigger pops `alert()`. Go PDF generator & Anime.js integration missing. |
 | **GATE 1** | **Core Proof Review Gate** | **Tier 1A End-to-End Core Proof Walkthrough** | **BLOCKED** | Requires completion of backend Phases 1 through 5. |
 | **Phase 6** | Core UI Completion | Grid view, search bar, home screen, upload queue, recent files, loading skeletons | **PARTIAL** | Grid view, search input, home view built. Upload queue panel & skeletons missing. |
@@ -140,8 +140,8 @@ To pass the **Core Proof Review Gate**, the following criteria must be satisfied
 3. [x] Chunked file upload streaming directly into Content-Addressed Storage (`/data/blobs/sha256/xx/yy/hash`).
 4. [x] Upload collision modal prompt (*"Replace existing (vN)"*, *"Keep both"*, *"Cancel"*).
 5. [x] Version creation and version restoration rollback.
-6. [ ] Interactive provenance verification backed by SHA-256 event chaining.
-7. [ ] Tamper detection flagging modified or corrupted hashes.
+6. [x] Interactive provenance verification backed by SHA-256 event chaining.
+7. [x] Tamper detection flagging modified or corrupted hashes.
 8. [ ] Server-side Go PDF provenance report export.
 9. [ ] Zero visual regressions on the existing frontend shell.
 

@@ -1,354 +1,487 @@
 <!DOCTYPE html>
 
-<html class="h-full" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Eunomia Home Screen</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Source+Sans+3:ital,wght@0,200..900;1,200..900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                            "surface-tint": "#855311",
-                            "on-secondary-fixed-variant": "#174f45",
-                            "secondary": "#32675c",
-                            "on-secondary-fixed": "#00201a",
-                            "on-secondary-container": "#386e62",
-                            "surface": "#f8f9ff",
-                            "on-surface-variant": "#514538",
-                            "surface-variant": "#e1e2e9",
-                            "on-surface": "#191c21",
-                            "surface-container-low": "#f2f3fa",
-                            "on-primary-fixed-variant": "#673d00",
-                            "tertiary": "#6f536a",
-                            "secondary-fixed": "#b6eedf",
-                            "outline": "#837467",
-                            "on-tertiary": "#ffffff",
-                            "on-error": "#ffffff",
-                            "surface-container-highest": "#e1e2e9",
-                            "surface-container-high": "#e6e8ef",
-                            "primary-container": "#9f6926",
-                            "on-error-container": "#93000a",
-                            "on-tertiary-fixed": "#2a1427",
-                            "primary-fixed": "#ffddbb",
-                            "inverse-surface": "#2e3036",
-                            "inverse-primary": "#fcb96f",
-                            "on-tertiary-container": "#fffbff",
-                            "on-secondary": "#ffffff",
-                            "tertiary-fixed": "#fcd8f3",
-                            "on-tertiary-fixed-variant": "#583e54",
-                            "on-primary": "#ffffff",
-                            "on-background": "#191c21",
-                            "tertiary-fixed-dim": "#dfbcd7",
-                            "error": "#ba1a1a",
-                            "surface-dim": "#d8dae1",
-                            "tertiary-container": "#896b83",
-                            "primary-fixed-dim": "#fcb96f",
-                            "surface-container-lowest": "#ffffff",
-                            "background": "#f8f9ff",
-                            "on-primary-fixed": "#2b1700",
-                            "primary": "#82510e",
-                            "outline-variant": "#d5c3b3",
-                            "surface-container": "#ecedf5",
-                            "surface-bright": "#f8f9ff",
-                            "error-container": "#ffdad6",
-                            "inverse-on-surface": "#eff0f8",
-                            "on-primary-container": "#fffbff",
-                            "secondary-container": "#b6eedf",
-                            "secondary-fixed-dim": "#9bd1c3"
-                    },
-                    "borderRadius": {
-                            "DEFAULT": "0.25rem",
-                            "lg": "0.5rem",
-                            "xl": "0.75rem",
-                            "full": "9999px"
-                    },
-                    "spacing": {
-                            "lg": "40px",
-                            "sm": "16px",
-                            "rule-weight": "1.5px",
-                            "xs": "8px",
-                            "md": "24px",
-                            "base": "4px",
-                            "sidebar-width": "280px",
-                            "xl": "64px"
-                    },
-                    "fontFamily": {
-                            "body-lg": ["\"Source Sans 3\""],
-                            "headline-md": ["Playfair Display"],
-                            "body-md": ["\"Source Sans 3\""],
-                            "display-lg": ["Playfair Display"],
-                            "headline-lg": ["Playfair Display"],
-                            "label-md": ["JetBrains Mono"],
-                            "headline-sm": ["Playfair Display"],
-                            "label-lg": ["JetBrains Mono"],
-                            "body-sm": ["\"Source Sans 3\""],
-                            "label-sm": ["JetBrains Mono"]
-                    },
-                    "fontSize": {
-                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                            "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
-                            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                            "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
-                            "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-                            "label-sm": ["10px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500"}]
-                    }
-                },
-            },
-        }
-    </script>
+<html class="h-full" lang="en">
+
+<head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Eunomia Home Screen</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Source+Sans+3:ital,wght@0,200..900;1,200..900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap"
+                rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+                rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+                rel="stylesheet" />
+        <script id="tailwind-config">
+                tailwind.config = {
+                        darkMode: "class",
+                        theme: {
+                                extend: {
+                                        "colors": {
+                                                "surface-tint": "#855311",
+                                                "on-secondary-fixed-variant": "#174f45",
+                                                "secondary": "#32675c",
+                                                "on-secondary-fixed": "#00201a",
+                                                "on-secondary-container": "#386e62",
+                                                "surface": "#f8f9ff",
+                                                "on-surface-variant": "#514538",
+                                                "surface-variant": "#e1e2e9",
+                                                "on-surface": "#191c21",
+                                                "surface-container-low": "#f2f3fa",
+                                                "on-primary-fixed-variant": "#673d00",
+                                                "tertiary": "#6f536a",
+                                                "secondary-fixed": "#b6eedf",
+                                                "outline": "#837467",
+                                                "on-tertiary": "#ffffff",
+                                                "on-error": "#ffffff",
+                                                "surface-container-highest": "#e1e2e9",
+                                                "surface-container-high": "#e6e8ef",
+                                                "primary-container": "#9f6926",
+                                                "on-error-container": "#93000a",
+                                                "on-tertiary-fixed": "#2a1427",
+                                                "primary-fixed": "#ffddbb",
+                                                "inverse-surface": "#2e3036",
+                                                "inverse-primary": "#fcb96f",
+                                                "on-tertiary-container": "#fffbff",
+                                                "on-secondary": "#ffffff",
+                                                "tertiary-fixed": "#fcd8f3",
+                                                "on-tertiary-fixed-variant": "#583e54",
+                                                "on-primary": "#ffffff",
+                                                "on-background": "#191c21",
+                                                "tertiary-fixed-dim": "#dfbcd7",
+                                                "error": "#ba1a1a",
+                                                "surface-dim": "#d8dae1",
+                                                "tertiary-container": "#896b83",
+                                                "primary-fixed-dim": "#fcb96f",
+                                                "surface-container-lowest": "#ffffff",
+                                                "background": "#f8f9ff",
+                                                "on-primary-fixed": "#2b1700",
+                                                "primary": "#82510e",
+                                                "outline-variant": "#d5c3b3",
+                                                "surface-container": "#ecedf5",
+                                                "surface-bright": "#f8f9ff",
+                                                "error-container": "#ffdad6",
+                                                "inverse-on-surface": "#eff0f8",
+                                                "on-primary-container": "#fffbff",
+                                                "secondary-container": "#b6eedf",
+                                                "secondary-fixed-dim": "#9bd1c3"
+                                        },
+                                        "borderRadius": {
+                                                "DEFAULT": "0.25rem",
+                                                "lg": "0.5rem",
+                                                "xl": "0.75rem",
+                                                "full": "9999px"
+                                        },
+                                        "spacing": {
+                                                "lg": "40px",
+                                                "sm": "16px",
+                                                "rule-weight": "1.5px",
+                                                "xs": "8px",
+                                                "md": "24px",
+                                                "base": "4px",
+                                                "sidebar-width": "280px",
+                                                "xl": "64px"
+                                        },
+                                        "fontFamily": {
+                                                "body-lg": ["\"Source Sans 3\""],
+                                                "headline-md": ["Playfair Display"],
+                                                "body-md": ["\"Source Sans 3\""],
+                                                "display-lg": ["Playfair Display"],
+                                                "headline-lg": ["Playfair Display"],
+                                                "label-md": ["JetBrains Mono"],
+                                                "headline-sm": ["Playfair Display"],
+                                                "label-lg": ["JetBrains Mono"],
+                                                "body-sm": ["\"Source Sans 3\""],
+                                                "label-sm": ["JetBrains Mono"]
+                                        },
+                                        "fontSize": {
+                                                "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                                                "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                                                "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                                                "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                                                "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                                                "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                                                "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                                                "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                                                "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                                                "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                                        }
+                                },
+                        },
+                }
+        </script>
 </head>
+
 <body class="bg-surface h-full flex font-body-md text-on-surface overflow-hidden">
-<!-- SideNavBar Component -->
-<nav class="hidden md:flex flex-col w-sidebar-width h-full py-md px-sm bg-on-surface dark:bg-on-surface text-primary-fixed dark:text-primary-fixed-dim border-r-[1.5px] border-primary dark:border-primary-container shrink-0 sticky top-0">
-<div class="mb-xl px-sm">
-<h1 class="font-headline-md text-headline-md text-surface-container-lowest dark:text-surface-container-lowest">Eunomia</h1>
-<p class="font-label-md text-label-md text-surface-variant dark:text-outline-variant mt-xs">Archival System</p>
-</div>
-<div class="flex-grow space-y-sm">
-<a class="flex items-center gap-sm py-xs text-surface-container-lowest border-l-[1.5px] border-primary-container pl-sm bg-on-secondary-fixed-variant duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
-<span>Home</span>
-</a>
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">folder_open</span>
-<span>My Files</span>
-</a>
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">schedule</span>
-<span>Recent</span>
-</a>
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">star</span>
-<span>Starred</span>
-</a>
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">database</span>
-<span>Storage</span>
-</a>
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">account_tree</span>
-<span>Graph</span>
-</a>
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">cloud_download</span>
-<span>Drive Import</span>
-</a>
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">delete</span>
-<span>Trash</span>
-</a>
-</div>
-<div class="mt-auto space-y-sm pt-md border-t-[1.5px] border-surface-variant/20">
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">settings</span>
-<span>Settings</span>
-</a>
-<a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg" href="#">
-<span class="material-symbols-outlined">contact_support</span>
-<span>Support</span>
-</a>
-</div>
-</nav>
-<!-- Main Workspace -->
-<main class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-surface-container-lowest">
-<!-- Mobile TopNavBar (Fallback if sidebar hidden) -->
-<header class="md:hidden flex justify-between items-center w-full px-md h-xl max-w-full bg-surface dark:bg-surface-container-low border-b-[1.5px] border-on-surface dark:border-outline shrink-0 sticky top-0 z-10">
-<div class="flex items-center gap-md">
-<span class="font-display-lg text-display-lg text-primary dark:text-primary-fixed tracking-tight" style="font-size: 24px; line-height: 24px;">E</span>
-</div>
-<div class="flex items-center gap-sm text-primary dark:text-primary-fixed">
-<span class="material-symbols-outlined cursor-pointer hover:text-primary dark:hover:text-primary-fixed transition-colors active:opacity-80">search</span>
-<span class="material-symbols-outlined cursor-pointer hover:text-primary dark:hover:text-primary-fixed transition-colors active:opacity-80">menu</span>
-</div>
-</header>
-<!-- Canvas -->
-<div class="p-lg max-w-[1200px] mx-auto w-full">
-<header class="mb-xl flex justify-between items-end border-b-[1.5px] border-on-surface pb-md">
-<div>
-<h2 class="font-display-lg text-display-lg text-on-surface">Home</h2>
-<p class="font-body-lg text-body-lg text-on-surface-variant mt-xs">Overview of archival systems and active processes.</p>
-</div>
-<button class="bg-primary-container text-on-primary-container px-md py-xs font-label-md text-label-md hover:opacity-90 transition-opacity">
-                    NEW ARCHIVE
-                </button>
-</header>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
-<!-- Left Column (Recent Activity & Quick Access) -->
-<div class="lg:col-span-8 flex flex-col gap-lg">
-<!-- Quick Access Section -->
-<section>
-<h3 class="font-headline-sm text-headline-sm text-on-surface mb-md border-b-[1.5px] border-on-surface pb-xs">Quick Access</h3>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-[1.5px] bg-on-surface p-[1.5px]">
-<!-- Quick Link 1 -->
-<div class="bg-surface-container-lowest p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex flex-col h-full justify-between aspect-square">
-<span class="material-symbols-outlined text-primary-container mb-md group-hover:scale-110 transition-transform duration-300">description</span>
-<span class="font-label-md text-label-md text-on-surface">Q3 Transcripts</span>
-</div>
-<!-- Quick Link 2 -->
-<div class="bg-surface-container-lowest p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex flex-col h-full justify-between aspect-square">
-<span class="material-symbols-outlined text-primary-container mb-md group-hover:scale-110 transition-transform duration-300">image</span>
-<span class="font-label-md text-label-md text-on-surface">Historical Assets</span>
-</div>
-<!-- Quick Link 3 -->
-<div class="bg-surface-container-lowest p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex flex-col h-full justify-between aspect-square">
-<span class="material-symbols-outlined text-primary-container mb-md group-hover:scale-110 transition-transform duration-300">folder_shared</span>
-<span class="font-label-md text-label-md text-on-surface">Shared Drives</span>
-</div>
-<!-- Quick Link 4 -->
-<div class="bg-surface-container-lowest p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex flex-col h-full justify-between aspect-square">
-<span class="material-symbols-outlined text-primary-container mb-md group-hover:scale-110 transition-transform duration-300">auto_awesome</span>
-<span class="font-label-md text-label-md text-on-surface">AI Analysis</span>
-</div>
-</div>
-</section>
-<!-- Recent Activity Editorial -->
-<section>
-<h3 class="font-headline-sm text-headline-sm text-on-surface mb-md border-b-[1.5px] border-on-surface pb-xs flex justify-between items-center">
-                            Recent Activity
-                            <span class="font-label-sm text-label-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">VIEW ALL</span>
-</h3>
-<div class="border-[1.5px] border-on-surface bg-surface-container-lowest divide-y-[1.5px] divide-on-surface">
-<!-- Activity Item 1 -->
-<div class="p-md flex items-start gap-md hover:bg-surface-container-low transition-colors cursor-pointer">
-<div class="w-12 h-12 bg-secondary-container border-[1.5px] border-on-surface flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-on-secondary-container">cloud_sync</span>
-</div>
-<div class="flex-grow">
-<div class="flex justify-between items-baseline mb-xs">
-<h4 class="font-label-lg text-label-lg text-on-surface">Batch Import Completed</h4>
-<span class="font-label-sm text-label-sm text-on-surface-variant">10 MIN AGO</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant max-w-[600px]">Successfully ingested 4,203 documents from Legacy Drive 'Alpha'. 0 conflicts reported during metadata extraction.</p>
-<div class="mt-sm flex gap-xs">
-<span class="bg-surface-variant border-[1px] border-on-surface px-xs py-base font-label-sm text-label-sm">SYSTEM</span>
-<span class="bg-surface-variant border-[1px] border-on-surface px-xs py-base font-label-sm text-label-sm">IMPORT</span>
-</div>
-</div>
-</div>
-<!-- Activity Item 2 -->
-<div class="p-md flex items-start gap-md hover:bg-surface-container-low transition-colors cursor-pointer">
-<div class="w-12 h-12 bg-primary-fixed border-[1.5px] border-on-surface flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-on-primary-fixed">person</span>
-</div>
-<div class="flex-grow">
-<div class="flex justify-between items-baseline mb-xs">
-<h4 class="font-label-lg text-label-lg text-on-surface">Access Requested</h4>
-<span class="font-label-sm text-label-sm text-on-surface-variant">2 HRS AGO</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant max-w-[600px]">Dr. Aris Thorne requested clearance for 'Classified Archeological Findings 2023'. Pending curator approval.</p>
-<div class="mt-sm flex gap-xs">
-<button class="bg-on-surface text-surface-container-lowest px-sm py-xs font-label-sm text-label-sm hover:opacity-90">APPROVE</button>
-<button class="bg-surface-container-lowest text-on-surface border-[1.5px] border-on-surface px-sm py-xs font-label-sm text-label-sm hover:bg-surface-variant">DENY</button>
-</div>
-</div>
-</div>
-<!-- Activity Item 3 -->
-<div class="p-md flex items-start gap-md hover:bg-surface-container-low transition-colors cursor-pointer">
-<div class="w-12 h-12 bg-tertiary-fixed border-[1.5px] border-on-surface flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-on-tertiary-fixed">warning</span>
-</div>
-<div class="flex-grow">
-<div class="flex justify-between items-baseline mb-xs">
-<h4 class="font-label-lg text-label-lg text-on-surface">Data Anomaly Detected</h4>
-<span class="font-label-sm text-label-sm text-on-surface-variant">YESTERDAY</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant max-w-[600px]">Corrupted checksums found in Partition Delta. Automated restoration protocol initiated from last known good backup.</p>
-</div>
-</div>
-</div>
-</section>
-</div>
-<!-- Right Column (Storage & Metrics) -->
-<div class="lg:col-span-4 flex flex-col gap-lg">
-<!-- Storage Summary -->
-<section class="bg-surface-container-highest border-[1.5px] border-on-surface flex flex-col h-full">
-<header class="border-b-[1.5px] border-on-surface p-md">
-<h3 class="font-headline-sm text-headline-sm text-on-surface">Storage Allocation</h3>
-</header>
-<div class="p-md flex-grow flex flex-col gap-md">
-<div class="flex justify-between items-end mb-sm">
-<div>
-<span class="font-display-lg text-display-lg text-on-surface block">72.4</span>
-<span class="font-label-md text-label-md text-on-surface-variant">TERABYTES USED</span>
-</div>
-<div class="text-right">
-<span class="font-headline-sm text-headline-sm text-on-surface block">100</span>
-<span class="font-label-md text-label-md text-on-surface-variant">CAPACITY</span>
-</div>
-</div>
-<!-- Brutalist Progress Bar -->
-<div class="h-8 border-[1.5px] border-on-surface w-full flex">
-<div class="bg-primary-container h-full" style="width: 45%;"></div>
-<div class="bg-secondary-container h-full border-l-[1.5px] border-on-surface" style="width: 20%;"></div>
-<div class="bg-tertiary-fixed h-full border-l-[1.5px] border-on-surface" style="width: 7.4%;"></div>
-</div>
-<!-- Legend -->
-<div class="space-y-sm mt-sm">
-<div class="flex justify-between items-center">
-<div class="flex items-center gap-xs">
-<div class="w-3 h-3 bg-primary-container border-[1.5px] border-on-surface"></div>
-<span class="font-label-sm text-label-sm text-on-surface">DOCUMENTS</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface">45 TB</span>
-</div>
-<div class="flex justify-between items-center">
-<div class="flex items-center gap-xs">
-<div class="w-3 h-3 bg-secondary-container border-[1.5px] border-on-surface"></div>
-<span class="font-label-sm text-label-sm text-on-surface">MEDIA ASSETS</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface">20 TB</span>
-</div>
-<div class="flex justify-between items-center">
-<div class="flex items-center gap-xs">
-<div class="w-3 h-3 bg-tertiary-fixed border-[1.5px] border-on-surface"></div>
-<span class="font-label-sm text-label-sm text-on-surface">SYSTEM LOGS</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface">7.4 TB</span>
-</div>
-</div>
-</div>
-</section>
-<!-- System Status -->
-<section class="border-[1.5px] border-on-surface bg-surface-container-lowest">
-<header class="border-b-[1.5px] border-on-surface p-sm bg-surface-variant">
-<h3 class="font-label-md text-label-md text-on-surface">SYSTEM STATUS</h3>
-</header>
-<div class="p-md space-y-md">
-<div class="flex items-center justify-between">
-<span class="font-body-md text-body-md text-on-surface">Indexing Engine</span>
-<div class="flex items-center gap-xs">
-<div class="w-2 h-2 rounded-full bg-secondary"></div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">OPTIMAL</span>
-</div>
-</div>
-<div class="flex items-center justify-between border-t-[1.5px] border-surface-variant pt-md">
-<span class="font-body-md text-body-md text-on-surface">Sync Gateways</span>
-<div class="flex items-center gap-xs">
-<div class="w-2 h-2 rounded-full bg-secondary"></div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">ONLINE</span>
-</div>
-</div>
-<div class="flex items-center justify-between border-t-[1.5px] border-surface-variant pt-md">
-<span class="font-body-md text-body-md text-on-surface">Archive Node C</span>
-<div class="flex items-center gap-xs">
-<div class="w-2 h-2 rounded-full bg-primary-container"></div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">REBUILDING</span>
-</div>
-</div>
-</div>
-</section>
-</div>
-</div>
-</div>
-</main>
-</body></html>
+        <!-- SideNavBar Component -->
+        <nav
+                class="hidden md:flex flex-col w-sidebar-width h-full py-md px-sm bg-on-surface dark:bg-on-surface text-primary-fixed dark:text-primary-fixed-dim border-r-[1.5px] border-primary dark:border-primary-container shrink-0 sticky top-0">
+                <div class="mb-xl px-sm">
+                        <h1
+                                class="font-headline-md text-headline-md text-surface-container-lowest dark:text-surface-container-lowest">
+                                Eunomia</h1>
+                        <p class="font-label-md text-label-md text-surface-variant dark:text-outline-variant mt-xs">
+                                Archival System</p>
+                </div>
+                <div class="flex-grow space-y-sm">
+                        <a class="flex items-center gap-sm py-xs text-surface-container-lowest border-l-[1.5px] border-primary-container pl-sm bg-on-secondary-fixed-variant duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined"
+                                        style="font-variation-settings: 'FILL' 1;">home</span>
+                                <span>Home</span>
+                        </a>
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">folder_open</span>
+                                <span>My Files</span>
+                        </a>
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">schedule</span>
+                                <span>Recent</span>
+                        </a>
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">star</span>
+                                <span>Starred</span>
+                        </a>
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">database</span>
+                                <span>Storage</span>
+                        </a>
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">account_tree</span>
+                                <span>Graph</span>
+                        </a>
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">cloud_download</span>
+                                <span>Drive Import</span>
+                        </a>
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">delete</span>
+                                <span>Trash</span>
+                        </a>
+                </div>
+                <div class="mt-auto space-y-sm pt-md border-t-[1.5px] border-surface-variant/20">
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">settings</span>
+                                <span>Settings</span>
+                        </a>
+                        <a class="flex items-center gap-sm py-xs text-surface-variant dark:text-outline-variant pl-sm hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg"
+                                href="#">
+                                <span class="material-symbols-outlined">contact_support</span>
+                                <span>Support</span>
+                        </a>
+                </div>
+        </nav>
+        <!-- Main Workspace -->
+        <main class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-surface-container-lowest">
+                <!-- Mobile TopNavBar (Fallback if sidebar hidden) -->
+                <header
+                        class="md:hidden flex justify-between items-center w-full px-md h-xl max-w-full bg-surface dark:bg-surface-container-low border-b-[1.5px] border-on-surface dark:border-outline shrink-0 sticky top-0 z-10">
+                        <div class="flex items-center gap-md">
+                                <span class="font-display-lg text-display-lg text-primary dark:text-primary-fixed tracking-tight"
+                                        style="font-size: 24px; line-height: 24px;">E</span>
+                        </div>
+                        <div class="flex items-center gap-sm text-primary dark:text-primary-fixed">
+                                <span
+                                        class="material-symbols-outlined cursor-pointer hover:text-primary dark:hover:text-primary-fixed transition-colors active:opacity-80">search</span>
+                                <span
+                                        class="material-symbols-outlined cursor-pointer hover:text-primary dark:hover:text-primary-fixed transition-colors active:opacity-80">menu</span>
+                        </div>
+                </header>
+                <!-- Canvas -->
+                <div class="p-lg max-w-[1200px] mx-auto w-full">
+                        <header class="mb-xl flex justify-between items-end border-b-[1.5px] border-on-surface pb-md">
+                                <div>
+                                        <h2 class="font-display-lg text-display-lg text-on-surface">Home</h2>
+                                        <p class="font-body-lg text-body-lg text-on-surface-variant mt-xs">Overview of
+                                                archival systems and active processes.</p>
+                                </div>
+                                <button
+                                        class="bg-primary-container text-on-primary-container px-md py-xs font-label-md text-label-md hover:opacity-90 transition-opacity">
+                                        NEW ARCHIVE
+                                </button>
+                        </header>
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+                                <!-- Left Column (Recent Activity & Quick Access) -->
+                                <div class="lg:col-span-8 flex flex-col gap-lg">
+                                        <!-- Quick Access Section -->
+                                        <section>
+                                                <h3
+                                                        class="font-headline-sm text-headline-sm text-on-surface mb-md border-b-[1.5px] border-on-surface pb-xs">
+                                                        Quick Access</h3>
+                                                <div
+                                                        class="grid grid-cols-2 md:grid-cols-4 gap-[1.5px] bg-on-surface p-[1.5px]">
+                                                        <!-- Quick Link 1 -->
+                                                        <div
+                                                                class="bg-surface-container-lowest p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex flex-col h-full justify-between aspect-square">
+                                                                <span
+                                                                        class="material-symbols-outlined text-primary-container mb-md group-hover:scale-110 transition-transform duration-300">description</span>
+                                                                <span
+                                                                        class="font-label-md text-label-md text-on-surface">Q3
+                                                                        Transcripts</span>
+                                                        </div>
+                                                        <!-- Quick Link 2 -->
+                                                        <div
+                                                                class="bg-surface-container-lowest p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex flex-col h-full justify-between aspect-square">
+                                                                <span
+                                                                        class="material-symbols-outlined text-primary-container mb-md group-hover:scale-110 transition-transform duration-300">image</span>
+                                                                <span
+                                                                        class="font-label-md text-label-md text-on-surface">Historical
+                                                                        Assets</span>
+                                                        </div>
+                                                        <!-- Quick Link 3 -->
+                                                        <div
+                                                                class="bg-surface-container-lowest p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex flex-col h-full justify-between aspect-square">
+                                                                <span
+                                                                        class="material-symbols-outlined text-primary-container mb-md group-hover:scale-110 transition-transform duration-300">folder_shared</span>
+                                                                <span
+                                                                        class="font-label-md text-label-md text-on-surface">Shared
+                                                                        Drives</span>
+                                                        </div>
+                                                        <!-- Quick Link 4 -->
+                                                        <div
+                                                                class="bg-surface-container-lowest p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex flex-col h-full justify-between aspect-square">
+                                                                <span
+                                                                        class="material-symbols-outlined text-primary-container mb-md group-hover:scale-110 transition-transform duration-300">auto_awesome</span>
+                                                                <span
+                                                                        class="font-label-md text-label-md text-on-surface">AI
+                                                                        Analysis</span>
+                                                        </div>
+                                                </div>
+                                        </section>
+                                        <!-- Recent Activity Editorial -->
+                                        <section>
+                                                <h3
+                                                        class="font-headline-sm text-headline-sm text-on-surface mb-md border-b-[1.5px] border-on-surface pb-xs flex justify-between items-center">
+                                                        Recent Activity
+                                                        <span
+                                                                class="font-label-sm text-label-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">VIEW
+                                                                ALL</span>
+                                                </h3>
+                                                <div
+                                                        class="border-[1.5px] border-on-surface bg-surface-container-lowest divide-y-[1.5px] divide-on-surface">
+                                                        <!-- Activity Item 1 -->
+                                                        <div
+                                                                class="p-md flex items-start gap-md hover:bg-surface-container-low transition-colors cursor-pointer">
+                                                                <div
+                                                                        class="w-12 h-12 bg-secondary-container border-[1.5px] border-on-surface flex items-center justify-center shrink-0">
+                                                                        <span
+                                                                                class="material-symbols-outlined text-on-secondary-container">cloud_sync</span>
+                                                                </div>
+                                                                <div class="flex-grow">
+                                                                        <div
+                                                                                class="flex justify-between items-baseline mb-xs">
+                                                                                <h4
+                                                                                        class="font-label-lg text-label-lg text-on-surface">
+                                                                                        Batch Import Completed</h4>
+                                                                                <span
+                                                                                        class="font-label-sm text-label-sm text-on-surface-variant">10
+                                                                                        MIN AGO</span>
+                                                                        </div>
+                                                                        <p
+                                                                                class="font-body-sm text-body-sm text-on-surface-variant max-w-[600px]">
+                                                                                Successfully ingested 4,203 documents
+                                                                                from Legacy Drive 'Alpha'. 0 conflicts
+                                                                                reported during metadata extraction.</p>
+                                                                        <div class="mt-sm flex gap-xs">
+                                                                                <span
+                                                                                        class="bg-surface-variant border-[1px] border-on-surface px-xs py-base font-label-sm text-label-sm">SYSTEM</span>
+                                                                                <span
+                                                                                        class="bg-surface-variant border-[1px] border-on-surface px-xs py-base font-label-sm text-label-sm">IMPORT</span>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <!-- Activity Item 2 -->
+                                                        <div
+                                                                class="p-md flex items-start gap-md hover:bg-surface-container-low transition-colors cursor-pointer">
+                                                                <div
+                                                                        class="w-12 h-12 bg-primary-fixed border-[1.5px] border-on-surface flex items-center justify-center shrink-0">
+                                                                        <span
+                                                                                class="material-symbols-outlined text-on-primary-fixed">person</span>
+                                                                </div>
+                                                                <div class="flex-grow">
+                                                                        <div
+                                                                                class="flex justify-between items-baseline mb-xs">
+                                                                                <h4
+                                                                                        class="font-label-lg text-label-lg text-on-surface">
+                                                                                        Access Requested</h4>
+                                                                                <span
+                                                                                        class="font-label-sm text-label-sm text-on-surface-variant">2
+                                                                                        HRS AGO</span>
+                                                                        </div>
+                                                                        <p
+                                                                                class="font-body-sm text-body-sm text-on-surface-variant max-w-[600px]">
+                                                                                Dr. Aris Thorne requested clearance for
+                                                                                'Classified Archeological Findings
+                                                                                2023'. Pending curator approval.</p>
+                                                                        <div class="mt-sm flex gap-xs">
+                                                                                <button
+                                                                                        class="bg-on-surface text-surface-container-lowest px-sm py-xs font-label-sm text-label-sm hover:opacity-90">APPROVE</button>
+                                                                                <button
+                                                                                        class="bg-surface-container-lowest text-on-surface border-[1.5px] border-on-surface px-sm py-xs font-label-sm text-label-sm hover:bg-surface-variant">DENY</button>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <!-- Activity Item 3 -->
+                                                        <div
+                                                                class="p-md flex items-start gap-md hover:bg-surface-container-low transition-colors cursor-pointer">
+                                                                <div
+                                                                        class="w-12 h-12 bg-tertiary-fixed border-[1.5px] border-on-surface flex items-center justify-center shrink-0">
+                                                                        <span
+                                                                                class="material-symbols-outlined text-on-tertiary-fixed">warning</span>
+                                                                </div>
+                                                                <div class="flex-grow">
+                                                                        <div
+                                                                                class="flex justify-between items-baseline mb-xs">
+                                                                                <h4
+                                                                                        class="font-label-lg text-label-lg text-on-surface">
+                                                                                        Data Anomaly Detected</h4>
+                                                                                <span
+                                                                                        class="font-label-sm text-label-sm text-on-surface-variant">YESTERDAY</span>
+                                                                        </div>
+                                                                        <p
+                                                                                class="font-body-sm text-body-sm text-on-surface-variant max-w-[600px]">
+                                                                                Corrupted checksums found in Partition
+                                                                                Delta. Automated restoration protocol
+                                                                                initiated from last known good backup.
+                                                                        </p>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </section>
+                                </div>
+                                <!-- Right Column (Storage & Metrics) -->
+                                <div class="lg:col-span-4 flex flex-col gap-lg">
+                                        <!-- Storage Summary -->
+                                        <section
+                                                class="bg-surface-container-highest border-[1.5px] border-on-surface flex flex-col h-full">
+                                                <header class="border-b-[1.5px] border-on-surface p-md">
+                                                        <h3 class="font-headline-sm text-headline-sm text-on-surface">
+                                                                Storage Allocation</h3>
+                                                </header>
+                                                <div class="p-md flex-grow flex flex-col gap-md">
+                                                        <div class="flex justify-between items-end mb-sm">
+                                                                <div>
+                                                                        <span
+                                                                                class="font-display-lg text-display-lg text-on-surface block">72.4</span>
+                                                                        <span
+                                                                                class="font-label-md text-label-md text-on-surface-variant">TERABYTES
+                                                                                USED</span>
+                                                                </div>
+                                                                <div class="text-right">
+                                                                        <span
+                                                                                class="font-headline-sm text-headline-sm text-on-surface block">100</span>
+                                                                        <span
+                                                                                class="font-label-md text-label-md text-on-surface-variant">CAPACITY</span>
+                                                                </div>
+                                                        </div>
+                                                        <!-- Brutalist Progress Bar -->
+                                                        <div class="h-8 border-[1.5px] border-on-surface w-full flex">
+                                                                <div class="bg-primary-container h-full"
+                                                                        style="width: 45%;"></div>
+                                                                <div class="bg-secondary-container h-full border-l-[1.5px] border-on-surface"
+                                                                        style="width: 20%;"></div>
+                                                                <div class="bg-tertiary-fixed h-full border-l-[1.5px] border-on-surface"
+                                                                        style="width: 7.4%;"></div>
+                                                        </div>
+                                                        <!-- Legend -->
+                                                        <div class="space-y-sm mt-sm">
+                                                                <div class="flex justify-between items-center">
+                                                                        <div class="flex items-center gap-xs">
+                                                                                <div
+                                                                                        class="w-3 h-3 bg-primary-container border-[1.5px] border-on-surface">
+                                                                                </div>
+                                                                                <span
+                                                                                        class="font-label-sm text-label-sm text-on-surface">DOCUMENTS</span>
+                                                                        </div>
+                                                                        <span
+                                                                                class="font-label-sm text-label-sm text-on-surface">45
+                                                                                TB</span>
+                                                                </div>
+                                                                <div class="flex justify-between items-center">
+                                                                        <div class="flex items-center gap-xs">
+                                                                                <div
+                                                                                        class="w-3 h-3 bg-secondary-container border-[1.5px] border-on-surface">
+                                                                                </div>
+                                                                                <span
+                                                                                        class="font-label-sm text-label-sm text-on-surface">MEDIA
+                                                                                        ASSETS</span>
+                                                                        </div>
+                                                                        <span
+                                                                                class="font-label-sm text-label-sm text-on-surface">20
+                                                                                TB</span>
+                                                                </div>
+                                                                <div class="flex justify-between items-center">
+                                                                        <div class="flex items-center gap-xs">
+                                                                                <div
+                                                                                        class="w-3 h-3 bg-tertiary-fixed border-[1.5px] border-on-surface">
+                                                                                </div>
+                                                                                <span
+                                                                                        class="font-label-sm text-label-sm text-on-surface">SYSTEM
+                                                                                        LOGS</span>
+                                                                        </div>
+                                                                        <span
+                                                                                class="font-label-sm text-label-sm text-on-surface">7.4
+                                                                                TB</span>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </section>
+                                        <!-- System Status -->
+                                        <section class="border-[1.5px] border-on-surface bg-surface-container-lowest">
+                                                <header
+                                                        class="border-b-[1.5px] border-on-surface p-sm bg-surface-variant">
+                                                        <h3 class="font-label-md text-label-md text-on-surface">SYSTEM
+                                                                STATUS</h3>
+                                                </header>
+                                                <div class="p-md space-y-md">
+                                                        <div class="flex items-center justify-between">
+                                                                <span class="font-body-md text-body-md text-on-surface">Indexing
+                                                                        Engine</span>
+                                                                <div class="flex items-center gap-xs">
+                                                                        <div class="w-2 h-2 rounded-full bg-secondary">
+                                                                        </div>
+                                                                        <span
+                                                                                class="font-label-sm text-label-sm text-on-surface-variant">OPTIMAL</span>
+                                                                </div>
+                                                        </div>
+                                                        <div
+                                                                class="flex items-center justify-between border-t-[1.5px] border-surface-variant pt-md">
+                                                                <span class="font-body-md text-body-md text-on-surface">Sync
+                                                                        Gateways</span>
+                                                                <div class="flex items-center gap-xs">
+                                                                        <div class="w-2 h-2 rounded-full bg-secondary">
+                                                                        </div>
+                                                                        <span
+                                                                                class="font-label-sm text-label-sm text-on-surface-variant">ONLINE</span>
+                                                                </div>
+                                                        </div>
+                                                        <div
+                                                                class="flex items-center justify-between border-t-[1.5px] border-surface-variant pt-md">
+                                                                <span class="font-body-md text-body-md text-on-surface">Archive
+                                                                        Node C</span>
+                                                                <div class="flex items-center gap-xs">
+                                                                        <div
+                                                                                class="w-2 h-2 rounded-full bg-primary-container">
+                                                                        </div>
+                                                                        <span
+                                                                                class="font-label-sm text-label-sm text-on-surface-variant">REBUILDING</span>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </section>
+                                </div>
+                        </div>
+                </div>
+        </main>
+</body>
+
+</html>

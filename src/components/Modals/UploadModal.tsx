@@ -35,9 +35,9 @@ export const UploadModal: React.FC = () => {
         className="rule-all"
         style={{
           width: '460px',
-          backgroundColor: '#FFF',
+          backgroundColor: 'var(--bg-modal)',
           padding: '24px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.15)'
+          boxShadow: '0 8px 32px rgba(0,0,0,0.5)'
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>

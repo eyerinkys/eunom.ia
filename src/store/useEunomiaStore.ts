@@ -1,9 +1,10 @@
 import { create } from 'zustand';
-import type { ViewTab, DisplayMode, FileItem, FileVersion, FolderItem, StorageCategory, ActivityLog, GraphNode, User, ApiNode, Breadcrumb } from '../types/eunomia';
+import type { ViewTab, DisplayMode, FileItem, FileVersion, FolderItem, StorageCategory, ActivityLog, GraphNode, User, ApiNode, Breadcrumb, ProvenanceEvent, ProvenanceVerificationResult } from '../types/eunomia';
 import { STORAGE_CATEGORIES, INITIAL_ACTIVITIES, INITIAL_GRAPH_NODES } from '../data/mockData';
 import * as authApi from '../api/auth';
 import * as nodesApi from '../api/nodes';
 import * as filesApi from '../api/files';
+import * as provenanceApi from '../api/provenance';
 
 function formatSize(bytes: number) {
   if (bytes === 0) return '0 B';
@@ -23,6 +24,9 @@ interface EunomiaState {
   inspectorTab: 'details' | 'versions' | 'provenance';
   isVerifying: boolean;
   verificationStep: number;
+  provenanceEvents: ProvenanceEvent[];
+  provenanceVerificationResult: ProvenanceVerificationResult | null;
+  isProvenanceLoading: boolean;
   
   // Auth State
   user: User | null;
@@ -80,12 +84,15 @@ interface EunomiaState {
   clearSelection: () => void;
   setInspectorTab: (tab: 'details' | 'versions' | 'provenance') => void;
   triggerProvenanceVerification: () => void;
+  fetchProvenance: (nodeId: string) => Promise<void>;
+  verifyProvenance: (nodeId: string) => Promise<void>;
   setUploadModalOpen: (open: boolean) => void;
   setDiffModalOpen: (open: boolean, diffData?: any) => void;
   selectedCategoryFilter: string;
   setSelectedCategoryFilter: (cat: string) => void;
   fetchVersions: (nodeId: string) => Promise<void>;
   restoreVersion: (nodeId: string, versionId: string) => Promise<void>;
+  deleteVersion: (nodeId: string, versionId: string) => Promise<void>;
   // Stubs for Phase 1
   addUploadedFile: (name: string, type: FileItem['type'], sizeBytes: number) => void;
   folders: FolderItem[];
@@ -101,6 +108,9 @@ export const useEunomiaStore = create<EunomiaState>((set, get) => ({
   inspectorTab: 'details',
   isVerifying: false,
   verificationStep: 0,
+  provenanceEvents: [],
+  provenanceVerificationResult: null,
+  isProvenanceLoading: false,
   
   user: null,
   isAuthLoading: true, // Start loading to check session
@@ -483,10 +493,68 @@ export const useEunomiaStore = create<EunomiaState>((set, get) => ({
   setInspectorTab: (tab) => set({ inspectorTab: tab }),
   
   triggerProvenanceVerification: () => {
-    set({ isVerifying: true, verificationStep: 1 });
-    setTimeout(() => set({ verificationStep: 2 }), 400);
-    setTimeout(() => set({ verificationStep: 3 }), 800);
-    setTimeout(() => set({ isVerifying: false, verificationStep: 4 }), 1200);
+    const activeFile = get().activeFile;
+    if (activeFile) {
+      get().verifyProvenance(activeFile.id);
+    }
+  },
+
+  fetchProvenance: async (nodeId) => {
+    set({ isProvenanceLoading: true });
+    try {
+      const res = await provenanceApi.getProvenance(nodeId);
+      set(state => {
+        const newState: Partial<EunomiaState> = {
+          provenanceEvents: res.events || [],
+          isProvenanceLoading: false,
+        };
+        // Update activeFile provenanceStatus based on real data
+        if (state.activeFile && state.activeFile.id === nodeId) {
+          const status = res.status === 'VALID' ? 'VALID' as const : 
+                         res.status === 'TAMPERED' ? 'TAMPERED' as const : 
+                         'UNVERIFIED' as const;
+          newState.activeFile = { ...state.activeFile, provenanceStatus: status };
+        }
+        return newState;
+      });
+    } catch (err) {
+      console.warn('Failed to fetch provenance:', err);
+      set({ provenanceEvents: [], isProvenanceLoading: false });
+    }
+  },
+
+  verifyProvenance: async (nodeId) => {
+    set({ isVerifying: true, verificationStep: 1, provenanceVerificationResult: null });
+    
+    // Step 1: Start scanning animation
+    setTimeout(() => set({ verificationStep: 2 }), 300);
+
+    try {
+      // Step 2-3: Call real API (this is the actual verification)
+      const apiPromise = provenanceApi.verifyProvenance(nodeId);
+      setTimeout(() => set({ verificationStep: 3 }), 600);
+      
+      const result = await apiPromise;
+
+      // Step 4: Show result — NEVER show success before verification completes
+      set(state => {
+        const status = result.isValid ? 'VALID' as const : 'TAMPERED' as const;
+        const updatedFile = state.activeFile && state.activeFile.id === nodeId
+          ? { ...state.activeFile, provenanceStatus: status }
+          : state.activeFile;
+        return {
+          isVerifying: false,
+          verificationStep: 4,
+          provenanceVerificationResult: result,
+          activeFile: updatedFile,
+          // Also update the file in the files list
+          files: state.files.map(f => f.id === nodeId ? { ...f, provenanceStatus: status } : f),
+        };
+      });
+    } catch (err) {
+      console.error('Provenance verification failed:', err);
+      set({ isVerifying: false, verificationStep: 0, provenanceVerificationResult: null });
+    }
   },
   
   setUploadModalOpen: (open) => set({ isUploadModalOpen: open }),
@@ -598,5 +666,32 @@ export const useEunomiaStore = create<EunomiaState>((set, get) => ({
         };
       });
     }
+  },
+
+  deleteVersion: async (nodeId, versionId) => {
+    const activeFile = get().activeFile;
+    if (!activeFile || activeFile.id !== nodeId) return;
+
+    const targetVer = (activeFile.versions || []).find(v => v.id === versionId);
+    if (targetVer?.version === 'v1' || versionId.startsWith('v1-')) {
+      alert('The original starting version (v1) cannot be deleted.');
+      return;
+    }
+
+    if (!confirm('Are you sure you want to delete this version revision?')) return;
+    set(state => {
+      if (!state.activeFile || state.activeFile.id !== nodeId) return state;
+      const updatedVersions = (state.activeFile.versions || []).filter(v => v.id !== versionId);
+      const updatedFile = {
+        ...state.activeFile,
+        versions: updatedVersions,
+        versionCount: updatedVersions.length
+      };
+      return {
+        activeFile: updatedFile,
+        files: state.files.map(f => f.id === nodeId ? updatedFile : f)
+      };
+    });
+    get().fetchProvenance(nodeId);
   }
 }));

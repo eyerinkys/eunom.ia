@@ -80,7 +80,13 @@ func NewRouter(db *sql.DB, corsOrigin string, logger *slog.Logger) http.Handler 
 			r.Delete("/{sessionId}", CancelUploadHandler(db))
 		})
 
-		// r.Route("/provenance", provenanceRoutes)
+		// Provenance routes (protected)
+		r.Route("/provenance", func(r chi.Router) {
+			r.Use(RequireAuth(db))
+			r.Get("/{nodeId}", ListProvenanceHandler(db))
+			r.Post("/{nodeId}/verify", VerifyProvenanceHandler(db))
+		})
+
 		// r.Route("/storage", storageRoutes)
 		// r.Route("/graph", graphRoutes)
 		// r.Route("/imports", importRoutes)

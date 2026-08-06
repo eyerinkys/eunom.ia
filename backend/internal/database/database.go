@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 // Open creates a new SQLite database connection with WAL mode, busy timeout,
@@ -18,7 +18,7 @@ func Open(dbPath string, logger *slog.Logger) (*sql.DB, error) {
 	// - _foreign_keys=ON: Enforce foreign key constraints
 	dsn := fmt.Sprintf("file:%s?_journal_mode=WAL&_busy_timeout=5000&_foreign_keys=ON", dbPath)
 
-	db, err := sql.Open("sqlite3", dsn)
+	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("opening database: %w", err)
 	}

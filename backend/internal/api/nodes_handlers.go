@@ -4,11 +4,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/eyerinerror/eunomia/internal/nodes"
+	"github.com/eyerinerror/eunomia/internal/provenance"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 )
@@ -250,14 +252,51 @@ func UpdateNodeHandler(db *sql.DB) http.HandlerFunc {
 				WriteValidationError(w, "Validation failed", map[string]interface{}{"name": "cannot be empty"})
 				return
 			}
-			// Update name
+
+			// Get current name for provenance metadata
+			var currentName, nodeType string
+			err = db.QueryRowContext(r.Context(), "SELECT name, type FROM nodes WHERE id = ?", nodeID).Scan(&currentName, &nodeType)
+			if err != nil {
+				WriteInternalError(w, err)
+				return
+			}
+
+			// Use a transaction for atomic rename + provenance recording
 			now := time.Now().UTC().Format(time.RFC3339)
-			_, err = db.ExecContext(r.Context(), "UPDATE nodes SET name = ?, updated_at = ? WHERE id = ?", name, now, nodeID)
+			tx, txErr := db.BeginTx(r.Context(), nil)
+			if txErr != nil {
+				WriteInternalError(w, txErr)
+				return
+			}
+			defer tx.Rollback()
+
+			_, err = tx.ExecContext(r.Context(), "UPDATE nodes SET name = ?, updated_at = ? WHERE id = ?", name, now, nodeID)
 			if err != nil {
 				if strings.Contains(err.Error(), "UNIQUE constraint failed") {
 					WriteError(w, http.StatusConflict, ErrCodeConflict, "A file or folder with this name already exists here")
 					return
 				}
+				WriteInternalError(w, err)
+				return
+			}
+
+			// Record provenance event for file renames (not folder renames)
+			if nodeType == "file" {
+				changeDesc := fmt.Sprintf("rename:%s->%s", currentName, name)
+				_, err = provenance.RecordEvent(r.Context(), tx, provenance.RecordEventParams{
+					NodeID:      nodeID,
+					ActorID:     userID,
+					Action:      provenance.EventMetadataUpdated,
+					PayloadHash: provenance.ComputePayloadHash(changeDesc),
+					Metadata:    fmt.Sprintf(`{"action":"rename","from":%q,"to":%q}`, currentName, name),
+				})
+				if err != nil {
+					WriteInternalError(w, err)
+					return
+				}
+			}
+
+			if err = tx.Commit(); err != nil {
 				WriteInternalError(w, err)
 				return
 			}

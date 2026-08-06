@@ -11,9 +11,21 @@ import {
   User,
   GitCompare,
   RotateCcw,
-  Download
+  Download,
+  FilePlus,
+  FileUp,
+  RotateCw,
+  Edit3
 } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
+import { animate, stagger } from 'animejs';
+
+const ACTION_META: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
+  file_created:     { label: 'Initial File Uploaded',  icon: <FilePlus size={12} />,  color: 'var(--accent-olive)' },
+  version_created:  { label: 'New Revision Added',     icon: <FileUp size={12} />,   color: 'var(--accent-bronze)' },
+  version_restored: { label: 'Restored Previous Version', icon: <RotateCw size={12} />, color: 'var(--accent-copper)' },
+  metadata_updated: { label: 'File Renamed',          icon: <Edit3 size={12} />,    color: 'var(--accent-plum)' },
+};
 
 export const InspectorPanel: React.FC = () => {
   const { 
@@ -21,12 +33,16 @@ export const InspectorPanel: React.FC = () => {
     inspectorTab, 
     setInspectorTab, 
     isVerifying, 
-    verificationStep, 
     triggerProvenanceVerification,
     setDiffModalOpen,
     uploadVersion,
     restoreVersion,
-    deleteFile
+    deleteVersion,
+    deleteFile,
+    provenanceEvents,
+    provenanceVerificationResult,
+    isProvenanceLoading,
+    fetchProvenance
   } = useEunomiaStore();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -37,6 +53,39 @@ export const InspectorPanel: React.FC = () => {
       e.target.value = '';
     }
   };
+
+  // Anime.js verification line animation ref
+  const verifyLineRef = React.useRef<HTMLDivElement>(null);
+  const verifyNodesRef = React.useRef<(HTMLDivElement | null)[]>([]);
+
+  // Fetch provenance events when switching to provenance tab
+  React.useEffect(() => {
+    if (inspectorTab === 'provenance' && activeFile) {
+      fetchProvenance(activeFile.id);
+    }
+  }, [inspectorTab, activeFile?.id, fetchProvenance]);
+
+  // Anime.js verification animation
+  React.useEffect(() => {
+    if (isVerifying && verifyLineRef.current) {
+      // Animate the verification scanning line
+      animate(verifyLineRef.current, {
+        scaleY: [0, 1],
+        duration: 800,
+        ease: 'outExpo',
+      });
+      // Stagger-pulse each node dot
+      const validNodes = verifyNodesRef.current.filter(Boolean) as HTMLDivElement[];
+      if (validNodes.length > 0) {
+        animate(validNodes, {
+          scale: [0.5, 1.2, 1],
+          duration: 400,
+          delay: stagger(150),
+          ease: 'outElastic(1, .6)',
+        });
+      }
+    }
+  }, [isVerifying]);
 
   if (!activeFile) {
     return (
@@ -247,32 +296,6 @@ export const InspectorPanel: React.FC = () => {
                 <span className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>LAST MODIFIED</span>
                 <p className="font-mono">{activeFile.modifiedAt}</p>
               </div>
-              <div>
-                <span className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>STORAGE PATH</span>
-                <p className="font-mono" style={{ fontSize: '11px', wordBreak: 'break-all' }}>{activeFile.path}</p>
-              </div>
-              <div>
-                <span className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>OPFS CACHE</span>
-                <p style={{ fontWeight: 600, color: activeFile.opfsCached ? 'var(--accent-olive)' : 'var(--text-muted)' }}>
-                  {activeFile.opfsCached ? 'LOCAL OPFS READY' : 'REMOTE BLOB'}
-                </p>
-              </div>
-            </div>
-
-            {/* Signature Box */}
-            <div 
-              style={{
-                backgroundColor: 'var(--bg-panel)',
-                padding: '12px',
-                border: 'var(--border-rule)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', fontSize: '11px', fontWeight: 600, fontFamily: 'var(--font-sans)' }}>
-                <ShieldCheck size={14} color="var(--accent-bronze)" /> RSA-4096 / Ed25519 Signature
-              </div>
-              <code className="font-code" style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
-                {activeFile.authorSignature}
-              </code>
             </div>
 
             {/* Content Snippet Preview */}
@@ -301,23 +324,24 @@ export const InspectorPanel: React.FC = () => {
             )}
 
             {/* Delete Button in Details Tab */}
-            <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #E1E2E9' }}>
+            <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: 'var(--border-rule)' }}>
               <button
                 onClick={() => deleteFile(activeFile.id)}
                 className="btn-secondary"
                 style={{
                   width: '100%',
                   padding: '8px',
-                  color: '#BA1A1A',
-                  borderColor: '#F2B8B5',
-                  backgroundColor: '#FFF0F0',
+                  color: '#FF8888',
+                  borderColor: 'var(--accent-red)',
+                  backgroundColor: 'rgba(224, 62, 62, 0.15)',
                   fontWeight: 600,
                   fontSize: '12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '6px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  borderRadius: '2px'
                 }}
               >
                 <Trash2 size={14} />
@@ -370,7 +394,7 @@ export const InspectorPanel: React.FC = () => {
                     top: '12px',
                     bottom: '12px',
                     width: '2px',
-                    backgroundColor: '#D1D5DB'
+                    backgroundColor: '#2E3746'
                   }}
                 />
 
@@ -382,11 +406,11 @@ export const InspectorPanel: React.FC = () => {
                       style={{
                         position: 'relative',
                         marginBottom: '14px',
-                        backgroundColor: '#FFFFFF',
-                        border: '1.5px solid #171A1F',
-                        borderRadius: '4px',
+                        backgroundColor: 'var(--bg-panel)',
+                        border: 'var(--border-rule)',
+                        borderRadius: '2px',
                         padding: '12px',
-                        boxShadow: isLatest ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                       }}
                     >
                       {/* Timeline Dot */}
@@ -397,8 +421,8 @@ export const InspectorPanel: React.FC = () => {
                           top: '14px',
                           width: '10px',
                           height: '10px',
-                          backgroundColor: isLatest ? 'var(--accent-bronze)' : '#9CA3AF',
-                          border: '2px solid #F8F9FF',
+                          backgroundColor: isLatest ? 'var(--accent-bronze)' : 'var(--text-muted)',
+                          border: '2px solid var(--bg-panel)',
                           borderRadius: '50%',
                           zIndex: 1
                         }}
@@ -412,17 +436,17 @@ export const InspectorPanel: React.FC = () => {
                             style={{ 
                               fontWeight: 700, 
                               fontSize: '11px', 
-                              color: '#82510E',
-                              backgroundColor: '#F7F1E5',
-                              border: '1px solid #E6D7BD',
+                              color: 'var(--accent-bronze)',
+                              backgroundColor: 'rgba(198, 154, 66, 0.15)',
+                              border: '1px solid var(--accent-bronze)',
                               padding: '1px 6px',
-                              borderRadius: '3px'
+                              borderRadius: '2px'
                             }}
                           >
                             {ver.version}
                           </span>
                           {isLatest && (
-                            <span className="font-mono" style={{ fontSize: '9px', backgroundColor: '#E2F0D9', color: '#385723', padding: '1px 5px', borderRadius: '3px', fontWeight: 600 }}>
+                            <span className="badge-valid font-mono" style={{ fontSize: '9px', padding: '1px 5px' }}>
                               CURRENT
                             </span>
                           )}
@@ -441,11 +465,11 @@ export const InspectorPanel: React.FC = () => {
                       </div>
 
                       {/* Action Buttons */}
-                      <div style={{ display: 'flex', gap: '6px', paddingTop: '8px', borderTop: '1px solid #F0F1F5' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', paddingTop: '8px', borderTop: 'var(--border-rule)' }}>
                         {!isLatest && (
                           <button 
                             className="btn-secondary" 
-                            style={{ padding: '3px 8px', fontSize: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            style={{ flex: '1 1 auto', justifyContent: 'center', padding: '4px 6px', fontSize: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                             onClick={() => restoreVersion(activeFile.id, ver.id)}
                             title="Restore this version as current"
                           >
@@ -456,7 +480,7 @@ export const InspectorPanel: React.FC = () => {
                         {displayVersions.length >= 2 && (
                           <button 
                             className="btn-secondary" 
-                            style={{ padding: '3px 8px', fontSize: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            style={{ flex: '1 1 auto', justifyContent: 'center', padding: '4px 6px', fontSize: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                             onClick={() => {
                               const oldSnippet = ('contentSnippet' in ver && ver.contentSnippet) ? ver.contentSnippet : (ver.version === 'v1' ? `# ${activeFile.name}\n\nInitial version draft content.` : `# ${activeFile.name}\n\nVersion ${ver.version} content.`);
                               const newSnippet = (displayVersions[0] && 'contentSnippet' in displayVersions[0] && displayVersions[0].contentSnippet) ? displayVersions[0].contentSnippet : (activeFile.contentSnippet || `# ${activeFile.name}\n\nCurrent version active content.`);
@@ -469,19 +493,30 @@ export const InspectorPanel: React.FC = () => {
                             }}
                           >
                             <GitCompare size={10} />
-                            Compare Diff
+                            Diff
                           </button>
                         )}
                         {ver.id && !ver.id.startsWith('v1-') && (
                           <a 
                             className="btn-secondary" 
-                            style={{ padding: '3px 8px', fontSize: '10px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            style={{ flex: '1 1 auto', justifyContent: 'center', padding: '4px 6px', fontSize: '10px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                             href={`/api/files/${activeFile.id}/versions/${ver.id}/download`}
                             download
                           >
                             <Download size={10} />
                             Download
                           </a>
+                        )}
+                        {ver.version !== 'v1' && !ver.id.startsWith('v1-') && (
+                          <button 
+                            className="btn-secondary" 
+                            style={{ flex: '1 1 auto', justifyContent: 'center', padding: '4px 6px', fontSize: '10px', color: 'var(--accent-red)', borderColor: 'rgba(186,26,26,0.3)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            onClick={() => deleteVersion(activeFile.id, ver.id)}
+                            title="Delete this revision"
+                          >
+                            <Trash2 size={10} />
+                            Delete
+                          </button>
                         )}
                       </div>
                     </div>
@@ -503,11 +538,11 @@ export const InspectorPanel: React.FC = () => {
                 textAlign: 'center'
               }}
             >
-              <h4 className="font-serif" style={{ fontSize: '14px', marginBottom: '6px' }}>
-                Cryptographic Chain Verification
+              <h4 className="font-serif" style={{ fontSize: '14px', marginBottom: '4px' }}>
+                File History & Proof of Work
               </h4>
-              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
-                Validate the SHA-256 block hash graph and author digital key signature.
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.4 }}>
+                Check that your file history is genuine and has not been altered or corrupted.
               </p>
               <button 
                 onClick={triggerProvenanceVerification}
@@ -515,91 +550,145 @@ export const InspectorPanel: React.FC = () => {
                 className="btn-primary"
                 style={{ width: '100%', justifyContent: 'center' }}
               >
-                <Zap size={15} /> {isVerifying ? `VERIFYING STEP ${verificationStep}/4...` : 'VERIFY PROVENANCE NOW'}
+                <Zap size={15} /> {isVerifying ? `CHECKING INTEGRITY...` : 'CHECK FILE INTEGRITY'}
               </button>
             </div>
 
-            {/* Status Axis */}
-            <div style={{ position: 'relative', paddingLeft: '24px' }}>
-              <div 
-                style={{
-                  position: 'absolute',
-                  left: '8px',
-                  top: '10px',
-                  bottom: '10px',
-                  width: '2px',
-                  backgroundColor: isVerifying ? 'var(--accent-bronze)' : (activeFile.provenanceStatus === 'VALID' ? 'var(--accent-olive)' : 'var(--accent-red)')
-                }}
-              />
+            {/* Verification Result Banner */}
+            {provenanceVerificationResult && !isVerifying && (
+              <div style={{
+                padding: '12px 16px',
+                backgroundColor: provenanceVerificationResult.isValid ? 'rgba(85,107,47,0.15)' : 'rgba(186,26,26,0.15)',
+                border: `1.5px solid ${provenanceVerificationResult.isValid ? 'var(--accent-olive)' : 'var(--accent-red)'}`,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                {provenanceVerificationResult.isValid ? (
+                  <CheckCircle2 size={18} color="var(--accent-olive)" />
+                ) : (
+                  <AlertTriangle size={18} color="var(--accent-red)" />
+                )}
+                <div style={{ flex: 1 }}>
+                  <span className="font-sans" style={{
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    color: provenanceVerificationResult.isValid ? 'var(--accent-olive)' : 'var(--accent-red)'
+                  }}>
+                    {provenanceVerificationResult.isValid ? 'ALL REVISIONS AUTHENTIC' : 'UNAUTHORIZED CHANGE DETECTED'}
+                  </span>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    {provenanceVerificationResult.isValid
+                      ? `${provenanceVerificationResult.eventsCount} file events verified — your work history is genuine.`
+                      : `A file modification or record change was detected.`}
+                  </p>
+                </div>
+              </div>
+            )}
 
-              {/* Node 1 */}
-              <div style={{ marginBottom: '16px', position: 'relative' }}>
+            {/* Real Event Timeline */}
+            {isProvenanceLoading ? (
+              <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
+                <span className="font-sans" style={{ fontSize: '11px' }}>Loading history...</span>
+              </div>
+            ) : provenanceEvents.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
+                <ShieldCheck size={32} style={{ marginBottom: '8px', opacity: 0.5 }} />
+                <p style={{ fontSize: '12px' }}>No history recorded yet.</p>
+                <p style={{ fontSize: '10px', marginTop: '4px' }}>Upload a file to start tracking your work history.</p>
+              </div>
+            ) : (
+              <div style={{ position: 'relative', paddingLeft: '24px' }}>
+                {/* Animated verification axis line */}
                 <div 
+                  ref={verifyLineRef}
                   style={{
                     position: 'absolute',
-                    left: '-24px',
-                    top: '4px',
-                    width: '12px',
-                    height: '12px',
-                    backgroundColor: 'var(--accent-olive)',
-                    border: '2px solid #FFF'
+                    left: '8px',
+                    top: '10px',
+                    bottom: '10px',
+                    width: '2px',
+                    transformOrigin: 'top',
+                    backgroundColor: isVerifying ? 'var(--accent-bronze)' : (activeFile.provenanceStatus === 'VALID' ? 'var(--accent-olive)' : activeFile.provenanceStatus === 'TAMPERED' ? 'var(--accent-red)' : 'var(--text-muted)')
                   }}
                 />
-                <span className="font-mono" style={{ fontSize: '10px', color: 'var(--accent-olive)', fontWeight: 700 }}>
-                  NODE 1 • CAS INGESTION
-                </span>
-                <p style={{ fontSize: '11px', fontWeight: 600 }}>Initial Blob Hashed to CAS Store</p>
-                <code className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)' }}>
-                  0x7f83b1657ff1fc5...
-                </code>
-              </div>
 
-              {/* Node 2 */}
-              <div style={{ marginBottom: '16px', position: 'relative' }}>
-                <div 
-                  style={{
-                    position: 'absolute',
-                    left: '-24px',
-                    top: '4px',
-                    width: '12px',
-                    height: '12px',
-                    backgroundColor: 'var(--accent-bronze)',
-                    border: '2px solid #FFF'
-                  }}
-                />
-                <span className="font-mono" style={{ fontSize: '10px', color: 'var(--accent-bronze)', fontWeight: 700 }}>
-                  NODE 2 • REVISION VERIFIED
-                </span>
-                <p style={{ fontSize: '11px', fontWeight: 600 }}>RSA-4096 Signature Seal Applied</p>
-                <code className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)' }}>
-                  {activeFile.authorSignature}
-                </code>
-              </div>
+                {provenanceEvents.map((evt, i) => {
+                  const meta = ACTION_META[evt.action] || ACTION_META['file_created'];
+                  const isFailed = provenanceVerificationResult && !provenanceVerificationResult.isValid && provenanceVerificationResult.failedEventId === evt.id;
+                  const dotColor = isFailed ? 'var(--accent-red)' : meta.color;
 
-              {/* Node 3 */}
-              <div style={{ position: 'relative' }}>
-                <div 
-                  style={{
-                    position: 'absolute',
-                    left: '-24px',
-                    top: '4px',
-                    width: '12px',
-                    height: '12px',
-                    backgroundColor: activeFile.provenanceStatus === 'VALID' ? 'var(--accent-olive)' : 'var(--accent-red)',
-                    border: '2px solid #FFF'
-                  }}
-                />
-                <span className="font-mono" style={{ fontSize: '10px', color: activeFile.provenanceStatus === 'VALID' ? 'var(--accent-olive)' : 'var(--accent-red)', fontWeight: 700 }}>
-                  NODE 3 • CURRENT CHAIN SEAL
-                </span>
-                <p style={{ fontSize: '11px', fontWeight: 600 }}>
-                  {activeFile.provenanceStatus === 'VALID' ? 'INTEGRITY SEAL INTACT' : 'TAMPER ALERT: HASH MISMATCH'}
-                </p>
-                <code className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)' }}>
-                  {activeFile.hash.slice(0, 24)}...
-                </code>
+                  return (
+                    <div 
+                      key={evt.id} 
+                      style={{ marginBottom: i < provenanceEvents.length - 1 ? '16px' : '0', position: 'relative' }}
+                    >
+                      {/* Timeline dot */}
+                      <div 
+                        ref={el => { verifyNodesRef.current[i] = el; }}
+                        style={{
+                          position: 'absolute',
+                          left: '-24px',
+                          top: '4px',
+                          width: '12px',
+                          height: '12px',
+                          backgroundColor: dotColor,
+                          border: '2px solid var(--bg-canvas)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      />
+
+                      {/* Event header */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                        <span style={{ color: dotColor }}>{meta.icon}</span>
+                        <span className="font-sans" style={{ fontSize: '11px', color: dotColor, fontWeight: 700 }}>
+                          {meta.label}
+                        </span>
+                      </div>
+
+                      {/* Actor and timestamp */}
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '2px' }}>
+                        By {evt.actorName || 'You'} — {new Date(evt.timestamp).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </p>
+
+                      {/* Status pill */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                        <span style={{
+                          fontSize: '9px',
+                          padding: '1px 6px',
+                          borderRadius: '2px',
+                          backgroundColor: isFailed ? 'rgba(186,26,26,0.12)' : 'rgba(85,107,47,0.12)',
+                          color: isFailed ? 'var(--accent-red)' : 'var(--accent-olive)',
+                          fontWeight: 600
+                        }}>
+                          {isFailed ? '⚠️ Modified' : '✓ Verified Authentic'}
+                        </span>
+                      </div>
+
+                      {/* Tamper alert detail */}
+                      {isFailed && (
+                        <div style={{
+                          marginTop: '6px',
+                          padding: '6px 10px',
+                          backgroundColor: 'rgba(186,26,26,0.12)',
+                          border: '1px solid var(--accent-red)',
+                          fontSize: '11px',
+                          color: 'var(--accent-red)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}>
+                          <AlertTriangle size={12} />
+                          <span>This step has been modified or corrupted.</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
