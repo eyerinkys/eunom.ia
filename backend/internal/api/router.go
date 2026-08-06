@@ -62,10 +62,24 @@ func NewRouter(db *sql.DB, corsOrigin string, logger *slog.Logger) http.Handler 
 			r.Delete("/{id}", DeleteNodeHandler(db))
 		})
 
-		// Future route groups will be mounted here:
-		// r.Route("/files", fileRoutes)
-		// r.Route("/uploads", uploadRoutes)
-		// r.Route("/versions", versionRoutes)
+		// Files & Uploads routes (protected)
+		r.Route("/files", func(r chi.Router) {
+			r.Use(RequireAuth(db))
+			r.Post("/download-zip", DownloadZipHandler(db))
+			r.Get("/{nodeId}/download", DownloadFileHandler(db))
+			r.Get("/{nodeId}/versions", ListVersionsHandler(db))
+			r.Post("/{nodeId}/versions/{versionId}/restore", RestoreVersionHandler(db))
+			r.Get("/{nodeId}/versions/{versionId}/download", DownloadSpecificVersionHandler(db))
+		})
+
+		r.Route("/uploads", func(r chi.Router) {
+			r.Use(RequireAuth(db))
+			r.Post("/", CreateUploadSessionHandler(db))
+			r.Put("/{sessionId}", UploadChunkHandler(db))
+			r.Post("/{sessionId}/complete", CompleteUploadHandler(db))
+			r.Delete("/{sessionId}", CancelUploadHandler(db))
+		})
+
 		// r.Route("/provenance", provenanceRoutes)
 		// r.Route("/storage", storageRoutes)
 		// r.Route("/graph", graphRoutes)

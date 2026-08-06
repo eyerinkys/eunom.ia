@@ -6,7 +6,12 @@ import {
   FileCheck, 
   Copy, 
   ShieldCheck,
-  Zap
+  Zap,
+  Trash2,
+  User,
+  GitCompare,
+  RotateCcw,
+  Download
 } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 
@@ -18,8 +23,20 @@ export const InspectorPanel: React.FC = () => {
     isVerifying, 
     verificationStep, 
     triggerProvenanceVerification,
-    setDiffModalOpen
+    setDiffModalOpen,
+    uploadVersion,
+    restoreVersion,
+    deleteFile
   } = useEunomiaStore();
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleUploadVersion = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0 && activeFile) {
+      uploadVersion(activeFile.id, e.target.files[0]);
+      e.target.value = '';
+    }
+  };
 
   if (!activeFile) {
     return (
@@ -78,21 +95,39 @@ export const InspectorPanel: React.FC = () => {
           backgroundColor: 'var(--bg-panel)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-          <FileText size={20} color="var(--accent-bronze)" />
-          <h2 
-            className="font-serif" 
-            style={{ 
-              fontSize: '16px', 
-              fontWeight: 700, 
-              whiteSpace: 'nowrap', 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis',
-              flex: 1 
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
+            <FileText size={20} color="var(--accent-bronze)" style={{ flexShrink: 0 }} />
+            <h2 
+              className="font-serif" 
+              style={{ 
+                fontSize: '16px', 
+                fontWeight: 700, 
+                whiteSpace: 'nowrap', 
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {activeFile.name}
+            </h2>
+          </div>
+          <button
+            onClick={() => deleteFile(activeFile.id)}
+            title="Delete File"
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--accent-red, #BA1A1A)',
+              padding: '4px',
+              borderRadius: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            {activeFile.name}
-          </h2>
+            <Trash2 size={16} />
+          </button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span className="font-mono" style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
@@ -263,96 +298,198 @@ export const InspectorPanel: React.FC = () => {
                 </div>
               </div>
             )}
-          </div>
-        )}
 
-        {inspectorTab === 'versions' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="font-mono" style={{ fontSize: '11px', fontWeight: 600 }}>CHRONOLOGICAL TIMELINE</span>
-              <button 
-                className="btn-secondary" 
-                style={{ padding: '4px 8px', fontSize: '10px' }}
-                onClick={() => alert(`Create new version for ${activeFile.name}`)}
+            {/* Delete Button in Details Tab */}
+            <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #E1E2E9' }}>
+              <button
+                onClick={() => deleteFile(activeFile.id)}
+                className="btn-secondary"
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  color: '#BA1A1A',
+                  borderColor: '#F2B8B5',
+                  backgroundColor: '#FFF0F0',
+                  fontWeight: 600,
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  cursor: 'pointer'
+                }}
               >
-                + Upload Version
+                <Trash2 size={14} />
+                Delete File
               </button>
             </div>
-
-            {/* Vertical Version Axis */}
-            <div style={{ position: 'relative', paddingLeft: '20px' }}>
-              <div 
-                style={{
-                  position: 'absolute',
-                  left: '6px',
-                  top: '8px',
-                  bottom: '8px',
-                  width: '2px',
-                  backgroundColor: 'var(--accent-bronze)'
-                }}
-              />
-
-              {activeFile.versions.map((ver) => (
-                <div 
-                  key={ver.id}
-                  style={{
-                    position: 'relative',
-                    marginBottom: '16px',
-                    backgroundColor: 'var(--bg-panel)',
-                    border: '1.5px solid #171A1F',
-                    padding: '12px'
-                  }}
-                >
-                  <div 
-                    style={{
-                      position: 'absolute',
-                      left: '-20px',
-                      top: '12px',
-                      width: '10px',
-                      height: '10px',
-                      backgroundColor: 'var(--accent-bronze)',
-                      border: '2px solid #F8F9FF',
-                      borderRadius: '50%'
-                    }}
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                    <span className="font-mono" style={{ fontWeight: 700, fontSize: '12px', color: 'var(--accent-bronze)' }}>
-                      {ver.version}
-                    </span>
-                    <span className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
-                      {ver.timestamp}
-                    </span>
-                  </div>
-                  <p style={{ fontSize: '12px', fontWeight: 600, marginBottom: '4px' }}>{ver.commitNote}</p>
-                  <p className="font-mono" style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
-                    Author: {ver.author} • {ver.sizeFormatted}
-                  </p>
-                  <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
-                    <button 
-                      className="btn-secondary" 
-                      style={{ padding: '2px 8px', fontSize: '10px' }}
-                      onClick={() => setDiffModalOpen(true, {
-                        oldVersion: 'v2',
-                        newVersion: ver.version,
-                        oldSnippet: 'Initial drafting of quantum limits in phase noise estimation.',
-                        newSnippet: ver.contentSnippet || 'Updated equation details.'
-                      })}
-                    >
-                      Compare Diff
-                    </button>
-                    <button 
-                      className="btn-secondary" 
-                      style={{ padding: '2px 8px', fontSize: '10px' }}
-                      onClick={() => alert(`Restoring ${ver.version} as current active version!`)}
-                    >
-                      Restore
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         )}
+
+        {inspectorTab === 'versions' && (() => {
+          const displayVersions = (activeFile.versions && activeFile.versions.length > 0)
+            ? activeFile.versions
+            : [{
+                id: `v1-${activeFile.id}`,
+                version: 'v1',
+                timestamp: activeFile.modifiedAt || 'Initial version',
+                sizeFormatted: activeFile.sizeFormatted || '0 B',
+                sizeBytes: activeFile.sizeBytes || 0,
+                author: activeFile.owner || 'User',
+                commitNote: 'Initial version creation',
+                hash: activeFile.hash || '',
+                parentHash: ''
+              }];
+
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                    VERSION HISTORY ({displayVersions.length})
+                  </span>
+                </div>
+                <button 
+                  className="btn-secondary" 
+                  style={{ padding: '5px 10px', fontSize: '11px', fontWeight: 600 }}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  + Upload Version
+                </button>
+                <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleUploadVersion} />
+              </div>
+
+              {/* GitHub-style Commit History Timeline */}
+              <div style={{ position: 'relative', paddingLeft: '18px', marginTop: '4px' }}>
+                <div 
+                  style={{
+                    position: 'absolute',
+                    left: '5px',
+                    top: '12px',
+                    bottom: '12px',
+                    width: '2px',
+                    backgroundColor: '#D1D5DB'
+                  }}
+                />
+
+                {displayVersions.map((ver, idx) => {
+                  const isLatest = idx === 0;
+                  return (
+                    <div 
+                      key={ver.id || idx}
+                      style={{
+                        position: 'relative',
+                        marginBottom: '14px',
+                        backgroundColor: '#FFFFFF',
+                        border: '1.5px solid #171A1F',
+                        borderRadius: '4px',
+                        padding: '12px',
+                        boxShadow: isLatest ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'
+                      }}
+                    >
+                      {/* Timeline Dot */}
+                      <div 
+                        style={{
+                          position: 'absolute',
+                          left: '-18px',
+                          top: '14px',
+                          width: '10px',
+                          height: '10px',
+                          backgroundColor: isLatest ? 'var(--accent-bronze)' : '#9CA3AF',
+                          border: '2px solid #F8F9FF',
+                          borderRadius: '50%',
+                          zIndex: 1
+                        }}
+                      />
+
+                      {/* Row 1: Tag + Status + Timestamp */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span 
+                            className="font-mono" 
+                            style={{ 
+                              fontWeight: 700, 
+                              fontSize: '11px', 
+                              color: '#82510E',
+                              backgroundColor: '#F7F1E5',
+                              border: '1px solid #E6D7BD',
+                              padding: '1px 6px',
+                              borderRadius: '3px'
+                            }}
+                          >
+                            {ver.version}
+                          </span>
+                          {isLatest && (
+                            <span className="font-mono" style={{ fontSize: '9px', backgroundColor: '#E2F0D9', color: '#385723', padding: '1px 5px', borderRadius: '3px', fontWeight: 600 }}>
+                              CURRENT
+                            </span>
+                          )}
+                        </div>
+                        <span className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                          {ver.timestamp}
+                        </span>
+                      </div>
+
+                      {/* Row 2: Author & Size */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                        <User size={12} style={{ color: 'var(--text-muted)' }} />
+                        <span>{ver.author || 'System'}</span>
+                        <span>•</span>
+                        <span className="font-mono">{ver.sizeFormatted}</span>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div style={{ display: 'flex', gap: '6px', paddingTop: '8px', borderTop: '1px solid #F0F1F5' }}>
+                        {!isLatest && (
+                          <button 
+                            className="btn-secondary" 
+                            style={{ padding: '3px 8px', fontSize: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            onClick={() => restoreVersion(activeFile.id, ver.id)}
+                            title="Restore this version as current"
+                          >
+                            <RotateCcw size={10} />
+                            Restore
+                          </button>
+                        )}
+                        {displayVersions.length >= 2 && (
+                          <button 
+                            className="btn-secondary" 
+                            style={{ padding: '3px 8px', fontSize: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            onClick={() => {
+                              const oldSnippet = ('contentSnippet' in ver && ver.contentSnippet) ? ver.contentSnippet : (ver.version === 'v1' ? `# ${activeFile.name}\n\nInitial version draft content.` : `# ${activeFile.name}\n\nVersion ${ver.version} content.`);
+                              const newSnippet = (displayVersions[0] && 'contentSnippet' in displayVersions[0] && displayVersions[0].contentSnippet) ? displayVersions[0].contentSnippet : (activeFile.contentSnippet || `# ${activeFile.name}\n\nCurrent version active content.`);
+                              setDiffModalOpen(true, {
+                                oldVersion: ver.version,
+                                newVersion: displayVersions[0]?.version || 'Current',
+                                oldSnippet,
+                                newSnippet
+                              });
+                            }}
+                          >
+                            <GitCompare size={10} />
+                            Compare Diff
+                          </button>
+                        )}
+                        {ver.id && !ver.id.startsWith('v1-') && (
+                          <a 
+                            className="btn-secondary" 
+                            style={{ padding: '3px 8px', fontSize: '10px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            href={`/api/files/${activeFile.id}/versions/${ver.id}/download`}
+                            download
+                          >
+                            <Download size={10} />
+                            Download
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
 
         {inspectorTab === 'provenance' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

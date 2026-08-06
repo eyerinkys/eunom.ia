@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { X, UploadCloud, CheckCircle2 } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 
 export const UploadModal: React.FC = () => {
-  const { isUploadModalOpen, setUploadModalOpen, addUploadedFile } = useEunomiaStore();
-  const [filename, setFilename] = useState('');
-  const [fileType, setFileType] = useState<'markdown' | 'pdf' | 'code' | 'archive'>('markdown');
-  const [sizeKb, setSizeKb] = useState(120);
+  const { isUploadModalOpen, setUploadModalOpen, uploadFile, activeUploads } = useEunomiaStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isUploadModalOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!filename.trim()) return;
+  const uploadsArray = Object.values(activeUploads);
+  const isUploading = uploadsArray.length > 0;
+  const currentUpload = uploadsArray[0]; // just show first for now
 
-    addUploadedFile(filename.trim(), fileType, sizeKb * 1024);
-    setUploadModalOpen(false);
-    setFilename('');
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      uploadFile(file);
+    }
   };
 
   return (
@@ -47,101 +47,53 @@ export const UploadModal: React.FC = () => {
               Upload & Content-Address File
             </h3>
           </div>
-          <button 
-            onClick={() => setUploadModalOpen(false)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            <X size={18} />
-          </button>
+          {!isUploading && (
+            <button 
+              onClick={() => setUploadModalOpen(false)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div>
-            <label className="font-mono" style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
-              FILE NAME & EXTENSION
-            </label>
+        {isUploading ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px 0' }}>
+            <span className="font-mono" style={{ fontSize: '12px' }}>
+              Uploading: {currentUpload.filename}
+            </span>
+            <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--bg-panel)', position: 'relative' }}>
+              <div style={{ 
+                position: 'absolute', 
+                left: 0, top: 0, bottom: 0, 
+                width: `${currentUpload.progress}%`,
+                backgroundColor: 'var(--accent-bronze)',
+                transition: 'width 0.2s ease-out'
+              }} />
+            </div>
+            <span className="font-mono" style={{ fontSize: '11px', textAlign: 'right' }}>
+              {currentUpload.progress}%
+            </span>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center', padding: '32px 0' }}>
             <input 
-              type="text" 
-              required
-              placeholder="e.g. Research_Analysis_Draft.md" 
-              value={filename}
-              onChange={(e) => setFilename(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginTop: '4px',
-                border: '1.5px solid #171A1F',
-                backgroundColor: 'var(--bg-panel)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '12px',
-                outline: 'none'
-              }}
+              type="file" 
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
             />
-          </div>
-
-          <div>
-            <label className="font-mono" style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
-              FILE CATEGORY TYPE
-            </label>
-            <select
-              value={fileType}
-              onChange={(e) => setFileType(e.target.value as any)}
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginTop: '4px',
-                border: '1.5px solid #171A1F',
-                backgroundColor: 'var(--bg-panel)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '12px',
-                outline: 'none'
-              }}
-            >
-              <option value="markdown">Markdown Document (.md)</option>
-              <option value="pdf">PDF Document (.pdf)</option>
-              <option value="code">Code / Data Script (.py, .ts, .csv)</option>
-              <option value="archive">Archive Package (.tar.gz, .zip)</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="font-mono" style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
-              SIMULATED FILE SIZE (KB)
-            </label>
-            <input 
-              type="number" 
-              value={sizeKb}
-              onChange={(e) => setSizeKb(Number(e.target.value))}
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginTop: '4px',
-                border: '1.5px solid #171A1F',
-                backgroundColor: 'var(--bg-panel)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '12px',
-                outline: 'none'
-              }}
-            />
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px' }}>
             <button 
               type="button"
-              className="btn-secondary"
-              onClick={() => setUploadModalOpen(false)}
-            >
-              Cancel
-            </button>
-            <button 
-              type="submit"
               className="btn-primary"
+              onClick={() => fileInputRef.current?.click()}
             >
-              <CheckCircle2 size={16} /> Compute SHA-256 & Upload
+              <CheckCircle2 size={16} /> Select File to Upload
             </button>
           </div>
-        </form>
+        )}
       </div>
     </div>
   );
 };
+

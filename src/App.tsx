@@ -13,6 +13,7 @@ import { SettingsView } from './components/Views/SettingsView';
 
 import { UploadModal } from './components/Modals/UploadModal';
 import { DiffModal } from './components/Modals/DiffModal';
+import { CollisionModal } from './components/Modals/CollisionModal';
 import { LoginView } from './components/Views/LoginView';
 
 import { useEunomiaStore } from './store/useEunomiaStore';
@@ -97,6 +98,7 @@ export const App: React.FC = () => {
       {/* Overlays / Modals */}
       <UploadModal />
       <DiffModal />
+      <CollisionModal />
     </div>
   );
 };

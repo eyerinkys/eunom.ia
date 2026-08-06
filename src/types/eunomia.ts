@@ -17,6 +17,11 @@ export interface ApiNode {
   parentId: string | null;
   createdAt: string;
   updatedAt: string;
+  mimeType?: string;
+  sizeBytes?: number;
+  ownerName?: string;
+  hash?: string;
+  versionCount?: number;
 }
 
 export interface Breadcrumb {

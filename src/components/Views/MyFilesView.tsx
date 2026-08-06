@@ -6,10 +6,12 @@ import {
   ArrowUpDown,
   Edit2,
   Trash2,
-  Move
+  Move,
+  FileText
 } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 import type { ApiNode } from '../../types/eunomia';
+import { getDownloadUrl, downloadZip } from '../../api/files';
 
 export const MyFilesView: React.FC = () => {
   const { 
@@ -28,7 +30,10 @@ export const MyFilesView: React.FC = () => {
     setSelectedCategoryFilter,
     renameFolder,
     deleteFolder,
-    moveFolder
+    moveFolder,
+    uploadFile,
+    selectFile,
+    deleteFile
   } = useEunomiaStore();
 
   const [renamingFolderId, setRenamingFolderId] = useState<string | null>(null);
@@ -71,6 +76,27 @@ export const MyFilesView: React.FC = () => {
       await renameFolder(folder.id, renameInput);
     }
     setRenamingFolderId(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    droppedFiles.forEach(file => {
+      uploadFile(file);
+    });
+  };
+
+  const handleDownloadSelected = () => {
+    if (selectedFileIds.length === 0) return;
+    if (selectedFileIds.length === 1) {
+      window.open(getDownloadUrl(selectedFileIds[0]), '_blank');
+    } else {
+      downloadZip(selectedFileIds).catch(err => alert(err.message));
+    }
   };
 
   return (
@@ -133,10 +159,20 @@ export const MyFilesView: React.FC = () => {
             <button 
               className="btn-secondary" 
               style={{ padding: '2px 8px', fontSize: '10px' }}
-              disabled
-              title="Coming in Phase 2"
+              onClick={handleDownloadSelected}
             >
               <Download size={12} /> Download Selected
+            </button>
+            <button 
+              className="btn-secondary" 
+              style={{ padding: '2px 8px', fontSize: '10px', color: '#BA1A1A', borderColor: '#F2B8B5', backgroundColor: '#FFF0F0' }}
+              onClick={() => {
+                if (confirm(`Delete ${selectedFileIds.length} selected item(s)?`)) {
+                  selectedFileIds.forEach(id => deleteFile(id));
+                }
+              }}
+            >
+              <Trash2 size={12} /> Delete Selected
             </button>
             <button 
               className="btn-secondary" 
@@ -150,7 +186,11 @@ export const MyFilesView: React.FC = () => {
       </div>
 
       {/* Main Workspace Area */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+      <div 
+        style={{ flex: 1, overflowY: 'auto', padding: '20px' }}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
         
         {foldersError && (
           <div className="badge-tampered" style={{ marginBottom: '24px', padding: '12px' }}>
@@ -269,20 +309,75 @@ export const MyFilesView: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    File uploads and management coming in Phase 2.
-                  </td>
-                </tr>
+                {currentFiles.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                      No files found. Drag and drop files here to upload.
+                    </td>
+                  </tr>
+                ) : (
+                  currentFiles.map((file) => {
+                    const isSelected = selectedFileIds.includes(file.id);
+                    return (
+                      <tr 
+                        key={file.id} 
+                        className={`rule-b row-hover ${isSelected ? 'row-selected' : ''}`}
+                        style={{ cursor: 'pointer' }}
+                        onClick={(e) => {
+                          if (e.target instanceof HTMLInputElement) return; // let checkbox handle it
+                          selectFile(file, e.metaKey || e.ctrlKey);
+                        }}
+                      >
+                        <td style={{ padding: '10px 12px' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={isSelected}
+                            onChange={() => toggleFileSelection(file.id)}
+                            style={{ cursor: 'pointer' }}
+                          />
+                        </td>
+                        <td style={{ padding: '10px 12px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <FileText size={14} color="var(--accent-bronze)" />
+                            {file.name}
+                          </div>
+                        </td>
+                        <td style={{ padding: '10px 12px', color: 'var(--text-muted)' }}>
+                          <span className="badge-valid" style={{ backgroundColor: 'var(--bg-panel)', color: 'var(--text-secondary)' }}>
+                            {file.type}
+                          </span>
+                        </td>
+                        <td style={{ padding: '10px 12px' }}>{file.owner}</td>
+                        <td style={{ padding: '10px 12px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{file.modifiedAt}</td>
+                        <td style={{ padding: '10px 12px', textAlign: 'right', fontFamily: 'var(--font-mono)' }}>{file.sizeFormatted}</td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
         ) : (
           /* Grid View Mode */
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
-            <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)', gridColumn: '1 / -1' }}>
-              File uploads coming in Phase 2.
-            </div>
+            {currentFiles.length === 0 ? (
+              <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)', gridColumn: '1 / -1' }}>
+                No files found. Drag and drop files here to upload.
+              </div>
+            ) : (
+              currentFiles.map(file => (
+                <div 
+                  key={file.id}
+                  className={`rule-all row-hover ${selectedFileIds.includes(file.id) ? 'row-selected' : ''}`}
+                  style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', cursor: 'pointer' }}
+                  onClick={(e) => selectFile(file, e.metaKey || e.ctrlKey)}
+                >
+                  <FileText size={32} color="var(--accent-bronze)" />
+                  <span className="font-sans" style={{ fontWeight: 600, wordBreak: 'break-all' }}>{file.name}</span>
+                  <span className="font-mono" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{file.sizeFormatted}</span>
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>

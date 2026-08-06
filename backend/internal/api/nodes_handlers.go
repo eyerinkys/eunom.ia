@@ -20,6 +20,13 @@ type ApiNode struct {
 	ParentID  *string `json:"parentId"`
 	CreatedAt string  `json:"createdAt"`
 	UpdatedAt string  `json:"updatedAt"`
+
+	// Extended File metadata
+	MimeType     string `json:"mimeType,omitempty"`
+	SizeBytes    int64  `json:"sizeBytes,omitempty"`
+	OwnerName    string `json:"owner,omitempty"`
+	Hash         string `json:"hash,omitempty"`
+	VersionCount int    `json:"versionCount,omitempty"`
 }
 
 type NodeListResponse struct {
@@ -72,10 +79,22 @@ func ListNodesHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		// Get children (only folders for Phase 1, but we can query all undeleted)
-		rows, err := db.QueryContext(r.Context(),
-			"SELECT id, name, type, parent_id, created_at, updated_at FROM nodes WHERE parent_id = ? AND user_id = ? AND deleted_at IS NULL ORDER BY type DESC, name ASC",
-			parentID, userID)
+		// Get children with extended file metadata
+		query := `
+		SELECT 
+			n.id, n.name, n.type, n.parent_id, n.created_at, n.updated_at, n.mime_type,
+			COALESCE(u.display_name, ''),
+			COALESCE(fv.size_bytes, 0),
+			COALESCE(fv.blob_hash, ''),
+			(SELECT COUNT(*) FROM file_versions WHERE node_id = n.id) as version_count
+		FROM nodes n
+		LEFT JOIN users u ON n.user_id = u.id
+		LEFT JOIN file_versions fv ON fv.node_id = n.id 
+			AND fv.version_number = (SELECT MAX(version_number) FROM file_versions WHERE node_id = n.id)
+		WHERE n.parent_id = ? AND n.user_id = ? AND n.deleted_at IS NULL 
+		ORDER BY n.type DESC, n.name ASC
+		`
+		rows, err := db.QueryContext(r.Context(), query, parentID, userID)
 		if err != nil {
 			WriteInternalError(w, err)
 			return
@@ -86,7 +105,7 @@ func ListNodesHandler(db *sql.DB) http.HandlerFunc {
 		for rows.Next() {
 			var n ApiNode
 			var pID sql.NullString
-			if err := rows.Scan(&n.ID, &n.Name, &n.Type, &pID, &n.CreatedAt, &n.UpdatedAt); err != nil {
+			if err := rows.Scan(&n.ID, &n.Name, &n.Type, &pID, &n.CreatedAt, &n.UpdatedAt, &n.MimeType, &n.OwnerName, &n.SizeBytes, &n.Hash, &n.VersionCount); err != nil {
 				WriteInternalError(w, err)
 				return
 			}
