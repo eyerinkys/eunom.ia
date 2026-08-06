@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Eunomia - Structural File Graph</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Source+Sans+3:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-tint": "#855311",
+                      "on-secondary-fixed-variant": "#174f45",
+                      "secondary": "#32675c",
+                      "on-secondary-fixed": "#00201a",
+                      "on-secondary-container": "#386e62",
+                      "surface": "#f8f9ff",
+                      "on-surface-variant": "#514538",
+                      "surface-variant": "#e1e2e9",
+                      "on-surface": "#191c21",
+                      "surface-container-low": "#f2f3fa",
+                      "on-primary-fixed-variant": "#673d00",
+                      "tertiary": "#6f536a",
+                      "secondary-fixed": "#b6eedf",
+                      "outline": "#837467",
+                      "on-tertiary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "surface-container-highest": "#e1e2e9",
+                      "surface-container-high": "#e6e8ef",
+                      "primary-container": "#9f6926",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#2a1427",
+                      "primary-fixed": "#ffddbb",
+                      "inverse-surface": "#2e3036",
+                      "inverse-primary": "#fcb96f",
+                      "on-tertiary-container": "#fffbff",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#fcd8f3",
+                      "on-tertiary-fixed-variant": "#583e54",
+                      "on-primary": "#ffffff",
+                      "on-background": "#191c21",
+                      "tertiary-fixed-dim": "#dfbcd7",
+                      "error": "#ba1a1a",
+                      "surface-dim": "#d8dae1",
+                      "tertiary-container": "#896b83",
+                      "primary-fixed-dim": "#fcb96f",
+                      "surface-container-lowest": "#ffffff",
+                      "background": "#f8f9ff",
+                      "on-primary-fixed": "#2b1700",
+                      "primary": "#82510e",
+                      "outline-variant": "#d5c3b3",
+                      "surface-container": "#ecedf5",
+                      "surface-bright": "#f8f9ff",
+                      "error-container": "#ffdad6",
+                      "inverse-on-surface": "#eff0f8",
+                      "on-primary-container": "#fffbff",
+                      "secondary-container": "#b6eedf",
+                      "secondary-fixed-dim": "#9bd1c3",
+                      
+                      // Semantic Mapping for prompt specific colors
+                      "archive-ivory": "#f8f9ff", // Maps to background
+                      "deep-ink": "#191c21", // Maps to on-background/borders
+                      "sandstone": "#e1e2e9", // Maps to surface-variant
+                      "burnished-bronze": "#82510e", // Maps to primary
+                      "dusty-blue": "#896b83", // Maps to tertiary-container (approximate fallback)
+                      "olive": "#32675c", // Maps to secondary
+                      "clay-red": "#ba1a1a" // Maps to error
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "40px",
+                      "sm": "16px",
+                      "rule-weight": "1.5px",
+                      "xs": "8px",
+                      "md": "24px",
+                      "base": "4px",
+                      "sidebar-width": "280px",
+                      "xl": "64px"
+              },
+              "fontFamily": {
+                      "body-lg": ["\"Source Sans 3\""],
+                      "headline-md": ["Playfair Display"],
+                      "body-md": ["\"Source Sans 3\""],
+                      "display-lg": ["Playfair Display"],
+                      "headline-lg": ["Playfair Display"],
+                      "label-md": ["JetBrains Mono"],
+                      "headline-sm": ["Playfair Display"],
+                      "label-lg": ["JetBrains Mono"],
+                      "body-sm": ["\"Source Sans 3\""],
+                      "label-sm": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-sm": ["10px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Grid Background Pattern */
+        .grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(25, 28, 33, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(25, 28, 33, 0.05) 1px, transparent 1px);
+        }
+        
+        /* Path drawing for right-angled connectors */
+        .connector-path {
+            stroke: #191c21; /* deep-ink */
+            stroke-width: 1.5px;
+            fill: none;
+            stroke-linejoin: miter;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex flex-col md:flex-row">
+<!-- Top Navigation (Mobile Only) -->
+<header class="md:hidden flex justify-between items-center w-full px-md h-xl max-w-full bg-surface border-b-[1.5px] border-on-surface">
+<div class="flex items-center gap-sm">
+<span class="font-display-lg text-display-lg text-primary tracking-tight" style="font-size: 24px; line-height: 28px;">Eunomia</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:text-primary transition-colors active:opacity-80" data-icon="settings">settings</span>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-on-surface object-cover" data-alt="A small, circular profile portrait of an archivist or researcher. Soft, warm lighting accentuates a thoughtful expression. The background is a blurred, minimalist library setting, complementing the warm ivory and deep ink aesthetic of the interface. Professional and editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8CXVM2X33AJ3OIcKAT5Qmow4922zlfcOCN7wR-tad4sNA0y_CqUUDdZcg5krXzhAtol199nsjGoVArCxtiBjq6guGLMVz87Rn8ojeqfgeJ930BiPclsGdTIfwiCXYJ2TQsK4oS9ELIEPBM6Q2qSHapV1GKAKEdFkUf7F0qfQFCRoRb8_7zYdeBpVTxoiaDz9O6QPrDoOsEKa_WpDkq1GYS24IAswcRw5jZYdoOHw5vUbYpvP-TxrE"/>
+</div>
+</header>
+<!-- Side Navigation (Desktop) -->
+<nav class="hidden md:flex flex-col w-sidebar-width h-full py-md px-sm bg-on-surface text-primary-fixed border-r-[1.5px] border-primary">
+<div class="mb-lg px-sm">
+<h1 class="font-headline-md text-headline-md text-surface-container-lowest">Eunomia</h1>
+<p class="font-body-md text-body-md text-surface-variant mt-1">Archival System</p>
+</div>
+<ul class="flex flex-col gap-2 flex-grow">
+<!-- Nav Items -->
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+                    Home
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+                    My Files
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+                    Recent
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="star">star</span>
+                    Starred
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+                    Storage
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 py-2 text-surface-container-lowest border-l-[1.5px] border-primary-container pl-sm bg-on-secondary-fixed-variant transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-r-sm" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+                    Graph
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="cloud_download">cloud_download</span>
+                    Drive Import
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+                    Trash
+                </a>
+</li>
+</ul>
+<div class="mt-auto border-t-[1.5px] border-primary pt-sm">
+<ul class="flex flex-col gap-2">
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                        Settings
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 py-2 pl-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+                        Support
+                    </a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col relative grid-pattern">
+<!-- Graph Workspace Toolbar -->
+<div class="h-xl border-b-[1.5px] border-on-background flex items-center justify-between px-md bg-background/90 backdrop-blur-sm z-10 sticky top-0">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-sm text-headline-sm text-on-background">Structural Analysis</h2>
+<div class="h-6 w-[1.5px] bg-on-background"></div>
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md px-2 py-1 bg-surface-variant border-[1.5px] border-on-background">ROOT: /ARCHIVES_1920</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border-[1.5px] border-on-background bg-background hover:bg-surface-variant transition-colors font-label-md text-label-md uppercase">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span>
+                    Filter
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary hover:bg-surface-tint transition-colors font-label-md text-label-md uppercase">
+<span class="material-symbols-outlined text-[18px]" data-icon="zoom_in">zoom_in</span>
+                    Zoom Level
+                </button>
+</div>
+</div>
+<!-- Graph Canvas -->
+<div class="flex-grow relative overflow-auto p-lg">
+<!-- SVG Connectors (Rendered behind nodes) -->
+<svg class="absolute top-0 left-0 w-[2000px] h-[2000px] z-0 pointer-events-none">
+<!-- Root to A -->
+<path class="connector-path" d="M 240 100 L 240 250 L 150 250 L 150 280"></path>
+<!-- Root to B -->
+<path class="connector-path" d="M 240 100 L 240 250 L 350 250 L 350 280"></path>
+<!-- A to A1 -->
+<path class="connector-path" d="M 150 350 L 150 420 L 80 420 L 80 450"></path>
+<!-- A to A2 -->
+<path class="connector-path" d="M 150 350 L 150 420 L 220 420 L 220 450"></path>
+<!-- B to B1 (Selected) -->
+<path class="connector-path" d="M 350 350 L 350 420 L 350 450"></path>
+<!-- B to B2 (File) -->
+<path class="connector-path" d="M 350 350 L 350 420 L 480 420 L 480 450"></path>
+<!-- B1 to File -->
+<path class="connector-path" d="M 350 520 L 350 580"></path>
+</svg>
+<!-- Node Elements (Z-index 10 to sit above SVG) -->
+<div class="relative w-[1000px] h-[800px] z-10 font-label-md">
+<!-- Node: ROOT -->
+<div class="absolute top-[40px] left-[140px] w-[200px] bg-surface-variant border-[1.5px] border-primary p-3 flex flex-col gap-2 cursor-pointer shadow-none">
+<div class="flex justify-between items-center border-b-[1.5px] border-on-background pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="folder_special">folder_special</span>
+<span class="font-bold">ARCHIVES_1920</span>
+</div>
+<!-- Valid Provenance Marker -->
+<div class="w-3 h-3 rounded-full bg-secondary border-[1.5px] border-on-background" title="Valid Provenance"></div>
+</div>
+<div class="text-label-sm text-on-surface-variant">ID: Fld-001 | 14 Nodes</div>
+</div>
+<!-- Node: Directory A -->
+<div class="absolute top-[280px] left-[50px] w-[200px] bg-surface-variant border-[1.5px] border-primary p-3 flex flex-col gap-2 cursor-pointer">
+<div class="flex justify-between items-center border-b-[1.5px] border-on-background pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="folder">folder</span>
+<span class="font-bold">DOCUMENTS</span>
+</div>
+<div class="w-3 h-3 rounded-full bg-secondary border-[1.5px] border-on-background" title="Valid Provenance"></div>
+</div>
+<div class="text-label-sm text-on-surface-variant">ID: Fld-023 | 5 Nodes</div>
+</div>
+<!-- Node: Directory B -->
+<div class="absolute top-[280px] left-[250px] w-[200px] bg-surface-variant border-[1.5px] border-primary p-3 flex flex-col gap-2 cursor-pointer">
+<div class="flex justify-between items-center border-b-[1.5px] border-on-background pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="folder">folder</span>
+<span class="font-bold">PHOTOGRAPHS</span>
+</div>
+<div class="w-3 h-3 rounded-full bg-secondary border-[1.5px] border-on-background" title="Valid Provenance"></div>
+</div>
+<div class="text-label-sm text-on-surface-variant">ID: Fld-045 | 8 Nodes</div>
+</div>
+<!-- Node: File A1 -->
+<div class="absolute top-[450px] left-[-20px] w-[200px] bg-tertiary-container border-[1.5px] border-on-background p-3 flex flex-col gap-2 cursor-pointer">
+<div class="flex justify-between items-center border-b-[1.5px] border-on-background pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-background" data-icon="description">description</span>
+<span class="font-bold text-on-background truncate">Manifest_A.txt</span>
+</div>
+</div>
+<div class="text-label-sm text-on-background">Size: 12kb | Plaintext</div>
+</div>
+<!-- Node: File A2 (Broken Provenance) -->
+<div class="absolute top-[450px] left-[120px] w-[200px] bg-tertiary-container border-[1.5px] border-on-background p-3 flex flex-col gap-2 cursor-pointer">
+<div class="flex justify-between items-center border-b-[1.5px] border-on-background pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-background" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="font-bold text-on-background truncate">Report_Draft.pdf</span>
+</div>
+<!-- Broken Provenance Marker -->
+<div class="w-3 h-3 rounded-full bg-error border-[1.5px] border-on-background" title="Broken Provenance"></div>
+</div>
+<div class="text-label-sm text-on-background">Size: 1.2mb | Unverified</div>
+</div>
+<!-- Node: Directory B1 (SELECTED NODE - Burnished Bronze) -->
+<div class="absolute top-[450px] left-[250px] w-[200px] bg-primary border-[1.5px] border-on-background p-3 flex flex-col gap-2 cursor-pointer text-on-primary">
+<div class="flex justify-between items-center border-b-[1.5px] border-on-primary pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="folder">folder</span>
+<span class="font-bold">EXPEDITION_4</span>
+</div>
+<div class="w-3 h-3 rounded-full bg-secondary border-[1.5px] border-on-primary" title="Valid Provenance"></div>
+</div>
+<div class="text-label-sm opacity-90">ID: Fld-088 | 1 Node</div>
+</div>
+<!-- Node: File B2 -->
+<div class="absolute top-[450px] left-[380px] w-[200px] bg-tertiary-container border-[1.5px] border-on-background p-3 flex flex-col gap-2 cursor-pointer">
+<div class="flex justify-between items-center border-b-[1.5px] border-on-background pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-background" data-icon="image">image</span>
+<span class="font-bold text-on-background truncate">Camp_Site.tiff</span>
+</div>
+<div class="w-3 h-3 rounded-full bg-secondary border-[1.5px] border-on-background" title="Valid Provenance"></div>
+</div>
+<div class="text-label-sm text-on-background">Size: 45mb | TIFF</div>
+</div>
+<!-- Node: File B1-1 -->
+<div class="absolute top-[580px] left-[250px] w-[200px] bg-tertiary-container border-[1.5px] border-on-background p-3 flex flex-col gap-2 cursor-pointer">
+<div class="flex justify-between items-center border-b-[1.5px] border-on-background pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-background" data-icon="image">image</span>
+<span class="font-bold text-on-background truncate">Artifact_Scan.png</span>
+</div>
+<div class="w-3 h-3 rounded-full bg-secondary border-[1.5px] border-on-background" title="Valid Provenance"></div>
+</div>
+<div class="text-label-sm text-on-background">Size: 18mb | PNG</div>
+</div>
+</div>
+</div>
+<!-- Inspector Panel (Right side fixed overlay or flex item depending on space) -->
+<aside class="absolute right-0 top-[64px] h-[calc(100%-64px)] w-[320px] bg-surface-variant border-l-[1.5px] border-on-background flex flex-col hidden lg:flex">
+<div class="p-4 border-b-[1.5px] border-on-background">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-sm text-headline-sm uppercase text-on-background">Node Inspector</h3>
+<span class="material-symbols-outlined cursor-pointer" data-icon="close">close</span>
+</div>
+<div class="font-label-md px-2 py-1 bg-primary text-on-primary inline-block uppercase mt-1">Fld-088</div>
+</div>
+<div class="p-4 flex-grow overflow-y-auto font-body-sm">
+<div class="mb-6">
+<div class="font-label-md text-on-surface-variant border-b-[1.5px] border-on-surface-variant pb-1 mb-2">METADATA</div>
+<div class="grid grid-cols-2 gap-y-2 gap-x-4">
+<div class="text-on-surface-variant">Name:</div>
+<div class="font-label-md break-all">EXPEDITION_4</div>
+<div class="text-on-surface-variant">Type:</div>
+<div class="font-label-md">Directory</div>
+<div class="text-on-surface-variant">Created:</div>
+<div class="font-label-md">1920-04-12</div>
+<div class="text-on-surface-variant">Modified:</div>
+<div class="font-label-md">2023-11-05</div>
+</div>
+</div>
+<div class="mb-6">
+<div class="font-label-md text-on-surface-variant border-b-[1.5px] border-on-surface-variant pb-1 mb-2">PROVENANCE</div>
+<div class="flex items-start gap-2 bg-background p-2 border-[1.5px] border-on-background">
+<div class="w-3 h-3 rounded-full bg-secondary border-[1.5px] border-on-background mt-1 shrink-0"></div>
+<div>
+<span class="font-bold block mb-1">Chain Intact</span>
+<p class="text-on-surface-variant leading-tight">Cryptographic hash verified against source ledger.</p>
+</div>
+</div>
+</div>
+<div>
+<div class="font-label-md text-on-surface-variant border-b-[1.5px] border-on-surface-variant pb-1 mb-2">TAGS</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface border-[1.5px] border-on-background font-label-sm uppercase">Egypt</span>
+<span class="px-2 py-1 bg-surface border-[1.5px] border-on-background font-label-sm uppercase">Dig Site</span>
+<span class="px-2 py-1 bg-surface border-[1.5px] border-on-background font-label-sm uppercase">Priority</span>
+</div>
+</div>
+</div>
+<div class="p-4 border-t-[1.5px] border-on-background bg-surface-variant">
+<button class="w-full py-2 bg-background border-[1.5px] border-on-background text-on-background hover:bg-surface font-label-md uppercase transition-colors">
+                    Open Directory
+                </button>
+</div>
+</aside>
+</main>
+<!-- Mobile Bottom Navigation Shell Support -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface border-t-[1.5px] border-on-surface flex justify-around items-center h-16 z-50">
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant active:opacity-80 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[10px] font-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant active:opacity-80 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+<span class="text-[10px] font-label-sm mt-1">Files</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-primary border-t-2 border-primary active:opacity-80 transition-colors bg-surface-container-low" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="text-[10px] font-label-sm font-bold mt-1">Graph</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant active:opacity-80 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] font-label-sm mt-1">Settings</span>
+</a>
+</nav>
+</body></html>

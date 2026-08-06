@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Eunomia - My Files</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=Source+Sans+3:wght@400;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-tint": "#855311",
+                      "on-secondary-fixed-variant": "#174f45",
+                      "secondary": "#32675c",
+                      "on-secondary-fixed": "#00201a",
+                      "on-secondary-container": "#386e62",
+                      "surface": "#f8f9ff",
+                      "on-surface-variant": "#514538",
+                      "surface-variant": "#e1e2e9",
+                      "on-surface": "#191c21",
+                      "surface-container-low": "#f2f3fa",
+                      "on-primary-fixed-variant": "#673d00",
+                      "tertiary": "#6f536a",
+                      "secondary-fixed": "#b6eedf",
+                      "outline": "#837467",
+                      "on-tertiary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "surface-container-highest": "#e1e2e9",
+                      "surface-container-high": "#e6e8ef",
+                      "primary-container": "#9f6926",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#2a1427",
+                      "primary-fixed": "#ffddbb",
+                      "inverse-surface": "#2e3036",
+                      "inverse-primary": "#fcb96f",
+                      "on-tertiary-container": "#fffbff",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#fcd8f3",
+                      "on-tertiary-fixed-variant": "#583e54",
+                      "on-primary": "#ffffff",
+                      "on-background": "#191c21",
+                      "tertiary-fixed-dim": "#dfbcd7",
+                      "error": "#ba1a1a",
+                      "surface-dim": "#d8dae1",
+                      "tertiary-container": "#896b83",
+                      "primary-fixed-dim": "#fcb96f",
+                      "surface-container-lowest": "#ffffff",
+                      "background": "#f8f9ff",
+                      "on-primary-fixed": "#2b1700",
+                      "primary": "#82510e",
+                      "outline-variant": "#d5c3b3",
+                      "surface-container": "#ecedf5",
+                      "surface-bright": "#f8f9ff",
+                      "error-container": "#ffdad6",
+                      "inverse-on-surface": "#eff0f8",
+                      "on-primary-container": "#fffbff",
+                      "secondary-container": "#b6eedf",
+                      "secondary-fixed-dim": "#9bd1c3"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "40px",
+                      "sm": "16px",
+                      "rule-weight": "1.5px",
+                      "xs": "8px",
+                      "md": "24px",
+                      "base": "4px",
+                      "sidebar-width": "280px",
+                      "xl": "64px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "\"Source Sans 3\""
+                      ],
+                      "headline-md": [
+                              "Playfair Display"
+                      ],
+                      "body-md": [
+                              "\"Source Sans 3\""
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "headline-lg": [
+                              "Playfair Display"
+                      ],
+                      "label-md": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-sm": [
+                              "Playfair Display"
+                      ],
+                      "label-lg": [
+                              "JetBrains Mono"
+                      ],
+                      "body-sm": [
+                              "\"Source Sans 3\""
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "10px",
+                              {
+                                      "lineHeight": "14px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .rule-r { border-right: 1.5px solid #171A1F; }
+        .rule-b { border-bottom: 1.5px solid #171A1F; }
+        .rule-l { border-left: 1.5px solid #171A1F; }
+        .rule-t { border-top: 1.5px solid #171A1F; }
+        
+        .rule-bronze { border-color: #A66F2C !important; }
+        .rule-bronze-b { border-bottom: 1.5px solid #A66F2C; }
+        
+        .bg-deep-ink { background-color: #171A1F; }
+        .text-deep-ink { color: #171A1F; }
+        .bg-ivory { background-color: #F8F6F0; }
+        .text-ivory { color: #F8F6F0; }
+        .bg-sandstone { background-color: #E6E2D8; }
+        .text-bronze { color: #A66F2C; }
+        .bg-bronze { background-color: #A66F2C; }
+        .text-olive { color: #5B634B; }
+        .bg-olive { background-color: #5B634B; }
+
+        /* Custom Scrollbar for Inspector */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #171A1F; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #A66F2C; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #855311; 
+        }
+      </style>
+</head>
+<body class="h-full bg-ivory text-deep-ink flex overflow-hidden font-body-md text-body-md">
+<!-- SideNavBar (Shared Component) -->
+<nav class="bg-on-surface dark:bg-on-surface text-surface-container-lowest fixed left-0 top-0 h-full w-sidebar-width border-r-[1.5px] border-primary flex flex-col py-md px-sm z-50">
+<!-- Header -->
+<div class="mb-xl flex items-center gap-sm">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="museum">museum</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-surface-container-lowest dark:text-surface-container-lowest tracking-tight">Eunomia</h1>
+<p class="font-label-md text-label-md text-primary-fixed dark:text-primary-fixed-dim uppercase">Archival System</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 space-y-2">
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="home">home</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Home</span>
+</a>
+<a class="flex items-center gap-sm py-2 px-3 text-surface-container-lowest border-l-[1.5px] border-primary-container pl-sm bg-on-secondary-fixed-variant transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+<span>My Files</span>
+</a>
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="schedule">schedule</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Recent</span>
+</a>
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="star">star</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Starred</span>
+</a>
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="database">database</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Storage</span>
+</a>
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="account_tree">account_tree</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Graph</span>
+</a>
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="cloud_download">cloud_download</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Drive Import</span>
+</a>
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="delete">delete</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Trash</span>
+</a>
+</div>
+<!-- Footer Navigation -->
+<div class="mt-auto space-y-2 pt-md rule-t rule-bronze">
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="settings">settings</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Settings</span>
+</a>
+<a class="flex items-center gap-sm py-2 px-3 text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-surface-container-lowest transition-colors" data-icon="contact_support">contact_support</span>
+<span class="group-hover:text-surface-container-lowest transition-colors">Support</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-[280px] flex-1 flex h-full">
+<!-- Workspace Canvas -->
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-ivory">
+<!-- Top App Bar equivalent for Workspace -->
+<header class="h-xl rule-b flex items-center justify-between px-lg shrink-0">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-deep-ink" data-icon="folder_open">folder_open</span>
+<h2 class="font-headline-sm text-headline-sm text-deep-ink">My Files</h2>
+</div>
+<div class="flex items-center gap-md">
+<!-- Search input -->
+<div class="relative w-64">
+<input class="w-full bg-sandstone border-b-[1.5px] border-deep-ink focus:border-bronze border-t-0 border-l-0 border-r-0 focus:ring-0 py-1 pl-8 font-label-md text-label-md text-deep-ink placeholder-deep-ink/50 bg-transparent" placeholder="Search archive..." type="text"/>
+<span class="material-symbols-outlined absolute left-1 top-1.5 text-deep-ink/50" data-icon="search" style="font-size: 18px;">search</span>
+</div>
+<button class="bg-bronze text-ivory font-label-md text-label-md px-4 py-2 uppercase tracking-wider flex items-center gap-2 hover:bg-deep-ink transition-colors">
+<span class="material-symbols-outlined" data-icon="upload" style="font-size: 16px;">upload</span>
+                        Upload
+                    </button>
+</div>
+</header>
+<!-- Table Container -->
+<div class="flex-1 overflow-auto p-lg">
+<div class="max-w-[720px] mx-auto">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 font-label-md text-label-md text-deep-ink/70 mb-md uppercase">
+<span>Root</span>
+<span class="material-symbols-outlined" data-icon="chevron_right" style="font-size: 14px;">chevron_right</span>
+<span class="text-deep-ink font-bold">Research 2024</span>
+</div>
+<!-- Data Table -->
+<div class="w-full border-[1.5px] border-deep-ink">
+<!-- Table Header -->
+<div class="grid grid-cols-12 gap-4 bg-sandstone rule-b p-sm font-label-md text-label-md uppercase text-deep-ink tracking-wider">
+<div class="col-span-6">Name</div>
+<div class="col-span-3">Modified</div>
+<div class="col-span-3 text-right">Size</div>
+</div>
+<!-- Table Body -->
+<div class="flex flex-col">
+<!-- Row 1 -->
+<div class="grid grid-cols-12 gap-4 p-sm rule-b hover:bg-sandstone/50 cursor-pointer transition-colors group">
+<div class="col-span-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-deep-ink/60" data-icon="description">description</span>
+<span class="font-body-md text-body-md text-deep-ink font-medium">Biology Notes</span>
+</div>
+<div class="col-span-3 flex items-center font-label-md text-label-md text-deep-ink/70">Oct 12, 2023</div>
+<div class="col-span-3 flex items-center justify-end font-label-md text-label-md text-deep-ink/70">2.4 MB</div>
+</div>
+<!-- Row 2 -->
+<div class="grid grid-cols-12 gap-4 p-sm rule-b hover:bg-sandstone/50 cursor-pointer transition-colors group">
+<div class="col-span-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-deep-ink/60" data-icon="folder">folder</span>
+<span class="font-body-md text-body-md text-deep-ink font-medium">Mathematics</span>
+</div>
+<div class="col-span-3 flex items-center font-label-md text-label-md text-deep-ink/70">Oct 15, 2023</div>
+<div class="col-span-3 flex items-center justify-end font-label-md text-label-md text-deep-ink/70">--</div>
+</div>
+<!-- Row 3 (Selected) -->
+<div class="grid grid-cols-12 gap-4 p-sm rule-b bg-sandstone border-l-[3px] border-l-bronze cursor-pointer">
+<div class="col-span-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-bronze" data-icon="article">article</span>
+<span class="font-body-md text-body-md text-deep-ink font-bold">Physics Research Paper.md</span>
+</div>
+<div class="col-span-3 flex items-center font-label-md text-label-md text-deep-ink/90 font-bold">Today, 09:41</div>
+<div class="col-span-3 flex items-center justify-end font-label-md text-label-md text-deep-ink/90 font-bold">14 KB</div>
+</div>
+<!-- Row 4 -->
+<div class="grid grid-cols-12 gap-4 p-sm rule-b hover:bg-sandstone/50 cursor-pointer transition-colors group">
+<div class="col-span-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-deep-ink/60" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="font-body-md text-body-md text-deep-ink font-medium">Chemistry Lab Report.pdf</span>
+</div>
+<div class="col-span-3 flex items-center font-label-md text-label-md text-deep-ink/70">Nov 02, 2023</div>
+<div class="col-span-3 flex items-center justify-end font-label-md text-label-md text-deep-ink/70">4.1 MB</div>
+</div>
+<!-- Row 5 -->
+<div class="grid grid-cols-12 gap-4 p-sm hover:bg-sandstone/50 cursor-pointer transition-colors group">
+<div class="col-span-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-deep-ink/60" data-icon="co_present">co_present</span>
+<span class="font-body-md text-body-md text-deep-ink font-medium">History Presentation.pptx</span>
+</div>
+<div class="col-span-3 flex items-center font-label-md text-label-md text-deep-ink/70">Dec 01, 2023</div>
+<div class="col-span-3 flex items-center justify-end font-label-md text-label-md text-deep-ink/70">12.8 MB</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Inspector Panel -->
+<aside class="w-[360px] bg-sandstone rule-l flex flex-col shrink-0 h-full overflow-hidden">
+<!-- Inspector Header -->
+<div class="h-xl rule-b flex items-center justify-between px-md bg-ivory">
+<span class="font-headline-sm text-headline-sm text-deep-ink truncate">Physics Research Paper.md</span>
+<button class="text-deep-ink hover:text-bronze transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Inspector Tabs -->
+<div class="flex rule-b bg-ivory">
+<button class="flex-1 py-3 font-label-md text-label-md uppercase tracking-wider text-deep-ink/60 hover:bg-sandstone/50 transition-colors">Details</button>
+<button class="flex-1 py-3 font-label-md text-label-md uppercase tracking-wider text-bronze rule-bronze-b bg-sandstone">Provenance</button>
+</div>
+<!-- Provenance Content Area (Deep Ink Inset) -->
+<div class="flex-1 bg-deep-ink p-md overflow-y-auto relative">
+<!-- Background structural lines -->
+<div class="absolute left-8 top-0 bottom-0 w-px bg-bronze/30 z-0"></div>
+<h3 class="font-label-lg text-label-lg text-ivory uppercase tracking-wider mb-lg relative z-10">Chain of Custody</h3>
+<!-- Provenance Timeline -->
+<div class="space-y-xl relative z-10">
+<!-- Node 1: Origin -->
+<div class="flex gap-md relative group">
+<div class="w-10 h-10 rounded-full border-2 border-bronze bg-deep-ink flex items-center justify-center shrink-0 z-10">
+<span class="material-symbols-outlined text-bronze text-sm" data-icon="add">add</span>
+</div>
+<div class="flex-1">
+<div class="border-[1.5px] border-bronze bg-deep-ink p-sm relative">
+<!-- Connector line to timeline -->
+<div class="absolute w-md h-[1.5px] bg-bronze -left-md top-4 z-0"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-md text-label-md text-bronze uppercase">Creation</span>
+<span class="font-label-md text-label-md text-ivory/50">Oct 10, 2023 - 14:32 UTC</span>
+</div>
+<p class="font-body-md text-body-md text-ivory mb-2">Initial draft committed.</p>
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 bg-sandstone rounded flex items-center justify-center">
+<span class="font-label-sm text-label-sm text-deep-ink">DR</span>
+</div>
+<span class="font-label-sm text-label-sm text-ivory/70 font-mono">ID: a7f8b9c0</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Node 2: Edit -->
+<div class="flex gap-md relative group">
+<div class="w-10 h-10 rounded-full border-2 border-bronze bg-deep-ink flex items-center justify-center shrink-0 z-10">
+<span class="material-symbols-outlined text-bronze text-sm" data-icon="edit">edit</span>
+</div>
+<div class="flex-1">
+<div class="border-[1.5px] border-bronze/50 bg-deep-ink p-sm relative">
+<div class="absolute w-md h-[1.5px] bg-bronze/50 -left-md top-4 z-0"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-md text-label-md text-ivory/80 uppercase">Revision v1.2</span>
+<span class="font-label-md text-label-md text-ivory/50">Oct 14, 2023 - 09:15 UTC</span>
+</div>
+<p class="font-body-md text-body-md text-ivory/80 mb-2">Added methodology section.</p>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-ivory/50 font-mono">Hash: 3b9e12ff</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Node 3: Verification (Current) -->
+<div class="flex gap-md relative group">
+<!-- Olive verification indicator -->
+<div class="w-10 h-10 rounded-full border-2 border-olive bg-olive flex items-center justify-center shrink-0 z-10 shadow-[0_0_15px_rgba(91,99,75,0.5)]">
+<span class="material-symbols-outlined text-ivory text-sm" data-icon="verified">verified</span>
+</div>
+<div class="flex-1">
+<div class="border-[1.5px] border-olive bg-[#1A1F1A] p-sm relative">
+<div class="absolute w-md h-[1.5px] bg-olive -left-md top-4 z-0"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-md text-label-md text-olive uppercase tracking-widest">Cryptographic Seal</span>
+<span class="font-label-md text-label-md text-ivory">Today, 09:41 UTC</span>
+</div>
+<p class="font-body-md text-body-md text-ivory font-medium mb-3">Document integrity verified against institutional ledger.</p>
+<!-- Technical Metadata Chip -->
+<div class="inline-block border border-olive/50 bg-deep-ink px-2 py-1">
+<span class="font-label-sm text-label-sm text-olive font-mono">SIG_VAL_OK</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Inspector Footer Action -->
+<div class="p-sm bg-sandstone rule-t flex justify-end">
+<button class="border-[1.5px] border-deep-ink bg-ivory text-deep-ink font-label-md text-label-md px-4 py-2 uppercase tracking-wider hover:bg-deep-ink hover:text-ivory transition-colors">
+                    Export Audit Log
+                </button>
+</div>
+</aside>
+</main>
+</body></html>

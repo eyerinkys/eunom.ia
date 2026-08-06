@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Storage Visualiser - Eunomia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Playfair+Display:wght@400;600;700&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#855311",
+                        "on-secondary-fixed-variant": "#174f45",
+                        "secondary": "#32675c",
+                        "on-secondary-fixed": "#00201a",
+                        "on-secondary-container": "#386e62",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#514538",
+                        "surface-variant": "#e1e2e9",
+                        "on-surface": "#191c21",
+                        "surface-container-low": "#f2f3fa",
+                        "on-primary-fixed-variant": "#673d00",
+                        "tertiary": "#6f536a",
+                        "secondary-fixed": "#b6eedf",
+                        "outline": "#837467",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e1e2e9",
+                        "surface-container-high": "#e6e8ef",
+                        "primary-container": "#9f6926",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#2a1427",
+                        "primary-fixed": "#ffddbb",
+                        "inverse-surface": "#2e3036",
+                        "inverse-primary": "#fcb96f",
+                        "on-tertiary-container": "#fffbff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#fcd8f3",
+                        "on-tertiary-fixed-variant": "#583e54",
+                        "on-primary": "#ffffff",
+                        "on-background": "#191c21",
+                        "tertiary-fixed-dim": "#dfbcd7",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d8dae1",
+                        "tertiary-container": "#896b83",
+                        "primary-fixed-dim": "#fcb96f",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-primary-fixed": "#2b1700",
+                        "primary": "#82510e",
+                        "outline-variant": "#d5c3b3",
+                        "surface-container": "#ecedf5",
+                        "surface-bright": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#eff0f8",
+                        "on-primary-container": "#fffbff",
+                        "secondary-container": "#b6eedf",
+                        "secondary-fixed-dim": "#9bd1c3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "40px",
+                        "sm": "16px",
+                        "rule-weight": "1.5px",
+                        "xs": "8px",
+                        "md": "24px",
+                        "base": "4px",
+                        "sidebar-width": "280px",
+                        "xl": "64px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["\"Source Sans 3\""],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["\"Source Sans 3\""],
+                        "display-lg": ["Playfair Display"],
+                        "headline-lg": ["Playfair Display"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-sm": ["Playfair Display"],
+                        "label-lg": ["JetBrains Mono"],
+                        "body-sm": ["\"Source Sans 3\""],
+                        "label-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Treemap custom colors for specific blocks */
+        .bg-bronze { background-color: #A66F2C; }
+        .bg-copper { background-color: #5C7A70; }
+        .bg-olive { background-color: #7B855A; }
+        .bg-dusty-blue { background-color: #6B8296; }
+        .bg-muted-plum { background-color: #8C7389; }
+        
+        .rule-line {
+            border: 1.5px solid #171A1F;
+        }
+        .rule-border-b { border-bottom: 1.5px solid #171A1F; }
+        .rule-border-r { border-right: 1.5px solid #171A1F; }
+        .rule-border-l { border-left: 1.5px solid #171A1F; }
+        .rule-border-t { border-top: 1.5px solid #171A1F; }
+        
+        body {
+            background-color: #F8F9FA; /* Archive Ivory approx */
+            color: #171A1F; /* Deep Ink */
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md flex h-full overflow-hidden">
+<!-- Desktop Sidebar (Hidden on mobile) -->
+<nav class="hidden md:flex flex-col w-sidebar-width h-full py-md px-sm bg-on-surface dark:bg-on-surface border-r-[1.5px] border-primary dark:border-primary-container z-20 flex-shrink-0">
+<!-- Header -->
+<div class="mb-lg px-sm">
+<h1 class="font-headline-md text-headline-md text-surface-container-lowest dark:text-surface-container-lowest">Eunomia</h1>
+<p class="font-label-md text-label-md text-surface-variant opacity-80 mt-1 uppercase tracking-wider">Archival System</p>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 overflow-y-auto space-y-1">
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+                Home
+            </a>
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+                My Files
+            </a>
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+                Recent
+            </a>
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="star">star</span>
+                Starred
+            </a>
+<!-- Active Tab: Storage -->
+<a class="flex items-center gap-3 py-2 text-surface-container-lowest border-l-[1.5px] border-primary-container pl-sm bg-on-secondary-fixed-variant transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-r-sm" href="#">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+                Storage
+            </a>
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+                Graph
+            </a>
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="cloud_download">cloud_download</span>
+                Drive Import
+            </a>
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant dark:text-outline-variant hover:bg-on-secondary-container dark:hover:bg-on-secondary-container transition-all duration-200 ease-in-out font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+                Trash
+            </a>
+</div>
+<!-- Footer Navigation -->
+<div class="mt-auto pt-md border-t-[1.5px] border-primary/30 space-y-1">
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 py-2 px-sm text-surface-variant hover:bg-on-secondary-container transition-all duration-200 font-label-lg text-label-lg rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+                Support
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-[#F8F9FA] relative h-full overflow-hidden">
+<!-- Mobile Header (Hidden on desktop) -->
+<header class="md:hidden flex justify-between items-center w-full px-md h-xl max-w-full bg-surface border-b-[1.5px] border-on-surface z-10">
+<h1 class="font-display-lg text-display-lg text-primary tracking-tight" style="font-size: 24px; line-height: 32px;">Eunomia</h1>
+<div class="flex items-center gap-4">
+<button aria-label="Search" class="text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button aria-label="Menu" class="text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<!-- Canvas Workspace -->
+<div class="flex-1 overflow-auto p-4 md:p-8">
+<div class="max-w-[1200px] mx-auto flex flex-col h-full gap-6">
+<!-- Page Header & Stats -->
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 rule-border-b pb-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-[#171A1F] mb-2">Storage Visualiser</h2>
+<p class="font-body-md text-body-md text-[#514538] max-w-2xl">
+                            Real-time structural analysis of archival clusters. Distribution represents physical footprint post-deduplication.
+                        </p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 bg-on-surface text-surface-container-lowest font-label-md text-label-md uppercase tracking-wider hover:bg-primary-container transition-colors">
+                            Export Map
+                        </button>
+<button class="px-4 py-2 border-[1.5px] border-[#171A1F] text-[#171A1F] font-label-md text-label-md uppercase tracking-wider hover:bg-[#171A1F] hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px] align-middle">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Statistics Strip -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-0 rule-line bg-[#EAE8E3]">
+<div class="p-6 rule-border-r last:border-r-0 md:border-b-0 border-b-[1.5px] border-[#171A1F]">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#514538] block mb-2">Total Logical Size</span>
+<div class="font-headline-lg text-headline-lg text-[#171A1F]">842.6 TB</div>
+</div>
+<div class="p-6 rule-border-r last:border-r-0 md:border-b-0 border-b-[1.5px] border-[#171A1F]">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#514538] block mb-2">Physical CAS Storage</span>
+<div class="font-headline-lg text-headline-lg text-[#171A1F]">214.3 TB</div>
+</div>
+<div class="p-6">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#514538] block mb-2">Deduplication Savings</span>
+<div class="font-headline-lg text-headline-lg text-[#32675C]">74.5%</div>
+</div>
+</div>
+<!-- Treemap Visualization -->
+<div class="flex-1 min-h-[500px] rule-line bg-[#171A1F] p-[1.5px] relative">
+<!-- CSS Grid Treemap Approximation -->
+<div class="w-full h-full grid grid-cols-12 grid-rows-6 gap-[1.5px] bg-[#171A1F]">
+<!-- Large Block (Historical Records) -->
+<div class="col-span-12 md:col-span-5 row-span-2 md:row-span-6 bg-bronze relative p-4 group hover:opacity-90 transition-opacity cursor-pointer flex flex-col justify-between">
+<div class="font-headline-sm text-headline-sm text-white">Historical Records</div>
+<div class="flex justify-between items-end">
+<span class="font-label-md text-label-md text-white/80">CLUSTER A-1</span>
+<span class="font-label-lg text-label-lg text-white">42%</span>
+</div>
+</div>
+<!-- Top Right Block (Multimedia Archives) -->
+<div class="col-span-12 md:col-span-7 row-span-1 md:row-span-3 grid grid-cols-5 gap-[1.5px]">
+<div class="col-span-3 bg-copper relative p-4 group hover:opacity-90 transition-opacity cursor-pointer flex flex-col justify-between">
+<div class="font-headline-sm text-headline-sm text-white">Multimedia Archives</div>
+<div class="flex justify-between items-end">
+<span class="font-label-md text-label-md text-white/80">CLUSTER B-2</span>
+<span class="font-label-lg text-label-lg text-white">28%</span>
+</div>
+</div>
+<div class="col-span-2 bg-dusty-blue relative p-4 group hover:opacity-90 transition-opacity cursor-pointer flex flex-col justify-between">
+<div class="font-headline-sm text-headline-sm text-white">Financial Logs</div>
+<div class="flex justify-between items-end">
+<span class="font-label-md text-label-md text-white/80">CLUSTER C-1</span>
+<span class="font-label-lg text-label-lg text-white">12%</span>
+</div>
+</div>
+</div>
+<!-- Bottom Right Grid (Misc & Sub-clusters) -->
+<div class="col-span-12 md:col-span-7 row-span-2 md:row-span-3 grid grid-cols-4 grid-rows-2 gap-[1.5px]">
+<div class="col-span-2 row-span-2 bg-olive relative p-4 group hover:opacity-90 transition-opacity cursor-pointer flex flex-col justify-between">
+<div class="font-headline-sm text-headline-sm text-white">Personnel Files</div>
+<div class="flex justify-between items-end">
+<span class="font-label-md text-label-md text-white/80">CLUSTER D-4</span>
+<span class="font-label-lg text-label-lg text-white">10%</span>
+</div>
+</div>
+<div class="col-span-2 row-span-1 bg-[#EAE8E3] relative p-4 group hover:opacity-90 transition-opacity cursor-pointer flex flex-col justify-between">
+<div class="font-headline-sm text-headline-sm text-[#171A1F] leading-tight">Telemetry Data</div>
+<div class="flex justify-between items-end">
+<span class="font-label-md text-label-md text-[#514538]">CLUSTER E-1</span>
+<span class="font-label-lg text-label-lg text-[#171A1F]">5%</span>
+</div>
+</div>
+<div class="col-span-1 row-span-1 bg-muted-plum relative p-3 group hover:opacity-90 transition-opacity cursor-pointer flex flex-col justify-between">
+<div class="font-label-md text-label-md text-white uppercase tracking-wider">Sys Configs</div>
+<div class="text-right">
+<span class="font-label-lg text-label-lg text-white">2%</span>
+</div>
+</div>
+<div class="col-span-1 row-span-1 bg-surface-variant relative p-3 group hover:opacity-90 transition-opacity cursor-pointer flex flex-col justify-between">
+<div class="font-label-md text-label-md text-[#171A1F] uppercase tracking-wider">Orphaned</div>
+<div class="text-right">
+<span class="font-label-lg text-label-lg text-[#171A1F]">1%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Nav (Visible only on mobile) -->
+<nav class="md:hidden w-full h-16 bg-surface border-t-[1.5px] border-on-surface flex justify-around items-center z-10 flex-shrink-0">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-label-sm text-[10px]">Files</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">database</span>
+<span class="font-label-sm text-[10px]">Storage</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-[10px]">Settings</span>
+</a>
+</nav>
+</body></html>

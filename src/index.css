@@ -1,0 +1,202 @@
+/* Eunomia — Mineral Archival Design System */
+
+:root {
+  /* Surface Color Tokens (Tonal Layering) */
+  --bg-canvas: #F8F9FF;           /* Level 0: Archive Ivory */
+  --bg-panel: #E1E2E9;            /* Level 1: Soft Sandstone */
+  --bg-sidebar: #191C21;          /* Level 2: Deep Ink Global Navigation */
+  --bg-modal: #FFFFFF;            /* Level 3: Pure White Overlay Dialogs */
+  --bg-surface-elevated: #F2F3FA;
+  
+  /* Text & Rule Line Tokens */
+  --text-primary: #191C21;        /* Deep Ink primary text */
+  --text-secondary: #514538;      /* Warm Muted Brown secondary text */
+  --text-muted: #837467;          /* Muted rule text */
+  --text-on-dark: #F8F9FF;        /* Ivory text on dark sidebar */
+  --text-on-dark-muted: #A3A8B5;
+  
+  /* Rule Lines Motif (1.5px solid) */
+  --border-rule: 1.5px solid #171A1F;
+  --border-rule-light: 1.5px solid #D5C3B3;
+  --border-rule-accent: 3px solid #82510E;
+  --rule-color: #171A1F;
+  --rule-light: #D5C3B3;
+
+  /* Brand & Accent Palettes (Mineral Archival) */
+  --accent-bronze: #82510E;        /* Primary Accent: Burnished Bronze */
+  --accent-bronze-light: #9F6926;
+  --accent-bronze-fixed: #FFDDBB;
+  --accent-copper: #32675C;        /* Secondary Accent: Oxidised Copper */
+  --accent-plum: #6F536A;          /* Tertiary Accent: Muted Plum */
+  --accent-olive: #556B2F;         /* Success / Verified Badge */
+  --accent-red: #BA1A1A;           /* Tamper / Warning Red */
+  --accent-red-light: #FFDAD6;
+  
+  /* Typography Fonts */
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Source Sans 3', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  /* Spacing Scale */
+  --sidebar-width: 280px;
+  --inspector-width: 360px;
+  --topbar-height: 64px;
+}
+
+/* Base Resets */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* Typography Utility Classes */
+.font-serif { font-family: var(--font-serif); }
+.font-sans { font-family: var(--font-sans); }
+.font-mono { font-family: var(--font-mono); }
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rule Line Structural Utilities */
+.rule-b { border-bottom: var(--border-rule); }
+.rule-t { border-top: var(--border-rule); }
+.rule-l { border-left: var(--border-rule); }
+.rule-r { border-right: var(--border-rule); }
+.rule-all { border: var(--border-rule); }
+
+.rule-b-light { border-bottom: var(--border-rule-light); }
+.rule-r-light { border-right: var(--border-rule-light); }
+.rule-all-light { border: var(--border-rule-light); }
+
+/* Selection Rule Line Marker */
+.row-selected {
+  border-left: var(--border-rule-accent) !important;
+  background-color: #E6E2D8 !important;
+}
+
+.row-hover:hover {
+  background-color: rgba(225, 226, 233, 0.6);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-primary);
+}
+
+/* Custom Buttons (Strict Rule Line Style) */
+.btn-primary {
+  background-color: var(--accent-bronze);
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  border: var(--border-rule);
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-bronze-light);
+}
+
+.btn-secondary {
+  background-color: var(--bg-panel);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border: var(--border-rule);
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #D5C3B3;
+}
+
+.btn-icon {
+  background: transparent;
+  border: var(--border-rule);
+  padding: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transition: background-color 0.15s ease;
+}
+
+.btn-icon:hover {
+  background-color: var(--bg-panel);
+}
+
+/* Status Badges */
+.badge-valid {
+  background-color: rgba(85, 107, 47, 0.15);
+  color: var(--accent-olive);
+  border: 1px solid var(--accent-olive);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+
+.badge-tampered {
+  background-color: rgba(186, 26, 26, 0.15);
+  color: var(--accent-red);
+  border: 1px solid var(--accent-red);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+
+/* Code Snippet / Hash Chip */
+.hash-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background-color: #E1E2E9;
+  border: 1.5px solid #171A1F;
+  padding: 4px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+  word-break: break-all;
+  display: inline-block;
+}

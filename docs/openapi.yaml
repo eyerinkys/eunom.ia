@@ -1,0 +1,140 @@
+openapi: "3.1.0"
+info:
+  title: Eunomia API
+  description: |
+    REST API for the Eunomia content-addressed file management and
+    cryptographic provenance archive system.
+  version: "0.1.0"
+  contact:
+    name: Eunomia
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+# -------------------------------------------------------------------
+# Paths
+# -------------------------------------------------------------------
+paths:
+  /api/health:
+    get:
+      operationId: getHealth
+      summary: Health check
+      description: Returns service health status and database connectivity.
+      tags: [System]
+      responses:
+        "200":
+          description: Service is healthy.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "503":
+          description: Service is unavailable (database unreachable).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # --- Future route groups (Phase 1+) ---
+  # /api/auth/register:
+  # /api/auth/login:
+  # /api/auth/logout:
+  # /api/auth/me:
+  # /api/nodes:
+  # /api/nodes/{nodeId}:
+  # /api/files/{nodeId}/content:
+  # /api/uploads:
+  # /api/uploads/{uploadId}/chunks:
+  # /api/versions/{nodeId}:
+  # /api/versions/{versionId}/restore:
+  # /api/provenance/{nodeId}:
+  # /api/provenance/{nodeId}/verify:
+  # /api/provenance/{nodeId}/export:
+  # /api/storage/stats:
+  # /api/graph:
+  # /api/imports/drive:
+
+# -------------------------------------------------------------------
+# Components
+# -------------------------------------------------------------------
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, version, timestamp]
+      properties:
+        status:
+          type: string
+          description: Service health status.
+          examples: ["ok"]
+        version:
+          type: string
+          description: API version.
+          examples: ["0.1.0"]
+        timestamp:
+          type: string
+          format: date-time
+          description: Current server UTC timestamp.
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          $ref: "#/components/schemas/ErrorDetail"
+
+    ErrorDetail:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          enum:
+            - INTERNAL_ERROR
+            - NOT_FOUND
+            - VALIDATION_ERROR
+            - UNAUTHORIZED
+            - FORBIDDEN
+            - CONFLICT
+            - BAD_REQUEST
+            - SERVICE_UNAVAILABLE
+        message:
+          type: string
+          description: Human-readable error message.
+        details:
+          type: object
+          additionalProperties: true
+          description: Optional field-level validation details.
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: eunomia_session
+      description: HTTP-only secure session cookie set on login.
+
+tags:
+  - name: System
+    description: Health checks and system status.
+  # - name: Auth
+  #   description: User registration, login, logout, and session management.
+  # - name: Nodes
+  #   description: File and folder CRUD operations.
+  # - name: Files
+  #   description: File content upload and download.
+  # - name: Uploads
+  #   description: Chunked upload session management.
+  # - name: Versions
+  #   description: File version history and restoration.
+  # - name: Provenance
+  #   description: Cryptographic authorship provenance chain.
+  # - name: Storage
+  #   description: Storage analytics and visualisation data.
+  # - name: Graph
+  #   description: Structural file relationship graph.
+  # - name: Imports
+  #   description: Google Drive import jobs.
