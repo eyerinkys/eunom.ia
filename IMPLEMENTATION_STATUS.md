@@ -16,6 +16,12 @@ Eunomia is a local-first Content-Addressable Storage (CAS) file management & cry
 
 The frontend data layer uses a mixture of real folder/auth API integrations and mock state for files/activities. The backend foundation is complete and Phase 1 is fully integrated.
 
+### Feature Purge Status
+The following features have been completely purged from both frontend and backend:
+1. **Trash**: Purged from navigation (`Sidebar`), routes (`App.tsx`), types (`ViewTab`), and inspector buttons. Normal file/folder deletion is unaffected and uses `DeleteNode` (`deleted_at`).
+2. **Google Drive Import**: Purged from navigation (`Sidebar`), action bar (`TopBar`), routes (`App.tsx`), `DriveImportView.tsx`, types (`ViewTab`), and OpenAPI specification (`openapi.yaml`).
+3. **Node Settings**: Purged from navigation (`Sidebar` footer), routes (`App.tsx`), `SettingsView.tsx`, and types (`ViewTab`). Core internal `nodes` file/folder data model is preserved.
+
 ---
 
 ## 2. Preserved Visual Source-of-Truth Assets

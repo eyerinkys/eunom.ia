@@ -55,7 +55,6 @@ paths:
   # /api/provenance/{nodeId}/export:
   # /api/storage/stats:
   # /api/graph:
-  # /api/imports/drive:
 
 # -------------------------------------------------------------------
 # Components
@@ -136,5 +135,3 @@ tags:
   #   description: Storage analytics and visualisation data.
   # - name: Graph
   #   description: Structural file relationship graph.
-  # - name: Imports
-  #   description: Google Drive import jobs.

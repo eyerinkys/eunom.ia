@@ -24,7 +24,7 @@ eunom.ia/
 │   │   └── mockData.ts              # In-memory initial dataset (INITIAL_FILES, INITIAL_FOLDERS, STORAGE_CATEGORIES, INITIAL_GRAPH_NODES)
 │   ├── components/
 │   │   ├── Shell/                   # Top-level shell (Sidebar.tsx, TopBar.tsx, BreadcrumbBar.tsx)
-│   │   ├── Views/                   # Primary tab views (HomeView, MyFilesView, StorageVisualizerView, StructuralFileGraphView, DriveImportView, SettingsView)
+│   │   ├── Views/                   # Primary tab views (HomeView, MyFilesView, StorageVisualizerView, StructuralFileGraphView)
 │   │   ├── Inspector/               # Stationary drawer (InspectorPanel.tsx — file details, version history, provenance verification)
 │   │   └── Modals/                  # Dialog overlays (UploadModal.tsx, DiffModal.tsx)
 │   ├── index.css                    # Mineral Archival tokens (--bg-canvas, --border-rule, --accent-bronze), reset rules, and rule-line utility classes

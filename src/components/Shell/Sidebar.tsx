@@ -4,9 +4,6 @@ import {
   FolderGit2, 
   PieChart, 
   Network, 
-  CloudDownload, 
-  Trash2, 
-  Settings, 
   ShieldCheck,
   HardDrive
 } from 'lucide-react';
@@ -24,8 +21,6 @@ export const Sidebar: React.FC = () => {
     { tab: 'files', label: 'My Files & Provenance', icon: <FolderGit2 size={18} /> },
     { tab: 'storage', label: 'Storage Visualiser', icon: <PieChart size={18} /> },
     { tab: 'graph', label: 'Structural File Graph', icon: <Network size={18} /> },
-    { tab: 'drive', label: 'Google Drive Import', icon: <CloudDownload size={18} /> },
-    { tab: 'trash', label: 'Trash', icon: <Trash2 size={18} /> },
   ];
 
   return (
@@ -138,32 +133,16 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* System Settings Footer */}
+      {/* System Status Footer */}
       <div 
         style={{
           padding: '16px 24px',
           borderTop: '1.5px solid rgba(248, 249, 255, 0.15)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'flex-start'
         }}
       >
-        <button
-          onClick={() => setActiveTab('settings')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'none',
-            border: 'none',
-            color: activeTab === 'settings' ? '#FFF' : 'var(--text-on-dark-muted)',
-            fontFamily: 'var(--font-sans)',
-            fontSize: '12px',
-            cursor: 'pointer'
-          }}
-        >
-          <Settings size={16} /> Node Settings
-        </button>
         <div 
           style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', color: 'var(--accent-olive)', fontFamily: 'var(--font-sans)' }}
           title="Cryptographic RSA/Ed25519 node online"

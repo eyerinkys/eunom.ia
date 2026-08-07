@@ -135,14 +135,12 @@ All runtime data originates in [`src/data/mockData.ts`](file:///Users/eyerinerro
 
 | Component | Interactive Element | Current Action | Classification |
 |---|---|---|---|
-| `Sidebar.tsx` | Main Nav Buttons (`Home`, `My Files`, `Storage`, `Graph`, `Drive`, `Trash`) | `setActiveTab(tab)` | **Frontend-only state** |
-| `Sidebar.tsx` | Node Settings Button | `setActiveTab('settings')` | **Frontend-only state** |
+| `Sidebar.tsx` | Main Nav Buttons (`Home`, `My Files`, `Storage`, `Graph`) | `setActiveTab(tab)` | **Frontend-only state** |
 | `Sidebar.tsx` | Storage Gauge Widget | Displays static 345.9 MB / 1.0 GB | **Placeholder** |
 | `Sidebar.tsx` | SECURE Badge | Hover tooltip | **Placeholder** |
 | `TopBar.tsx` | Search Input Field | Updates `searchQuery`, filters `currentFiles` in `MyFilesView` | **Frontend-only state** |
 | `TopBar.tsx` | List / Grid View Toggles | `setDisplayMode('table' | 'grid')` | **Frontend-only state** |
-| `TopBar.tsx` | New Folder Button | Opens `prompt()`, calls `addFolder(name)` | **Partially functional** |
-| `TopBar.tsx` | Drive Import Button | `setActiveTab('drive')` | **Frontend-only state** |
+| `TopBar.tsx` | New Folder Button | Opens `prompt()`, calls `createFolder(name)` | **Functional** |
 | `TopBar.tsx` | Upload File Button | `setUploadModalOpen(true)` | **Frontend-only state** |
 | `BreadcrumbBar.tsx` | Folder Path Links | `setCurrentFolderId(crumb.id)` | **Frontend-only state** |
 | `HomeView.tsx` | Metric Summary Cards | Displays hardcoded & calculated values | **Placeholder** |

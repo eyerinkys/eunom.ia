@@ -1,5 +1,4 @@
-import React from 'react';
-import { Search, Upload, FolderPlus, LayoutGrid, List, CloudDownload } from 'lucide-react';
+import { Search, Upload, FolderPlus, LayoutGrid, List } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 
 export const TopBar: React.FC = () => {
@@ -9,7 +8,6 @@ export const TopBar: React.FC = () => {
     displayMode, 
     setDisplayMode, 
     setUploadModalOpen,
-    setActiveTab,
     createFolder,
     currentFolderId
   } = useEunomiaStore();
@@ -134,14 +132,6 @@ export const TopBar: React.FC = () => {
           style={{ flexShrink: 0 }}
         >
           <FolderPlus size={15} /> New Folder
-        </button>
-
-        <button 
-          onClick={() => setActiveTab('drive')}
-          className="btn-secondary"
-          style={{ flexShrink: 0 }}
-        >
-          <CloudDownload size={15} /> Drive Import
         </button>
 
         <button 

@@ -1,4 +1,4 @@
-export type ViewTab = 'home' | 'files' | 'storage' | 'graph' | 'drive' | 'trash' | 'settings';
+export type ViewTab = 'home' | 'files' | 'storage' | 'graph';
 
 export type DisplayMode = 'table' | 'grid';
 

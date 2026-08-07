@@ -8,8 +8,6 @@ import { HomeView } from './components/Views/HomeView';
 import { MyFilesView } from './components/Views/MyFilesView';
 import { StorageVisualizerView } from './components/Views/StorageVisualizerView';
 import { StructuralFileGraphView } from './components/Views/StructuralFileGraphView';
-import { DriveImportView } from './components/Views/DriveImportView';
-import { SettingsView } from './components/Views/SettingsView';
 
 import { UploadModal } from './components/Modals/UploadModal';
 import { DiffModal } from './components/Modals/DiffModal';
@@ -47,19 +45,6 @@ export const App: React.FC = () => {
         return <StorageVisualizerView />;
       case 'graph':
         return <StructuralFileGraphView />;
-      case 'drive':
-        return <DriveImportView />;
-      case 'settings':
-        return <SettingsView />;
-      case 'trash':
-        return (
-          <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
-            <h2 className="font-serif" style={{ fontSize: '24px', color: 'var(--text-primary)', marginBottom: '8px' }}>
-              Trash / Retention Quarantine
-            </h2>
-            <p>No deleted blobs currently pending garbage collection.</p>
-          </div>
-        );
       default:
         return <MyFilesView />;
     }
