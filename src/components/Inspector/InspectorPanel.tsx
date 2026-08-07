@@ -15,7 +15,8 @@ import {
   FilePlus,
   FileUp,
   RotateCw,
-  Edit3
+  Edit3,
+  Share2
 } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 import { animate, stagger } from 'animejs';
@@ -42,7 +43,8 @@ export const InspectorPanel: React.FC = () => {
     provenanceEvents,
     provenanceVerificationResult,
     isProvenanceLoading,
-    fetchProvenance
+    fetchProvenance,
+    setShareModalOpen
   } = useEunomiaStore();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -124,6 +126,10 @@ export const InspectorPanel: React.FC = () => {
     alert(`Generating & Exporting Cryptographic Provenance PDF for "${activeFile.name}"...`);
   };
 
+  const currentUserPerm = activeFile.currentUserPermission || 'owner';
+  const isOwner = currentUserPerm === 'owner';
+  const isViewer = currentUserPerm === 'viewer';
+
   return (
     <aside 
       style={{
@@ -160,23 +166,49 @@ export const InspectorPanel: React.FC = () => {
               {activeFile.name}
             </h2>
           </div>
-          <button
-            onClick={() => deleteFile(activeFile.id)}
-            title="Delete File"
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: 'var(--accent-red, #BA1A1A)',
-              padding: '4px',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <Trash2 size={16} />
-          </button>
+          
+          {/* Action Buttons: Share & Delete */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <button
+              onClick={() => setShareModalOpen(true)}
+              disabled={isViewer}
+              title={isViewer ? "Viewers cannot share this file" : "Share File"}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: isViewer ? 'not-allowed' : 'pointer',
+                color: 'var(--accent-bronze)',
+                opacity: isViewer ? 0.4 : 1,
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Share2 size={16} />
+            </button>
+
+            <button
+              onClick={() => deleteFile(activeFile.id)}
+              disabled={!isOwner}
+              title={!isOwner ? "Only the file owner can delete this file" : "Delete File"}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: !isOwner ? 'not-allowed' : 'pointer',
+                color: 'var(--accent-red, #BA1A1A)',
+                opacity: !isOwner ? 0.4 : 1,
+                padding: '4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span className="font-mono" style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
@@ -249,7 +281,7 @@ export const InspectorPanel: React.FC = () => {
             color: inspectorTab === 'provenance' ? 'var(--text-primary)' : 'var(--text-muted)'
           }}
         >
-          PROVENANCE
+          FILE INTEGRITY
         </button>
       </div>
 
@@ -327,6 +359,8 @@ export const InspectorPanel: React.FC = () => {
             <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: 'var(--border-rule)' }}>
               <button
                 onClick={() => deleteFile(activeFile.id)}
+                disabled={!isOwner}
+                title={!isOwner ? "Only the file owner can delete this file" : "Delete File"}
                 className="btn-secondary"
                 style={{
                   width: '100%',
@@ -340,12 +374,13 @@ export const InspectorPanel: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '6px',
-                  cursor: 'pointer',
+                  cursor: !isOwner ? 'not-allowed' : 'pointer',
+                  opacity: !isOwner ? 0.5 : 1,
                   borderRadius: '2px'
                 }}
               >
                 <Trash2 size={14} />
-                Delete File
+                Delete File {!isOwner && '(Owner Only)'}
               </button>
             </div>
           </div>
@@ -377,7 +412,15 @@ export const InspectorPanel: React.FC = () => {
                 </div>
                 <button 
                   className="btn-secondary" 
-                  style={{ padding: '5px 10px', fontSize: '11px', fontWeight: 600 }}
+                  disabled={isViewer}
+                  title={isViewer ? "Viewers cannot upload new versions" : "Upload Version"}
+                  style={{
+                    padding: '5px 10px',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    opacity: isViewer ? 0.5 : 1,
+                    cursor: isViewer ? 'not-allowed' : 'pointer'
+                  }}
                   onClick={() => fileInputRef.current?.click()}
                 >
                   + Upload Version
@@ -469,9 +512,20 @@ export const InspectorPanel: React.FC = () => {
                         {!isLatest && (
                           <button 
                             className="btn-secondary" 
-                            style={{ flex: '1 1 auto', justifyContent: 'center', padding: '4px 6px', fontSize: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            disabled={isViewer}
+                            style={{
+                              flex: '1 1 auto',
+                              justifyContent: 'center',
+                              padding: '4px 6px',
+                              fontSize: '10px',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              opacity: isViewer ? 0.5 : 1,
+                              cursor: isViewer ? 'not-allowed' : 'pointer'
+                            }}
                             onClick={() => restoreVersion(activeFile.id, ver.id)}
-                            title="Restore this version as current"
+                            title={isViewer ? "Viewers cannot restore versions" : "Restore this version as current"}
                           >
                             <RotateCcw size={10} />
                             Restore
@@ -510,9 +564,22 @@ export const InspectorPanel: React.FC = () => {
                         {ver.version !== 'v1' && !ver.id.startsWith('v1-') && (
                           <button 
                             className="btn-secondary" 
-                            style={{ flex: '1 1 auto', justifyContent: 'center', padding: '4px 6px', fontSize: '10px', color: 'var(--accent-red)', borderColor: 'rgba(186,26,26,0.3)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            disabled={!isOwner}
+                            style={{
+                              flex: '1 1 auto',
+                              justifyContent: 'center',
+                              padding: '4px 6px',
+                              fontSize: '10px',
+                              color: 'var(--accent-red)',
+                              borderColor: 'rgba(186,26,26,0.3)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              opacity: !isOwner ? 0.4 : 1,
+                              cursor: !isOwner ? 'not-allowed' : 'pointer'
+                            }}
                             onClick={() => deleteVersion(activeFile.id, ver.id)}
-                            title="Delete this revision"
+                            title={!isOwner ? "Only the file owner can delete revisions" : "Delete this revision"}
                           >
                             <Trash2 size={10} />
                             Delete

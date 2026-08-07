@@ -8,10 +8,12 @@ import { HomeView } from './components/Views/HomeView';
 import { MyFilesView } from './components/Views/MyFilesView';
 import { StorageVisualizerView } from './components/Views/StorageVisualizerView';
 import { StructuralFileGraphView } from './components/Views/StructuralFileGraphView';
+import { SharedWithMeView } from './components/Views/SharedWithMeView';
 
 import { UploadModal } from './components/Modals/UploadModal';
 import { DiffModal } from './components/Modals/DiffModal';
 import { CollisionModal } from './components/Modals/CollisionModal';
+import { ShareModal } from './components/Modals/ShareModal';
 import { LoginView } from './components/Views/LoginView';
 
 import { useEunomiaStore } from './store/useEunomiaStore';
@@ -41,6 +43,8 @@ export const App: React.FC = () => {
         return <HomeView />;
       case 'files':
         return <MyFilesView />;
+      case 'shared':
+        return <SharedWithMeView />;
       case 'storage':
         return <StorageVisualizerView />;
       case 'graph':
@@ -84,6 +88,7 @@ export const App: React.FC = () => {
       <UploadModal />
       <DiffModal />
       <CollisionModal />
+      <ShareModal />
     </div>
   );
 };

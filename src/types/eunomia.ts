@@ -1,8 +1,17 @@
-export type ViewTab = 'home' | 'files' | 'storage' | 'graph';
+export type ViewTab = 'home' | 'files' | 'storage' | 'graph' | 'shared';
 
 export type DisplayMode = 'table' | 'grid';
 
 export type ProvenanceStatus = 'VALID' | 'TAMPERED' | 'UNVERIFIED';
+
+export type SharePermission = 'owner' | 'editor' | 'viewer';
+
+export interface SharedAccess {
+  userId: string;
+  username: string;
+  email: string;
+  permission: SharePermission;
+}
 
 export interface User {
   id: string;
@@ -59,6 +68,8 @@ export interface FileItem {
   versionCount: number;
   versions: FileVersion[];
   contentSnippet?: string;
+  accessList?: SharedAccess[];
+  currentUserPermission?: SharePermission;
 }
 
 export interface FolderItem {

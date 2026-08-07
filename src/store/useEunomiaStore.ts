@@ -52,7 +52,14 @@ interface EunomiaState {
   // Modals
   isUploadModalOpen: boolean;
   isDiffModalOpen: boolean;
+  isShareModalOpen: boolean;
   diffComparison: { oldVersion: string; newVersion: string; oldSnippet: string; newSnippet: string } | null;
+
+  // Share Actions
+  setShareModalOpen: (open: boolean) => void;
+  shareFileWithUser: (fileId: string, emailOrUsername: string, permission: 'editor' | 'viewer') => void;
+  updateUserPermission: (fileId: string, userId: string, permission: 'editor' | 'viewer') => void;
+  removeUserAccess: (fileId: string, userId: string) => void;
 
   // Auth Actions
   checkAuth: () => Promise<void>;
@@ -132,9 +139,79 @@ export const useEunomiaStore = create<EunomiaState>((set, get) => ({
 
   isUploadModalOpen: false,
   isDiffModalOpen: false,
+  isShareModalOpen: false,
   diffComparison: null,
   selectedCategoryFilter: 'all',
   setSelectedCategoryFilter: (cat: string) => set({ selectedCategoryFilter: cat }),
+  
+  setShareModalOpen: (open) => set({ isShareModalOpen: open }),
+
+  shareFileWithUser: (fileId, emailOrUsername, permission) => {
+    const username = emailOrUsername.includes('@') ? emailOrUsername.split('@')[0] : emailOrUsername;
+    const email = emailOrUsername.includes('@') ? emailOrUsername : `${emailOrUsername.toLowerCase().replace(/\s+/g, '')}@eunomia.local`;
+    const newAccess = {
+      userId: `u-${Date.now()}`,
+      username: username,
+      email: email,
+      permission: permission
+    };
+
+    set(state => {
+      const updateAccess = (f: FileItem): FileItem => {
+        if (f.id !== fileId) return f;
+        const currentList = f.accessList || [
+          { userId: 'u-owner', username: f.owner, email: `${f.owner.toLowerCase().replace(/\s+/g, '')}@eunomia.local`, permission: 'owner' as const }
+        ];
+        const existingIdx = currentList.findIndex(a => a.email.toLowerCase() === email.toLowerCase() || a.username.toLowerCase() === username.toLowerCase());
+        let nextList;
+        if (existingIdx >= 0) {
+          nextList = [...currentList];
+          nextList[existingIdx] = { ...nextList[existingIdx], permission };
+        } else {
+          nextList = [...currentList, newAccess];
+        }
+        return { ...f, accessList: nextList };
+      };
+
+      const updatedActive = state.activeFile && state.activeFile.id === fileId ? updateAccess(state.activeFile) : state.activeFile;
+      return {
+        files: state.files.map(updateAccess),
+        activeFile: updatedActive
+      };
+    });
+  },
+
+  updateUserPermission: (fileId, userId, permission) => {
+    set(state => {
+      const updateAccess = (f: FileItem): FileItem => {
+        if (f.id !== fileId || !f.accessList) return f;
+        const nextList = f.accessList.map(a => a.userId === userId ? { ...a, permission } : a);
+        return { ...f, accessList: nextList };
+      };
+
+      const updatedActive = state.activeFile && state.activeFile.id === fileId ? updateAccess(state.activeFile) : state.activeFile;
+      return {
+        files: state.files.map(updateAccess),
+        activeFile: updatedActive
+      };
+    });
+  },
+
+  removeUserAccess: (fileId, userId) => {
+    set(state => {
+      const updateAccess = (f: FileItem): FileItem => {
+        if (f.id !== fileId || !f.accessList) return f;
+        const nextList = f.accessList.filter(a => a.userId !== userId);
+        return { ...f, accessList: nextList };
+      };
+
+      const updatedActive = state.activeFile && state.activeFile.id === fileId ? updateAccess(state.activeFile) : state.activeFile;
+      return {
+        files: state.files.map(updateAccess),
+        activeFile: updatedActive
+      };
+    });
+  },
   // Stubs for Phase 1
   addUploadedFile: () => {
     alert("Use uploadFile for Phase 2 uploads");

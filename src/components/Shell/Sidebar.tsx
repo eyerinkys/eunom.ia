@@ -5,7 +5,8 @@ import {
   PieChart, 
   Network, 
   ShieldCheck,
-  HardDrive
+  HardDrive,
+  Users
 } from 'lucide-react';
 import { useEunomiaStore } from '../../store/useEunomiaStore';
 import type { ViewTab } from '../../types/eunomia';
@@ -19,6 +20,7 @@ export const Sidebar: React.FC = () => {
   const mainNavItems: { tab: ViewTab; label: string; icon: React.ReactNode }[] = [
     { tab: 'home', label: 'Home', icon: <Home size={18} /> },
     { tab: 'files', label: 'My Files & Provenance', icon: <FolderGit2 size={18} /> },
+    { tab: 'shared', label: 'Shared With Me', icon: <Users size={18} /> },
     { tab: 'storage', label: 'Storage Visualiser', icon: <PieChart size={18} /> },
     { tab: 'graph', label: 'Structural File Graph', icon: <Network size={18} /> },
   ];

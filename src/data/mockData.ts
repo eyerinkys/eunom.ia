@@ -23,6 +23,12 @@ export const INITIAL_FILES: FileItem[] = [
     parentHash: '7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069',
     provenanceStatus: 'VALID',
     versionCount: 3,
+    currentUserPermission: 'owner',
+    accessList: [
+      { userId: 'u1', username: 'Researcher Aris', email: 'aris@eunomia.local', permission: 'owner' },
+      { userId: 'u2', username: 'Dr. Elena Rostova', email: 'elena@eunomia.local', permission: 'editor' },
+      { userId: 'u3', username: 'Prof. Miller', email: 'miller@eunomia.local', permission: 'viewer' }
+    ],
     contentSnippet: '# Quantum Metrology in Cryogenic Environments\n\n## Abstract\nWe present phase estimation limits using entangled photons in N-path interferometry...',
     versions: [
       {
@@ -77,6 +83,11 @@ export const INITIAL_FILES: FileItem[] = [
     hash: 'a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0',
     provenanceStatus: 'VALID',
     versionCount: 1,
+    currentUserPermission: 'owner',
+    accessList: [
+      { userId: 'u4', username: 'Lab Station 4', email: 'lab4@eunomia.local', permission: 'owner' },
+      { userId: 'u1', username: 'Researcher Aris', email: 'aris@eunomia.local', permission: 'editor' }
+    ],
     versions: [
       {
         id: 'v1',
@@ -105,6 +116,10 @@ export const INITIAL_FILES: FileItem[] = [
     hash: 'f9e8d7c6b5a432109876543210fedcba9876543210fedcba9876543210fedcba',
     provenanceStatus: 'VALID',
     versionCount: 2,
+    currentUserPermission: 'owner',
+    accessList: [
+      { userId: 'u2', username: 'Dr. Elena Rostova', email: 'elena@eunomia.local', permission: 'owner' }
+    ],
     versions: [
       {
         id: 'v2',
@@ -133,6 +148,7 @@ export const INITIAL_FILES: FileItem[] = [
     hash: 'deadbeef1234567890badbeef00112233445566778899aabbccddeeff0011223',
     provenanceStatus: 'TAMPERED',
     versionCount: 2,
+    currentUserPermission: 'owner',
     contentSnippet: 'CRITICAL WARNING: Unverified edits detected in step 4 block hash calculation.',
     versions: [
       {
@@ -162,6 +178,7 @@ export const INITIAL_FILES: FileItem[] = [
     hash: '556677889900aabbccddeeff11223344556677889900aabbccddeeff11223344',
     provenanceStatus: 'VALID',
     versionCount: 1,
+    currentUserPermission: 'owner',
     versions: []
   },
   {
@@ -178,6 +195,7 @@ export const INITIAL_FILES: FileItem[] = [
     hash: '9900aabbccddeeff11223344556677889900aabbccddeeff1122334455667788',
     provenanceStatus: 'VALID',
     versionCount: 1,
+    currentUserPermission: 'owner',
     versions: []
   },
   {
@@ -194,7 +212,76 @@ export const INITIAL_FILES: FileItem[] = [
     hash: '3344556677889900aabbccddeeff11223344556677889900aabbccddeeff1122',
     provenanceStatus: 'VALID',
     versionCount: 1,
+    currentUserPermission: 'owner',
     versions: []
+  },
+  {
+    id: 'f8_shared',
+    name: 'Cryogenic_Sensors_Report_2026.pdf',
+    folderId: 'shared_external',
+    path: '/SHARED/Cryogenic_Sensors_Report_2026.pdf',
+    type: 'pdf',
+    extension: '.pdf',
+    sizeFormatted: '8.4 MB',
+    sizeBytes: 8808038,
+    owner: 'Dr. Elena Rostova',
+    modifiedAt: '2026-08-06 14:10',
+    hash: '11223344556677889900aabbccddeeff11223344556677889900aabbccddeeff',
+    provenanceStatus: 'VALID',
+    versionCount: 2,
+    currentUserPermission: 'editor',
+    accessList: [
+      { userId: 'u2', username: 'Dr. Elena Rostova', email: 'elena@eunomia.local', permission: 'owner' },
+      { userId: 'you', username: 'You', email: 'user@eunomia.local', permission: 'editor' }
+    ],
+    contentSnippet: 'Comprehensive sensor thermal resistance test data.',
+    versions: [
+      {
+        id: 'v2',
+        version: 'v2',
+        timestamp: '2026-08-06 14:10',
+        sizeFormatted: '8.4 MB',
+        sizeBytes: 8808038,
+        author: 'Elena Rostova',
+        commitNote: 'Added sensor calibration values',
+        hash: '11223344556677889900aabbccddeeff11223344556677889900aabbccddeeff',
+        parentHash: '7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069'
+      }
+    ]
+  },
+  {
+    id: 'f9_shared',
+    name: 'Molecular_Structure_Database.csv',
+    folderId: 'shared_external',
+    path: '/SHARED/Molecular_Structure_Database.csv',
+    type: 'code',
+    extension: '.csv',
+    sizeFormatted: '2.1 MB',
+    sizeBytes: 2202009,
+    owner: 'Prof. Miller',
+    modifiedAt: '2026-08-04 09:30',
+    hash: '889900aabbccddeeff11223344556677889900aabbccddeeff11223344556677',
+    provenanceStatus: 'VALID',
+    versionCount: 1,
+    currentUserPermission: 'viewer',
+    accessList: [
+      { userId: 'u3', username: 'Prof. Miller', email: 'miller@eunomia.local', permission: 'owner' },
+      { userId: 'you', username: 'You', email: 'user@eunomia.local', permission: 'viewer' }
+    ],
+    contentSnippet: 'Compound_ID, Formula, Weight_g_mol, Solub_pH7',
+    versions: [
+      {
+        id: 'v1',
+        version: 'v1',
+        timestamp: '2026-08-04 09:30',
+        sizeFormatted: '2.1 MB',
+        sizeBytes: 2202009,
+        author: 'Prof. Miller',
+        commitNote: 'Initial database dump',
+        hash: '889900aabbccddeeff11223344556677889900aabbccddeeff11223344556677',
+        parentHash: ''
+      }
+    ]
   }
 ];
 
